@@ -293,6 +293,7 @@ function pied(lang, cle, estContact){
     ${colonnes}
     <div><h4>${esc(p.piedProjet)}</h4><ul>
       <li><a href="${lang.prefixe}/">${esc(p.piedEditeur)}</a></li>
+      ${lang.code === 'fr' ? '<li><a href="/guides/">Guides</a></li>' : ''}
       <li><a href="${lang.prefixe}/#confiance">${esc(p.piedConfidentialite)}</a></li>
       <li><a href="${lang.prefixe}/#questions">${esc(p.piedQuestions)}</a></li>
       <li>${estContact ? `<span aria-current="page">${esc(ui.contact.lien)}</span>`
@@ -1118,6 +1119,137 @@ for (const lang of LANGUES){
 
    priority et changefreq sont partis pour la même raison : Google les ignore
    depuis des années, ils ne faisaient qu'ajouter de la surface d'erreur. */
+/* ---------------- les guides ----------------
+   Les pages d'outil repondent a « je veux faire X ». Les guides repondent a
+   « comment fait-on X », qui est une autre requete et un autre moment. Ils sont
+   ecrits a la main par l'agent editorial — donc VERSIONNES, contrairement a tout
+   ce que ce script engendre — et ce bloc se contente de les recenser : sommaire,
+   sitemap, resume pour les moteurs de reponse.
+   Le sommaire est reconstruit a chaque build depuis les fichiers presents : un
+   guide ajoute apparait sans qu'on touche a quoi que ce soit. */
+/* Les guides existent dans les deux langues, chacun dans son dossier. Le slug
+   n'a aucune raison d'etre le meme : « modifier-le-texte-d-un-pdf » et
+   « edit-the-text-in-a-pdf » visent deux requetes differentes. L'appariement se
+   fait donc par un attribut data-pair, que l'agent pose, et non par le nom. */
+const LANGUES_GUIDES = [
+  { code: 'fr', prefixe: '', dossier: path.join(RACINE, 'guides'),
+    titre: 'Les guides', lien: 'Guides',
+    titreSeo: 'Guides PDF — comment faire, expliqué simplement — VoilàPDF',
+    meta: "Des guides pratiques sur les PDF : modifier le texte, réduire le poids, reconnaître un scan, comparer deux versions. Écrits pour être suivis, pas survolés.",
+    chapo: "Comment faire, pas à pas. Chaque guide répond à une question précise et renvoie vers l'outil qui s'en charge — sans vous demander de téléverser quoi que ce soit.",
+    fil: 'Accueil' },
+  { code: 'en', prefixe: '/en', dossier: path.join(RACINE, 'en', 'guides'),
+    titre: 'The guides', lien: 'Guides',
+    titreSeo: 'PDF guides — how to, explained plainly — VoilàPDF',
+    meta: 'Practical guides on PDFs: edit the text, cut the file size, deal with a scan, compare two versions. Written to be followed, not skimmed.',
+    chapo: 'How to do it, step by step. Each guide answers one precise question and points to the tool that handles it — without asking you to upload anything.',
+    fil: 'Home' }
+];
+
+const guidesPar = {};
+for (const lg of LANGUES_GUIDES){
+  const liste = [];
+  if (fs.existsSync(lg.dossier)){
+    for (const nom of fs.readdirSync(lg.dossier).sort()){
+      if (!nom.endsWith('.html') || nom === 'index.html') continue;
+      const html = fs.readFileSync(path.join(lg.dossier, nom), 'utf8');
+      const lire = (re, def) => { const m = re.exec(html); return m ? m[1].trim() : def; };
+      const slug = nom.replace(/\.html$/, '');
+      liste.push({
+        slug, langue: lg.code,
+        url: `${SITE}${lg.prefixe}/guides/${slug}/`,
+        titre: lire(/<h1[^>]*>([\s\S]*?)<\/h1>/, slug).replace(/<[^>]+>/g, ''),
+        meta: lire(/<meta name="description" content="([^"]*)"/, ''),
+        date: lire(/<time datetime="([^"]*)"/, JOUR),
+        paire: lire(/data-pair="([^"]*)"/, '')
+      });
+      urls.push({ loc: `${SITE}${lg.prefixe}/guides/${slug}/`, cle: null, prio: '0.6' });
+    }
+    liste.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  }
+  guidesPar[lg.code] = liste;
+}
+const guides = guidesPar.fr;
+
+for (const lg of LANGUES_GUIDES){
+  const liste = guidesPar[lg.code];
+  if (!liste.length) continue;
+  const lang = LANGUES.find(l => l.code === lg.code) || LANGUES[0];
+  const ui = lang.ui;
+
+  const carte = g => `    <a class="guide" href="${lg.prefixe}/guides/${g.slug}/">
+      <span class="d">${esc((g.date || '').split('-').reverse().join('/'))}</span>
+      <b>${esc(g.titre)}</b>
+      <span>${esc(g.meta)}</span>
+    </a>`;
+
+  /* Le selecteur de langue du sommaire pointe l'autre sommaire, pas l'accueil :
+     quelqu'un qui lit les guides veut les guides dans sa langue. */
+  const autres = LANGUES_GUIDES.filter(x => x.code !== lg.code && guidesPar[x.code].length);
+
+  const sommaire = `<!doctype html>
+<html lang="${lg.code}">
+<head>
+<meta charset="utf-8">
+<title>${esc(lg.titreSeo)}</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="${esc(lg.meta)}">
+${GSC}
+<link rel="canonical" href="${SITE}${lg.prefixe}/guides/">
+${LANGUES_GUIDES.filter(x => guidesPar[x.code].length).map(x =>
+  `<link rel="alternate" hreflang="${x.code}" href="${SITE}${x.prefixe}/guides/">`).join('\n')}
+<link rel="alternate" hreflang="x-default" href="${SITE}/guides/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VoilàPDF">
+<meta property="og:title" content="${esc(lg.titreSeo)}">
+<meta property="og:description" content="${esc(lg.meta)}">
+<meta property="og:url" content="${SITE}${lg.prefixe}/guides/">
+<meta property="og:image" content="${SITE}/social-preview.png">
+<link rel="icon" href="${FAVICON}">
+<link rel="stylesheet" href="/style-outil.css">
+<script type="application/ld+json">${JSON.stringify({
+  '@context': 'https://schema.org', '@type': 'CollectionPage',
+  '@id': `${SITE}${lg.prefixe}/guides/#page`, url: `${SITE}${lg.prefixe}/guides/`,
+  name: lg.titre, inLanguage: lg.code, dateModified: JOUR,
+  isPartOf: { '@id': SITE + '/#site' },
+  hasPart: liste.map(g => ({ '@type': 'Article', headline: g.titre, url: g.url, datePublished: g.date }))
+})}</script>
+</head>
+<body>
+
+<div class="hnav"><div class="in">
+  <a class="brand" href="${lg.prefixe}/"><i>${LOGO}</i>VoilàPDF</a>
+  <nav>
+    <a href="${lg.prefixe}/#outils">${esc(ui.navOutils)}</a>
+    <a href="${lg.prefixe}/guides/"><b>${esc(lg.lien)}</b></a>
+    <a href="${lg.prefixe}/#questions">${esc(ui.navQuestions)}</a>
+    <span class="langues"><b>${lg.code.toUpperCase()}</b>${autres.map(x =>
+      `<a href="${SITE}${x.prefixe}/guides/" hreflang="${x.code}">${x.code.toUpperCase()}</a>`).join('')}</span>
+    <a class="cta-nav" href="${lg.prefixe}/">${esc(ui.navEditer)}</a>
+  </nav>
+</div></div>
+
+<header class="tete"><div class="sec">
+  <p class="fil"><a href="${lg.prefixe}/">${esc(lg.fil)}</a> › ${esc(lg.lien)}</p>
+  <h1>${esc(lg.titre)}</h1>
+  <p class="chapo">${esc(lg.chapo)}</p>
+</div></header>
+
+<main class="sec corps">
+  <div class="guides">
+${liste.map(carte).join('\n')}
+  </div>
+</main>
+
+${pied(lang, null)}
+</body>
+</html>
+`;
+  fs.mkdirSync(lg.dossier, { recursive: true });
+  fs.writeFileSync(path.join(lg.dossier, 'index.html'), sommaire, 'utf8');
+  urls.push({ loc: `${SITE}${lg.prefixe}/guides/`, cle: null, prio: '0.7' });
+}
+
 const SITEMAP =
   '<?xml version="1.0" encoding="UTF-8"?>\n' +
   '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
@@ -1256,7 +1388,7 @@ fs.writeFileSync(path.join(RACINE, 'llms-full.txt'), complet.trimEnd() + '\n', '
 const dossiers = [];
 for (const lang of LANGUES){
   const p = lang.prefixe.replace(/^\//, '');
-  if (p) { dossiers.push('/' + p + '/'); continue; }   // /en/ en entier
+  if (p) { dossiers.push('/' + p + '/*'); continue; }  // le contenu de /en/, pas le dossier
   for (const cle of Object.keys(lang.outils)) dossiers.push('/' + lang.outils[cle].slug + '/');
   dossiers.push('/' + lang.ui.contact.slug + '/');
   for (const cle of Object.keys(lang.ui.pages)) dossiers.push('/' + lang.ui.pages[cle].slug + '/');
@@ -1270,7 +1402,12 @@ fs.writeFileSync(path.join(RACINE, '.gitignore'),
   + "\n.DS_Store\n*.pdf\n\n# pages d'outil et pages de texte, par langue\n"
   + dossiers.sort().join('\n') + '\n'
   + "\n# fichiers produits par la meme commande\n/sitemap.xml\n/sitemap2.xml\n/robots.txt\n"
-  + "/llms.txt\n/llms-full.txt\n/" + INDEXNOW + ".txt\n", 'utf8');
+  + "/llms.txt\n/llms-full.txt\n/" + INDEXNOW + ".txt\n"
+  + "\n# Les guides sont ecrits a la main : eux se versionnent, dans les deux langues.\n"
+  + "# Seuls leurs sommaires sont engendres. Git ne descend pas dans un dossier\n"
+  + "# exclu : il faut donc exclure le CONTENU de /en/ (avec /en/*) pour pouvoir\n"
+  + "# en readmettre guides/ ensuite.\n"
+  + "/guides/index.html\n!/en/guides\n/en/guides/index.html\n", 'utf8');
 
 console.log(`${n} page(s) d'outil sur ${LANGUES.length} langue(s), sitemap de ${urls.length} adresses.`);
 console.log(`llms.txt : ${Math.round(court.length / 1024)} Ko · llms-full.txt : ${Math.round(complet.length / 1024)} Ko`);

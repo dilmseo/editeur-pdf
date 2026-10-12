@@ -16,7 +16,7 @@
 /contact/
 /deverrouiller-pdf/
 /diviser-pdf/
-/en/
+/en/*
 /excel-en-pdf/
 /extraire-pages-pdf/
 /filigrane-pdf/
@@ -53,3 +53,11 @@
 /llms.txt
 /llms-full.txt
 /67ffc0350a7cb80c22ef26d6c6a1798b.txt
+
+# Les guides sont ecrits a la main : eux se versionnent, dans les deux langues.
+# Seuls leurs sommaires sont engendres. Git ne descend pas dans un dossier
+# exclu : il faut donc exclure le CONTENU de /en/ (avec /en/*) pour pouvoir
+# en readmettre guides/ ensuite.
+/guides/index.html
+!/en/guides
+/en/guides/index.html

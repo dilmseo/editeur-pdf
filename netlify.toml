@@ -56,6 +56,14 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
+# Les guides sont écrits comme guides/<slug>.html mais servis à /guides/<slug>/ :
+# une adresse sans extension vieillit mieux, et c'est la forme déjà utilisée par
+# les pages d'outil.
+[[redirects]]
+  from = "/guides/:slug/"
+  to = "/guides/:slug.html"
+  status = 200
+
 # Les résumés destinés aux moteurs de réponse doivent se lire dans le navigateur,
 # pas se télécharger.
 [[headers]]
