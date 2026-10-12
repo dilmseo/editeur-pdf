@@ -730,7 +730,23 @@ async function fusionnerPdf(fichiers, onProgres){
   return { nom: 'fusion.pdf', blob: new Blob([await out.save()], { type: 'application/pdf' }) };
 }
 
+/* Utilisé par la reconnaissance de texte pour rendre un .docx au lieu d'un .txt. */
+function texteVersDocx(nom, paragraphes){
+  let corps = '';
+  paragraphes.forEach((bloc, i) => {
+    for (const ligne of String(bloc).split(/\n/)){
+      corps += '<w:p><w:pPr><w:spacing w:after="80"/></w:pPr><w:r><w:rPr>'
+             + '<w:rFonts w:ascii="Calibri" w:hAnsi="Calibri"/><w:sz w:val="22"/></w:rPr>'
+             + `<w:t xml:space="preserve">${esc(ligne)}</w:t></w:r></w:p>`;
+    }
+    if (i < paragraphes.length - 1) corps += '<w:p><w:r><w:br w:type="page"/></w:r></w:p>';
+  });
+  return { nom, blob: new Blob([paquetDocx(corps)],
+    { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }) };
+}
+
 window.Conv = {
+  texteVersDocx,
   pdfVersPng:  (f, p) => pdfVersImages(f, 'image/png', p),
   pdfVersJpg:  (f, p) => pdfVersImages(f, 'image/jpeg', p),
   imagesVersPdf,

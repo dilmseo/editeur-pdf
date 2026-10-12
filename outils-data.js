@@ -32,8 +32,8 @@ const OUTILS = {
   resume: 'Un .docx dont le texte reste modifiable',
   titre: 'PDF en Word',
   h1: 'Convertir un PDF en Word',
-  titreSeo: 'Convertir un PDF en Word gratuitement, sans téléverser le fichier',
-  meta: "Transformez un PDF en document Word .docx directement dans votre navigateur. Gratuit, sans inscription, sans limite de taille, et votre fichier ne quitte jamais votre ordinateur.",
+  titreSeo: 'PDF en Word gratuit, sans téléverser votre fichier',
+  meta: "Transformez un PDF en document Word .docx dans votre navigateur. Gratuit, sans inscription, sans limite de taille, et votre fichier ne part sur aucun serveur.",
   chapo: "Récupérez le texte d'un PDF dans un document Word que vous pourrez reprendre, corriger et réimprimer. La conversion se fait entièrement sur votre machine : votre document n'est jamais envoyé sur un serveur.",
   accept: 'application/pdf', fonction: 'pdfVersDocx',
   note: "Le texte, ses tailles et les titres sont conservés, chaque page du PDF devenant une page du document. La mise en page est simplifiée : ni colonnes, ni encadrés, ni images.",
@@ -80,8 +80,8 @@ const OUTILS = {
   resume: 'Une diapositive par page',
   titre: 'PDF en PowerPoint',
   h1: 'Convertir un PDF en PowerPoint',
-  titreSeo: 'Convertir un PDF en PowerPoint gratuitement, sans téléversement',
-  meta: "Transformez un PDF en présentation PowerPoint .pptx dans votre navigateur. Une diapositive par page, au format exact. Gratuit, sans compte, sans envoi de fichier.",
+  titreSeo: 'PDF en PowerPoint gratuit, sans téléverser le document',
+  meta: "Transformez un PDF en présentation .pptx dans votre navigateur : une diapositive par page, au format exact. Gratuit, sans compte, sans envoi.",
   chapo: "Reprenez un PDF comme support de présentation : chaque page devient une diapositive au format exact de la page, prête à être projetée ou annotée.",
   accept: 'application/pdf', fonction: 'pdfVersPptx',
   note: "Chaque page devient une diapositive au format exact de la page, remplie par son image. Le rendu est fidèle, mais le texte n'y est pas rééditable.",
@@ -106,7 +106,7 @@ const OUTILS = {
   resume: 'Une image par page',
   titre: 'PDF en JPG',
   h1: 'Convertir un PDF en JPG',
-  titreSeo: 'Convertir un PDF en JPG gratuitement, sans téléverser le fichier',
+  titreSeo: 'PDF en JPG gratuit : une image par page, sans envoi',
   meta: "Transformez chaque page d'un PDF en image JPG, directement dans votre navigateur. Gratuit, sans inscription, sans filigrane, sans envoi de fichier.",
   chapo: "Obtenez une image par page, prête à être insérée dans un courriel, un document ou une publication. Le rendu est celui du PDF, au double de la taille écran.",
   accept: 'application/pdf', fonction: 'pdfVersJpg',
@@ -160,8 +160,8 @@ const OUTILS = {
   resume: 'Depuis un .docx',
   titre: 'Word en PDF',
   h1: 'Convertir un Word en PDF',
-  titreSeo: 'Convertir un Word en PDF gratuitement, sans téléverser le document',
-  meta: "Transformez un document Word .docx en PDF directement dans votre navigateur. Gratuit, sans inscription, sans filigrane, et votre document ne part sur aucun serveur.",
+  titreSeo: 'Word en PDF gratuit, sans téléverser ni créer de compte',
+  meta: "Transformez un .docx en PDF dans votre navigateur. Gratuit, sans inscription, sans filigrane, et votre document ne part sur aucun serveur.",
   chapo: "Obtenez un PDF à partir d'un document Word, sans ouvrir Word et sans confier votre texte à un service en ligne. Pratique pour un courrier, un devis ou un contrat à envoyer.",
   accept: DOC + ',.docx', fonction: 'docxVersPdf',
   note: "Texte, gras, italique, tailles, alignements, tableaux simples et images sont repris. Les styles avancés, en-têtes et colonnes ne le sont pas.",
@@ -184,7 +184,7 @@ const OUTILS = {
   resume: 'Depuis un .xlsx',
   titre: 'Excel en PDF',
   h1: 'Convertir un Excel en PDF',
-  titreSeo: 'Convertir un Excel en PDF gratuitement, sans envoyer le classeur',
+  titreSeo: 'Excel en PDF gratuit, sans envoyer ni partager le classeur',
   meta: "Transformez un classeur Excel .xlsx en PDF lisible, directement dans votre navigateur. Gratuit, sans compte, sans filigrane, sans téléversement de vos données.",
   chapo: "Obtenez un PDF propre à partir d'un classeur, feuille par feuille, sans ouvrir Excel. Utile pour transmettre un tableau sans risquer qu'il soit modifié.",
   accept: XLS + ',.xlsx', fonction: 'xlsxVersPdf',
@@ -209,7 +209,7 @@ const OUTILS = {
   resume: 'Depuis un .pptx',
   titre: 'PowerPoint en PDF',
   h1: 'Convertir un PowerPoint en PDF',
-  titreSeo: 'Convertir un PowerPoint en PDF gratuitement, sans téléversement',
+  titreSeo: 'PowerPoint en PDF gratuit, sans téléverser la présentation',
   meta: "Transformez une présentation PowerPoint .pptx en PDF directement dans votre navigateur. Gratuit, sans compte, sans filigrane, sans envoi de fichier.",
   chapo: "Obtenez un PDF à partir d'une présentation, pour la diffuser ou l'imprimer sans que la mise en forme bouge d'un poste à l'autre.",
   accept: PPT + ',.pptx', fonction: 'pptxVersPdf',
@@ -235,7 +235,7 @@ const OUTILS = {
   titre: 'JPG en PDF',
   h1: 'Convertir des JPG en PDF',
   titreSeo: 'Convertir des JPG en PDF gratuitement, sans envoi de photos',
-  meta: "Réunissez vos images JPG dans un seul PDF, directement dans votre navigateur. Gratuit, sans compte, sans filigrane, et vos photos ne quittent pas votre ordinateur.",
+  meta: "Réunissez vos images JPG dans un seul PDF, dans votre navigateur. Gratuit, sans compte, sans filigrane, et vos photos restent chez vous.",
   chapo: "Rassemblez des photos ou des pages photographiées dans un seul PDF, à transmettre d'un bloc. Chaque image devient une page à sa taille exacte.",
   accept: 'image/jpeg,.jpg,.jpeg', multiple: true, fonction: 'imagesVersPdf',
   note: "Chaque image devient une page à sa taille exacte, sans recompression. Vous pouvez en déposer plusieurs : elles se suivent dans l'ordre choisi.",
@@ -259,7 +259,7 @@ const OUTILS = {
   resume: 'Une page par image',
   titre: 'PNG en PDF',
   h1: 'Convertir des PNG en PDF',
-  titreSeo: 'Convertir des PNG en PDF gratuitement, sans perte et sans envoi',
+  titreSeo: 'PNG en PDF gratuit, sans perte et sans téléversement',
   meta: "Réunissez vos images PNG dans un seul PDF, sans perte et dans votre navigateur. Gratuit, sans compte, sans filigrane, sans téléversement.",
   chapo: "Rassemblez des captures d'écran ou des visuels PNG dans un seul PDF, sans aucune perte de qualité. Chaque image devient une page à sa taille exacte.",
   accept: 'image/png,.png', multiple: true, fonction: 'imagesVersPdf',
@@ -287,7 +287,7 @@ const OUTILS = {
   titre: 'Fusionner des PDF',
   h1: 'Fusionner plusieurs PDF en un seul',
   titreSeo: 'Fusionner des PDF gratuitement, sans téléverser vos documents',
-  meta: "Réunissez plusieurs PDF en un seul fichier, directement dans votre navigateur. Gratuit, sans inscription, sans filigrane, et vos documents ne partent sur aucun serveur.",
+  meta: "Réunissez plusieurs PDF en un seul fichier, dans votre navigateur. Gratuit, sans inscription, sans filigrane, et rien n'est téléversé.",
   chapo: "Mettez plusieurs documents bout à bout dans l'ordre que vous choisissez. Les pages gardent leur qualité d'origine : rien n'est recompressé.",
   accept: 'application/pdf', multiple: true, fonction: 'fusionnerPdf',
   note: "Les documents sont mis bout à bout dans l'ordre où vous les ajoutez. Rien n'est recompressé : les pages gardent leur qualité d'origine.",
@@ -479,9 +479,533 @@ const EXTRA = {
 };
 for (const k in EXTRA) Object.assign(OUTILS[k], EXTRA[k]);
 
+/* ===================== outils agissant sur le PDF lui-même ===================== */
+
+Object.assign(ICO, {
+  compresser: '<path d="M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2"/><path d="M9 12h6"/>',
+  ciseaux:    '<circle cx="6" cy="6" r="2.4"/><circle cx="6" cy="18" r="2.4"/><path d="M8 7.5 20 18M8 16.5 20 6"/>',
+  pages:      '<rect x="3" y="4" width="11" height="14" rx="2"/><path d="M17 8h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9"/>',
+  retirer:    '<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 12h6"/>',
+  rotation:   '<path d="M3 12a9 9 0 1 0 2.6-6.4M3 4v5h5"/>',
+  rogner:     '<path d="M6 2v14a2 2 0 0 0 2 2h14M2 6h14a2 2 0 0 1 2 2v14"/>',
+  numero:     '<path d="M4 5h16M4 10h16M4 15h10"/><path d="M15 19h5"/>',
+  filigrane:  '<path d="M12 3 5 9v6l7 6 7-6V9z"/><path d="M8.5 12h7"/>',
+  cadenas:    '<rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0"/>',
+  stylo:      '<path d="M3 20c3 .5 5-1 6.5-3.5M5.5 14.5 15 5a2.1 2.1 0 0 1 3 3l-9.5 9.5-4 1z"/>',
+  etiquette:  '<path d="M3 7a2 2 0 0 1 2-2h6l9 9-6 6-9-9z"/><circle cx="8" cy="10" r="1.2"/>',
+  loupe:      '<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>'
+});
+
+const OUTILS2 = {
+
+'compresser': {
+  slug: 'compresser-pdf', carte: 'Compresser un PDF', ico: ICO.compresser, couleur: 'i-vert',
+  resume: 'Pour tenir dans une pièce jointe', titre: 'Compresser un PDF',
+  h1: 'Compresser un PDF', actionTexte: 'Compresser',
+  titreSeo: 'Compresser un PDF gratuitement, sans envoyer le fichier',
+  meta: "Réduisez le poids d'un PDF directement dans votre navigateur, sans limite de taille et sans téléversement. Gratuit, sans compte, sans filigrane.",
+  chapo: "Faites tenir un document trop lourd dans une pièce jointe. La compression se fait sur votre machine : le fichier n'est envoyé nulle part, et vous choisissez le compromis entre poids et netteté.",
+  accept: 'application/pdf', fonction: 'compresserPdf',
+  options: [{ id: 'niveau', type: 'choix', label: 'Niveau de compression', defaut: 'moyenne',
+    valeurs: [['forte', 'Forte', 'la plus légère'], ['moyenne', 'Équilibrée', 'recommandé'], ['douce', 'Douce', 'qualité maximale']] }],
+  note: "Les pages sont rematricées à la définition choisie. Le poids chute nettement, mais le texte n'est plus sélectionnable : c'est le prix d'une compression sans serveur.",
+  garde: ['L\'apparence de chaque page, polices et images comprises', 'Le format et le nombre de pages',
+          'Les couleurs', 'Un document lisible à l\'écran comme à l\'impression courante'],
+  perdu: ['Le texte sélectionnable et la recherche dans le document', 'Les liens cliquables et les signets',
+          'Les champs de formulaire', 'Une part de finesse, proportionnelle au niveau choisi'],
+  contexte: "Un PDF devient lourd pour une raison presque toujours identique : il contient des images en pleine définition, souvent des pages scannées. Les boîtes mail plafonnent généralement à 10 ou 25 Mo, et les téléservices administratifs souvent plus bas encore.",
+  usages: [
+    { t: 'Faire passer une pièce jointe', d: "Un dossier scanné de 40 Mo redescend couramment sous les 5 Mo." },
+    { t: 'Déposer sur un téléservice', d: "Impôts, CAF, assurances : la plupart refusent au-delà de quelques mégaoctets." },
+    { t: 'Archiver sans saturer', d: "Des centaines de documents prennent bien moins de place." }
+  ],
+  format: "La compression consiste ici à redessiner chaque page en image JPEG à la définition retenue. C'est efficace sur les scans et les documents riches en images ; sur un PDF de texte pur, déjà très compact, l'outil vous rend l'original plutôt que de l'alourdir.",
+  inverse: null,
+  lies: [
+    { cle: 'pdf-jpg', r: "Pour récupérer directement les pages en images plutôt qu'un PDF allégé." },
+    { cle: 'diviser', r: "Parfois il vaut mieux envoyer le document en deux fois que le dégrader." },
+    { cle: 'supprimer-pages', r: "Retirer les pages inutiles allège souvent plus sûrement qu'une compression." }
+  ],
+  faq: [
+    { q: 'De combien mon fichier va-t-il maigrir ?',
+      r: "Sur un document scanné, la réduction dépasse souvent 80 %. Sur un PDF né d'un traitement de texte, elle est faible, voire nulle : ces fichiers sont déjà compacts. Dans ce cas l'outil vous le dit et vous rend l'original intact." },
+    { q: 'Pourquoi le texte n\'est-il plus sélectionnable ?',
+      r: "Parce que compresser réellement un PDF suppose de réencoder ses images, ce que seul un moteur serveur sait faire en préservant la couche de texte. Ici, chaque page est redessinée en image : c'est honnête et efficace, mais le texte devient de l'image." },
+    { q: 'Puis-je compresser un document de 500 pages ?',
+      r: "Oui, aucune limite n'est imposée. Comptez simplement du temps : chaque page est redessinée une par une dans votre navigateur." }
+  ]
+},
+
+'diviser': {
+  slug: 'diviser-pdf', carte: 'Diviser un PDF', ico: ICO.ciseaux, couleur: 'i-bleu',
+  resume: 'Un fichier par page ou par plage', titre: 'Diviser un PDF',
+  h1: 'Diviser un PDF en plusieurs fichiers', actionTexte: 'Découper',
+  titreSeo: 'Diviser un PDF gratuitement, sans téléverser le document',
+  meta: "Découpez un PDF en plusieurs fichiers, page par page ou par plages, directement dans votre navigateur. Gratuit, sans compte, sans perte de qualité.",
+  chapo: "Séparez un document en autant de fichiers que nécessaire : une page chacun, ou des plages que vous définissez. Les pages sont recopiées telles quelles, sans réencodage.",
+  accept: 'application/pdf', fonction: 'diviserPdf',
+  options: [
+    { id: 'mode', type: 'choix', label: 'Mode de découpe', defaut: 'chaque',
+      valeurs: [['chaque', 'Une page par fichier', 'archive ZIP'], ['plages', 'Par plages', 'vous les définissez']] },
+    { id: 'plages', type: 'texte', label: 'Plages à extraire', exemple: '1-3, 4, 5-12',
+      aide: 'Séparez les plages par des virgules. Chaque plage devient un fichier.' }
+  ],
+  note: "Les pages sont recopiées sans être réencodées : le texte reste sélectionnable et les images gardent leur définition d'origine.",
+  garde: ['La qualité exacte des pages', 'Le texte sélectionnable et les polices intégrées',
+          'Les formats de page, même s\'ils diffèrent', 'L\'ordre d\'origine à l\'intérieur de chaque morceau'],
+  perdu: ['Les signets et la table des matières', 'Les champs de formulaire remplis',
+          'Les signatures électroniques, qui deviennent caduques'],
+  contexte: "Un document unique convient rarement à tous ses destinataires : le comptable veut les factures, le client veut sa page, l'archive veut le tout. Découper évite d'envoyer cent pages à qui n'en attend qu'une.",
+  usages: [
+    { t: 'Isoler les pages qui concernent chacun', d: "Un relevé annuel se répartit en douze envois mensuels." },
+    { t: 'Séparer un lot numérisé', d: "Un scan en continu de plusieurs documents redevient un fichier par document." },
+    { t: 'Alléger un envoi', d: "Deux fichiers de 4 Mo passent là où un seul de 8 Mo est refusé." }
+  ],
+  format: "À partir de deux morceaux, les fichiers sont réunis dans une archive ZIP que votre système ouvre d'un double-clic. Chaque fichier porte le numéro de sa page ou de sa plage.",
+  inverse: 'fusion',
+  lies: [
+    { cle: 'extraire-pages', r: "Si vous ne voulez qu'un seul morceau, l'extraction est plus directe." },
+    { cle: 'fusion', r: "Pour refaire le chemin inverse et recoller les morceaux." },
+    { cle: 'supprimer-pages', r: "Pour ne retirer que quelques pages sans découper le reste." }
+  ],
+  faq: [
+    { q: 'Comment écrire les plages ?',
+      r: "Séparez-les par des virgules : « 1-3, 4, 5-12 » produit trois fichiers. Un numéro seul donne une page seule. Les plages peuvent se recouvrir sans problème." },
+    { q: 'La qualité baisse-t-elle au découpage ?',
+      r: "Non. Les pages sont recopiées à l'identique, sans réencodage : le texte reste du texte et les images gardent leur définition." },
+    { q: 'Et si je veux juste séparer en deux ?',
+      r: "Choisissez le mode par plages et saisissez par exemple « 1-10, 11-20 » : vous obtenez deux fichiers." }
+  ]
+},
+
+'extraire-pages': {
+  slug: 'extraire-pages-pdf', carte: 'Extraire des pages', ico: ICO.pages, couleur: 'i-bleu',
+  resume: 'Garder seulement ce qui compte', titre: 'Extraire des pages',
+  h1: 'Extraire des pages d\'un PDF', actionTexte: 'Extraire les pages',
+  titreSeo: 'Extraire des pages d\'un PDF gratuitement, sans téléversement',
+  meta: "Sélectionnez les pages à garder dans un aperçu et obtenez un nouveau PDF, sans rien envoyer sur un serveur. Gratuit, sans compte, sans perte.",
+  chapo: "Choisissez visuellement les pages à conserver et repartez avec un document qui ne contient qu'elles. Les pages gardées sont recopiées sans aucune perte.",
+  accept: 'application/pdf', fonction: 'extrairePages',
+  panneau: 'pages', capacites: ['selection'],
+  note: "Cliquez les pages à conserver dans l'aperçu. Elles sont recopiées sans réencodage : qualité, texte et polices intacts.",
+  garde: ['La qualité exacte des pages retenues', 'Le texte sélectionnable', 'L\'ordre d\'origine', 'Les formats de page'],
+  perdu: ['Les signets qui pointaient vers les pages écartées', 'Les champs de formulaire remplis', 'Les signatures électroniques'],
+  contexte: "Il est souvent plus simple de dire ce qu'on garde que ce qu'on jette. Pour transmettre trois pages d'un rapport de quatre-vingts, l'extraction évite d'imprimer, de rescanner ou de passer par un logiciel installé.",
+  usages: [
+    { t: 'Transmettre un extrait', d: "Trois pages d'un contrat partent sans le reste du dossier." },
+    { t: 'Constituer un justificatif', d: "Seules les pages demandées par l'administration sont jointes." },
+    { t: 'Récupérer un chapitre', d: "Une partie d'un livre ou d'un manuel devient un document autonome." }
+  ],
+  format: "L'aperçu affiche toutes les pages en vignettes : un clic sélectionne, un autre désélectionne. Rien n'est envoyé pour produire cet aperçu, il est calculé dans votre navigateur.",
+  inverse: null,
+  lies: [
+    { cle: 'supprimer-pages', r: "Quand il y a plus de pages à garder qu'à jeter, l'inverse est plus rapide." },
+    { cle: 'diviser', r: "Pour obtenir plusieurs morceaux d'un coup plutôt qu'un seul extrait." },
+    { cle: 'organiser', r: "Pour aussi remettre les pages dans l'ordre voulu." }
+  ],
+  faq: [
+    { q: 'Les pages extraites gardent-elles leur qualité ?',
+      r: "Oui, intégralement : elles sont recopiées sans être réencodées. Le texte reste sélectionnable et les images conservent leur définition." },
+    { q: 'Puis-je changer l\'ordre en même temps ?',
+      r: "Les pages sortent dans leur ordre d'origine. Pour les réordonner, utilisez l'outil d'organisation, qui permet de déplacer chaque page." },
+    { q: 'Y a-t-il une limite au nombre de pages ?',
+      r: "Non. L'aperçu affiche les vignettes au fil du défilement, ce qui reste fluide même sur un document épais." }
+  ]
+},
+
+'supprimer-pages': {
+  slug: 'supprimer-pages-pdf', carte: 'Supprimer des pages', ico: ICO.retirer, couleur: 'i-rouge',
+  resume: 'Retirer ce qui n\'a rien à faire là', titre: 'Supprimer des pages',
+  h1: 'Supprimer des pages d\'un PDF', actionTexte: 'Supprimer les pages',
+  titreSeo: 'Supprimer des pages d\'un PDF, gratuit et sans envoi',
+  meta: "Retirez les pages inutiles d'un PDF en les cliquant dans un aperçu. Tout se passe dans votre navigateur : aucun téléversement, aucun compte.",
+  chapo: "Page blanche, double scan, annexe sans intérêt : cliquez les pages à retirer et repartez avec un document net. Les pages conservées ne sont pas réencodées.",
+  accept: 'application/pdf', fonction: 'supprimerPages',
+  panneau: 'pages', capacites: ['selection'],
+  note: "Cliquez dans l'aperçu les pages à retirer. Les autres sont recopiées telles quelles, sans perte.",
+  garde: ['La qualité exacte des pages conservées', 'Le texte sélectionnable', 'L\'ordre d\'origine', 'Les formats de page'],
+  perdu: ['Les signets qui pointaient vers les pages retirées', 'Les champs de formulaire remplis', 'Les signatures électroniques'],
+  contexte: "Un scanner produit presque toujours une page de trop : un verso vierge, une feuille de séparation, une double numérisation. Les laisser alourdit le fichier et brouille la lecture.",
+  usages: [
+    { t: 'Nettoyer un scan', d: "Les versos vierges et les feuilles doublées disparaissent." },
+    { t: 'Retirer une annexe', d: "Le corps du document part sans les pièces jointes." },
+    { t: 'Écarter une page confidentielle', d: "Une page sensible est retirée avant transmission — et là, elle disparaît vraiment du fichier." }
+  ],
+  format: "Contrairement au masquage dans l'éditeur, qui recouvre visuellement, la suppression retire réellement la page du document : son contenu n'est plus récupérable dans le fichier produit.",
+  inverse: null,
+  lies: [
+    { cle: 'extraire-pages', r: "Quand il y a plus à jeter qu'à garder, l'extraction est plus rapide." },
+    { cle: 'organiser', r: "Pour aussi réordonner ou faire pivoter ce qui reste." },
+    { cle: 'compresser', r: "Si l'objectif était d'alléger, la compression va plus loin." }
+  ],
+  faq: [
+    { q: 'Le contenu supprimé est-il vraiment effacé ?',
+      r: "Oui. La page n'est pas recopiée dans le document produit : son texte et ses images n'y figurent plus du tout. C'est la différence avec le masquage de l'éditeur, qui ne fait que recouvrir." },
+    { q: 'Puis-je tout supprimer ?',
+      r: "Non : un PDF doit garder au moins une page. L'outil vous arrête si votre sélection ne laisse rien." },
+    { q: 'Le reste du document est-il modifié ?',
+      r: "Non, les pages conservées sont recopiées à l'identique : ni recompression, ni changement de format." }
+  ]
+},
+
+'organiser': {
+  slug: 'organiser-pdf', carte: 'Organiser les pages', ico: ICO.pages, couleur: 'i-violet',
+  resume: 'Réordonner et redresser', titre: 'Organiser un PDF',
+  h1: 'Réorganiser les pages d\'un PDF', actionTexte: 'Appliquer l\'ordre',
+  titreSeo: 'Réorganiser les pages d\'un PDF, gratuit et sans envoi',
+  meta: "Déplacez, inversez et faites pivoter les pages d'un PDF depuis un aperçu, dans votre navigateur. Gratuit, sans compte, sans envoi de fichier.",
+  chapo: "Remettez les pages dans le bon ordre et redressez celles qui sont de travers, en les voyant. Tout se décide dans l'aperçu, rien n'est envoyé.",
+  accept: 'application/pdf', fonction: 'organiserPages',
+  panneau: 'pages', capacites: ['ordre', 'rotation'],
+  note: "Déplacez les pages avec les flèches, faites-les pivoter d'un clic, inversez tout l'ordre d'un bouton. Les pages ne sont pas réencodées.",
+  garde: ['La qualité exacte des pages', 'Le texte sélectionnable', 'Les formats de page', 'Les rotations que vous appliquez'],
+  perdu: ['Les signets, dont les cibles ne correspondent plus', 'Les champs de formulaire remplis', 'Les signatures électroniques'],
+  contexte: "Un chargeur de scanner avale parfois les feuilles à l'envers, et un document assemblé à la hâte sort rarement dans le bon ordre. Reprendre tout le scan pour deux pages mal placées n'a pas de sens.",
+  usages: [
+    { t: 'Remettre un scan dans l\'ordre', d: "Les pages avalées à l'envers retrouvent leur place." },
+    { t: 'Redresser des pages couchées', d: "Un tableau scanné en paysage se lit enfin dans le bon sens." },
+    { t: 'Inverser un document entier', d: "Un scan effectué de la dernière à la première page se remet d'un bouton." }
+  ],
+  format: "La rotation suit la page, pas son rang : si vous faites pivoter la page 3 puis la déplacez, elle emporte sa rotation avec elle.",
+  inverse: null,
+  lies: [
+    { cle: 'pivoter', r: "Si vous voulez seulement faire pivoter tout le document, c'est plus direct." },
+    { cle: 'supprimer-pages', r: "Pour écarter les pages en trop avant de réordonner." },
+    { cle: 'fusion', r: "Pour assembler d'abord plusieurs documents, puis ranger l'ensemble." }
+  ],
+  faq: [
+    { q: 'Comment déplacer une page ?',
+      r: "Les deux flèches sous chaque vignette l'avancent ou la reculent d'un rang. Pour un grand déplacement, cliquez plusieurs fois : l'aperçu suit en direct." },
+    { q: 'La rotation est-elle réelle ou seulement visuelle ?',
+      r: "Elle est inscrite dans le fichier produit : la page s'ouvrira redressée dans n'importe quel lecteur, et s'imprimera ainsi." },
+    { q: 'Puis-je tout inverser d\'un coup ?',
+      r: "Oui, le bouton « Inverser l'ordre » retourne le document entier, ce qui règle le cas classique du scan effectué à l'envers." }
+  ]
+},
+
+'pivoter': {
+  slug: 'pivoter-pdf', carte: 'Pivoter un PDF', ico: ICO.rotation, couleur: 'i-violet',
+  resume: 'Redresser des pages couchées', titre: 'Pivoter un PDF',
+  h1: 'Pivoter les pages d\'un PDF', actionTexte: 'Appliquer la rotation',
+  titreSeo: 'Pivoter un PDF gratuitement, sans téléverser le document',
+  meta: "Faites pivoter tout un PDF ou seulement certaines pages, dans votre navigateur. La rotation est enregistrée dans le fichier. Gratuit et sans envoi.",
+  chapo: "Redressez un document numérisé de travers. La rotation est écrite dans le fichier : il s'ouvrira droit partout, et s'imprimera droit.",
+  accept: 'application/pdf', fonction: 'pivoterPdf',
+  panneau: 'pages', capacites: ['rotation'],
+  note: "Pivotez tout le document d'un bouton, ou page par page dans l'aperçu. Rien d'autre n'est touché.",
+  garde: ['La qualité exacte des pages', 'Le texte sélectionnable', 'Le poids du fichier, à l\'octet près ou presque', 'Les liens et signets'],
+  perdu: ['Rien : seule l\'orientation déclarée des pages change'],
+  contexte: "Une page couchée se lit en tournant la tête ou en pivotant l'affichage à chaque ouverture — et s'imprime de travers. Corriger l'orientation une fois règle le problème pour tous les destinataires.",
+  usages: [
+    { t: 'Redresser un scan', d: "Les feuilles avalées dans le mauvais sens se remettent droites." },
+    { t: 'Remettre un tableau d\'aplomb', d: "Une page en paysage insérée dans un document portrait se lit normalement." },
+    { t: 'Préparer une impression', d: "Un document droit à l'écran s'imprime droit." }
+  ],
+  format: "La rotation d'un PDF n'est pas un redessin : c'est une propriété de la page, lue par tous les lecteurs. L'opération est donc instantanée et strictement sans perte.",
+  inverse: null,
+  lies: [
+    { cle: 'organiser', r: "Pour pivoter et réordonner dans le même mouvement." },
+    { cle: 'rogner', r: "Pour aussi retirer des marges parasites après un scan." },
+    { cle: 'compresser', r: "Si le scan redressé reste trop lourd à envoyer." }
+  ],
+  faq: [
+    { q: 'La rotation est-elle définitive ?',
+      r: "Elle est inscrite dans le fichier produit, donc visible partout. Vous pouvez naturellement repasser l'outil pour revenir en arrière." },
+    { q: 'Puis-je ne pivoter qu\'une page ?',
+      r: "Oui : chaque vignette de l'aperçu a son propre bouton de rotation. Les boutons du haut agissent, eux, sur tout le document." },
+    { q: 'Le fichier s\'alourdit-il ?',
+      r: "Non. Aucune page n'est redessinée : seule une propriété d'orientation change." }
+  ]
+},
+
+'rogner': {
+  slug: 'rogner-pdf', carte: 'Rogner un PDF', ico: ICO.rogner, couleur: 'i-ambre',
+  resume: 'Couper les marges inutiles', titre: 'Rogner un PDF',
+  h1: 'Rogner les marges d\'un PDF', actionTexte: 'Rogner',
+  titreSeo: 'Rogner un PDF gratuitement, sans téléverser le fichier',
+  meta: "Coupez les marges d'un PDF en faisant glisser les bords sur un aperçu, directement dans votre navigateur. Gratuit, sans compte, sans envoi.",
+  chapo: "Supprimez les marges noires d'un scan ou recentrez une page mal cadrée. Vous voyez ce que vous coupez avant de valider.",
+  accept: 'application/pdf', fonction: 'rognerPdf',
+  panneau: 'rogner',
+  note: "Faites glisser les quatre bords sur l'aperçu. Le cadrage choisi s'applique à toutes les pages du document.",
+  garde: ['Le contenu à l\'intérieur du cadre, sans aucune perte', 'Le texte sélectionnable',
+          'La définition des images', 'Le poids du fichier, quasi inchangé'],
+  perdu: ['Ce qui dépasse du cadre n\'est plus affiché', 'Le même cadrage s\'applique à toutes les pages'],
+  contexte: "Un document photographié ou scanné embarque souvent une bordure noire, un bout de table ou une marge démesurée. À l'impression, cela gâche la page ; à l'écran, cela réduit la zone utile.",
+  usages: [
+    { t: 'Enlever une bordure de scan', d: "Le liseré noir autour de la feuille disparaît." },
+    { t: 'Recadrer une photo de document', d: "Une page photographiée au téléphone retrouve des bords nets." },
+    { t: 'Gagner de la place à l\'impression', d: "Des marges réduites laissent le texte plus grand." }
+  ],
+  format: "Le rognage modifie la zone affichée de la page, pas son contenu. Techniquement, ce qui dépasse reste dans le fichier mais n'est plus montré : pour effacer vraiment, réimprimez ensuite le résultat en PDF.",
+  inverse: null,
+  lies: [
+    { cle: 'pivoter', r: "Un scan de travers se redresse avant d'être recadré." },
+    { cle: 'compresser', r: "Pour alléger le document une fois recadré." },
+    { cle: 'pdf-jpg', r: "Pour récupérer directement les pages recadrées en images." }
+  ],
+  faq: [
+    { q: 'Le cadrage s\'applique-t-il à toutes les pages ?',
+      r: "Oui, le même cadre est appliqué partout. C'est le cas d'usage dominant, un scan ayant les mêmes marges du début à la fin." },
+    { q: 'Le contenu coupé est-il supprimé du fichier ?',
+      r: "Non : il est seulement masqué par la nouvelle zone d'affichage. Si l'objectif est d'effacer une information, réimprimez le résultat en PDF après rognage." },
+    { q: 'Le fichier devient-il plus léger ?',
+      r: "Très peu : rien n'est réencodé. Pour alléger réellement, enchaînez avec la compression." }
+  ]
+},
+
+'numeroter': {
+  slug: 'numeroter-pdf', carte: 'Numéroter les pages', ico: ICO.numero, couleur: 'i-bleu',
+  resume: 'Ajouter une pagination', titre: 'Numéroter un PDF',
+  h1: 'Numéroter les pages d\'un PDF', actionTexte: 'Numéroter',
+  titreSeo: 'Numéroter les pages d\'un PDF, gratuit et sans envoi',
+  meta: "Ajoutez une pagination à un PDF, à la position et au format de votre choix, dans votre navigateur. Gratuit, sans compte, sans téléversement.",
+  chapo: "Posez des numéros de page sur un document qui n'en a pas. Choisissez la position, le format et le numéro de départ.",
+  accept: 'application/pdf', fonction: 'numeroterPdf',
+  options: [
+    { id: 'position', type: 'liste', label: 'Position', defaut: 'bas-centre',
+      valeurs: [['bas-centre', 'En bas, centré'], ['bas-droite', 'En bas à droite'], ['bas-gauche', 'En bas à gauche'],
+                ['haut-centre', 'En haut, centré'], ['haut-droite', 'En haut à droite'], ['haut-gauche', 'En haut à gauche']] },
+    { id: 'format', type: 'choix', label: 'Format', defaut: 'simple',
+      valeurs: [['simple', '1', 'le numéro seul'], ['sur-total', '1 / 12', 'avec le total'], ['page-n', 'Page 1', 'en toutes lettres']] },
+    { id: 'debut', type: 'nombre', label: 'Commencer à', defaut: '1', min: 1,
+      aide: 'Utile si les premières pages sont une couverture déjà numérotée à part.' },
+    { id: 'taille', type: 'nombre', label: 'Taille du texte (pt)', defaut: '11', min: 6, max: 40 }
+  ],
+  note: "Les numéros sont ajoutés par-dessus les pages existantes, sans rien réencoder. Le reste du document est intact.",
+  garde: ['Tout le contenu existant, à l\'identique', 'Le texte sélectionnable', 'Le poids du fichier, quasi inchangé'],
+  perdu: ['Rien : seule une ligne de texte est ajoutée sur chaque page'],
+  contexte: "Un dossier remis à un tribunal, à un jury ou à un client se pagine. C'est aussi la seule façon de se référer à une page lors d'un échange, et de repérer une feuille égarée après impression.",
+  usages: [
+    { t: 'Préparer un dossier officiel', d: "Les pièces paginées se citent et se vérifient." },
+    { t: 'Paginer un document assemblé', d: "Après une fusion, la numérotation d'origine ne vaut plus rien." },
+    { t: 'Faciliter la relecture', d: "Un relecteur peut renvoyer à « la page 14 » sans ambiguïté." }
+  ],
+  format: "Le numéro est écrit dans une police standard du PDF, en gris foncé, à quelques millimètres du bord. Il se superpose au contenu : si vos pages ont déjà un pied de page chargé, choisissez une position libre.",
+  inverse: null,
+  lies: [
+    { cle: 'fusion', r: "Numéroter après une fusion est le réflexe qui donne un dossier propre." },
+    { cle: 'filigrane', r: "Pour aussi marquer chaque page d'une mention." },
+    { cle: 'organiser', r: "Mettez les pages dans l'ordre avant de les numéroter." }
+  ],
+  faq: [
+    { q: 'Puis-je commencer à un autre numéro que 1 ?',
+      r: "Oui. Le champ « Commencer à » décale toute la numérotation, ce qui sert quand une couverture ou un sommaire se compte à part." },
+    { q: 'Et si mes pages ont déjà un pied de page ?',
+      r: "Choisissez une autre position parmi les six proposées : le numéro se superpose au contenu, il ne le repousse pas." },
+    { q: 'La numérotation est-elle du vrai texte ?',
+      r: "Oui, c'est du texte sélectionnable et cherchable, pas une image." }
+  ]
+},
+
+'filigrane': {
+  slug: 'filigrane-pdf', carte: 'Ajouter un filigrane', ico: ICO.filigrane, couleur: 'i-ambre',
+  resume: 'Marquer chaque page', titre: 'Filigrane sur un PDF',
+  h1: 'Ajouter un filigrane à un PDF', actionTexte: 'Appliquer le filigrane',
+  titreSeo: 'Ajouter un filigrane à un PDF gratuitement, sans téléversement',
+  meta: "Apposez une mention en filigrane sur toutes les pages d'un PDF, dans votre navigateur. Texte, couleur et intensité au choix. Gratuit et sans envoi.",
+  chapo: "Marquez un document d'un « CONFIDENTIEL », d'un « BROUILLON » ou du nom de son destinataire, sur toutes les pages à la fois.",
+  accept: 'application/pdf', fonction: 'filigranePdf',
+  options: [
+    { id: 'texte', type: 'texte', label: 'Texte du filigrane', defaut: 'CONFIDENTIEL', exemple: 'CONFIDENTIEL' },
+    { id: 'couleur', type: 'choix', label: 'Couleur', defaut: 'gris',
+      valeurs: [['gris', 'Gris', 'discret'], ['rouge', 'Rouge', 'alerte'], ['bleu', 'Bleu', 'mention']] },
+    { id: 'angle', type: 'choix', label: 'Inclinaison', defaut: 'oblique',
+      valeurs: [['oblique', 'En diagonale', 'classique'], ['droit', 'Horizontal', 'discret']] },
+    { id: 'opacite', type: 'nombre', label: 'Intensité (%)', defaut: '12', min: 3, max: 60,
+      aide: 'Au-delà de 25 %, le filigrane gêne la lecture du document.' },
+    { id: 'taille', type: 'nombre', label: 'Taille (pt)', defaut: '54', min: 10, max: 160 }
+  ],
+  note: "Le filigrane est posé au centre de chaque page, par-dessus le contenu existant, sans rien réencoder.",
+  garde: ['Tout le contenu existant, à l\'identique', 'Le texte sélectionnable', 'Le poids du fichier, quasi inchangé'],
+  perdu: ['Rien : le filigrane s\'ajoute, il ne remplace pas'],
+  contexte: "Un document qui circule finit par être confondu avec sa version définitive, ou diffusé plus loin que prévu. Une mention en travers de chaque page lève l'ambiguïté immédiatement, y compris sur une impression ou une photo d'écran.",
+  usages: [
+    { t: 'Marquer un brouillon', d: "Personne ne confond une version de travail avec la version signée." },
+    { t: 'Signaler un document confidentiel', d: "La mention suit le document, même imprimé." },
+    { t: 'Personnaliser une copie', d: "Le nom du destinataire sur chaque page dissuade la rediffusion." }
+  ],
+  format: "Le filigrane est du texte, pas une image : il reste net à tous les niveaux de zoom et n'alourdit pratiquement pas le fichier. Il est posé par-dessus le contenu, donc visible à l'impression.",
+  inverse: null,
+  lies: [
+    { cle: 'numeroter', r: "Pagination et filigrane vont souvent ensemble sur un dossier officiel." },
+    { cle: 'metadonnees', r: "Marquer la page ne sert à rien si le fichier révèle encore son auteur." },
+    { cle: 'compresser', r: "Si le document marqué doit ensuite être envoyé par courriel." }
+  ],
+  faq: [
+    { q: 'Le filigrane peut-il être retiré ?',
+      r: "Pas facilement : il fait partie du contenu de la page. Ce n'est pas une protection cryptographique pour autant — c'est une mention visible, pas un verrou." },
+    { q: 'Quelle intensité choisir ?',
+      r: "Autour de 10 à 15 % le filigrane se voit sans gêner la lecture. Au-delà de 25 %, le texte du document devient pénible à lire." },
+    { q: 'Puis-je mettre mon logo ?',
+      r: "Cet outil pose du texte. Pour une image, passez par l'éditeur, qui permet d'ajouter un élément à l'endroit de votre choix." }
+  ]
+},
+
+'metadonnees': {
+  slug: 'supprimer-metadonnees-pdf', carte: 'Nettoyer les métadonnées', ico: ICO.etiquette, couleur: 'i-rouge',
+  resume: 'Ce que votre fichier raconte sur vous', titre: 'Métadonnées d\'un PDF',
+  h1: 'Supprimer les métadonnées d\'un PDF', actionTexte: 'Nettoyer le fichier',
+  titreSeo: 'Supprimer les métadonnées d\'un PDF gratuitement et sans envoi',
+  meta: "Voyez ce que votre PDF révèle — auteur, logiciel, dates — et effacez-le, dans votre navigateur. Gratuit, sans compte, sans téléversement.",
+  chapo: "Un PDF transporte souvent le nom de son auteur, celui de son logiciel et ses dates de création. L'outil vous montre d'abord ce que le vôtre révèle, puis l'efface.",
+  accept: 'application/pdf', fonction: 'nettoyerMetadonnees',
+  panneau: 'metadonnees',
+  note: "Titre, auteur, sujet, mots-clés, logiciel et dates sont vidés. Le contenu des pages n'est pas touché.",
+  garde: ['Tout le contenu des pages, à l\'identique', 'Le texte sélectionnable', 'La qualité des images'],
+  perdu: ['Le nom de l\'auteur et du logiciel', 'Les dates de création et de modification',
+          'Le titre, le sujet et les mots-clés', 'Attention : le texte à l\'intérieur des pages n\'est pas concerné'],
+  contexte: "Un CV exporté depuis un traitement de texte porte généralement le nom du compte de l'ordinateur. Un devis révèle le logiciel de facturation. Ces informations voyagent avec le fichier sans que personne ne les regarde — jusqu'au jour où quelqu'un les regarde.",
+  usages: [
+    { t: 'Envoyer un CV', d: "Le nom du poste de travail ou d'un ancien employeur n'accompagne plus le fichier." },
+    { t: 'Transmettre un document d\'entreprise', d: "Le logiciel interne et l'auteur réel restent chez vous." },
+    { t: 'Publier un document', d: "Un fichier mis en ligne ne révèle plus sa chaîne de production." }
+  ],
+  format: "Les métadonnées sont des champs du fichier, distincts du contenu des pages. Les effacer ne modifie rien de ce qui est écrit : si une information sensible figure dans le texte, c'est l'éditeur qu'il faut utiliser.",
+  inverse: null,
+  lies: [
+    { cle: 'filigrane', r: "Nettoyer le fichier et marquer les pages sont deux gestes complémentaires." },
+    { cle: 'compresser', r: "Le rematriçage efface aussi au passage la couche de texte, donc davantage d'indices." },
+    { cle: 'supprimer-pages', r: "Pour retirer réellement une page sensible plutôt que la masquer." }
+  ],
+  faq: [
+    { q: 'Qu\'est-ce qui est réellement effacé ?',
+      r: "Le titre, l'auteur, le sujet, les mots-clés, le nom du logiciel producteur et les dates de création et de modification. Ce sont les champs qu'un lecteur de PDF affiche dans les propriétés du document." },
+    { q: 'Mes données personnelles dans le texte disparaissent-elles ?',
+      r: "Non, et c'est important : seules les métadonnées du fichier sont vidées. Pour retirer une information écrite dans une page, utilisez l'éditeur puis réimprimez le résultat en PDF." },
+    { q: 'Le document reste-t-il lisible partout ?',
+      r: "Oui. Ces champs sont informatifs : aucun lecteur n'en a besoin pour ouvrir le fichier." }
+  ]
+},
+
+'deverrouiller': {
+  slug: 'deverrouiller-pdf', carte: 'Déverrouiller un PDF', ico: ICO.cadenas, couleur: 'i-rouge',
+  resume: 'Retirer une protection connue', titre: 'Déverrouiller un PDF',
+  h1: 'Déverrouiller un PDF protégé', actionTexte: 'Déverrouiller',
+  titreSeo: 'Déverrouiller un PDF gratuitement, sans téléverser le document',
+  meta: "Retirez la protection d'un PDF dont vous connaissez le mot de passe, dans votre navigateur. Aucun fichier envoyé, aucun compte, gratuit.",
+  chapo: "Produisez une copie sans protection d'un document que vous avez le droit d'ouvrir. Le mot de passe que vous saisissez ne quitte pas votre navigateur.",
+  accept: 'application/pdf', fonction: 'deverrouillerPdf',
+  options: [{ id: 'motdepasse', type: 'motdepasse', label: 'Mot de passe du document', exemple: 'laissez vide si le document s\'ouvre sans',
+    aide: 'Il reste dans votre navigateur : la page ne communique avec aucun serveur.' }],
+  note: "Les pages sont redessinées sans la protection : le document s'ouvre et s'imprime librement, mais son texte devient de l'image.",
+  garde: ['L\'apparence exacte de chaque page', 'Le format et le nombre de pages', 'Les couleurs et la définition'],
+  perdu: ['Le texte sélectionnable et la recherche', 'Les liens cliquables et les signets', 'Les champs de formulaire'],
+  contexte: "Un relevé bancaire ou une facture d'opérateur arrive souvent protégé par un mot de passe, voire bridé à l'impression. Quand il faut le joindre à un dossier, la protection devient un obstacle alors que vous avez parfaitement le droit d'accéder au contenu.",
+  usages: [
+    { t: 'Joindre un relevé à un dossier', d: "Le document s'ouvre sans demander de mot de passe au destinataire légitime." },
+    { t: 'Imprimer un document bridé', d: "Une restriction d'impression ne bloque plus une copie que vous détenez." },
+    { t: 'Archiver sans dépendre d\'un mot de passe', d: "Le document reste lisible dans dix ans." }
+  ],
+  format: "pdf.js sait déchiffrer un document, mais pas le réécrire déchiffré : l'outil redessine donc chaque page. C'est la limite honnête d'une déprotection sans serveur, et la raison pour laquelle le texte devient de l'image.",
+  inverse: null,
+  lies: [
+    { cle: 'ocr', r: "Pour retrouver du texte exploitable après la déprotection." },
+    { cle: 'compresser', r: "Le résultat étant matricé, la compression s'applique bien." },
+    { cle: 'metadonnees', r: "Pour aussi nettoyer ce que le fichier révèle." }
+  ],
+  faq: [
+    { q: 'Cet outil casse-t-il les mots de passe ?',
+      r: "Non, et ce n'est pas son objet. Il retire la protection d'un document que vous pouvez déjà ouvrir, en saisissant le mot de passe si le document en demande un. Aucune tentative de déchiffrement n'est faite." },
+    { q: 'Mon mot de passe est-il transmis quelque part ?',
+      r: "Non. Il est utilisé par le lecteur PDF de votre navigateur, dans l'onglet. La page ne communique avec aucun serveur, vous pouvez même couper votre connexion." },
+    { q: 'Pourquoi le texte n\'est-il plus sélectionnable ?',
+      r: "Parce qu'un PDF déchiffré ne peut pas être réécrit tel quel depuis un navigateur. Les pages sont redessinées à partir de leur rendu, ce qui préserve l'apparence mais transforme le texte en image." }
+  ]
+},
+
+'signer': {
+  slug: 'signer-pdf', carte: 'Signer un PDF', ico: ICO.stylo, couleur: 'i-vert',
+  resume: 'Dessiner et apposer sa signature', titre: 'Signer un PDF',
+  h1: 'Signer un PDF à la main', actionTexte: 'Apposer la signature',
+  titreSeo: 'Signer un PDF gratuitement, sans téléverser le document',
+  meta: "Dessinez votre signature et apposez-la sur un PDF, entièrement dans votre navigateur. Ni compte, ni envoi du document, ni filigrane.",
+  chapo: "Tracez votre signature à la souris ou au doigt, choisissez la page, et récupérez le document signé. Ni le contrat ni la signature ne quittent votre ordinateur.",
+  accept: 'application/pdf', fonction: 'signerPdf',
+  panneau: 'signature',
+  options: [
+    { id: 'page', type: 'nombre', label: 'Page à signer', defaut: '', min: 1,
+      aide: 'Laissez vide pour signer la dernière page, ce qui est le cas le plus courant.' },
+    { id: 'largeur', type: 'liste', label: 'Taille de la signature', defaut: '0.26',
+      valeurs: [['0.18', 'Discrète'], ['0.26', 'Normale'], ['0.36', 'Large']] },
+    { id: 'x', type: 'liste', label: 'Position horizontale', defaut: '0.62',
+      valeurs: [['0.08', 'À gauche'], ['0.37', 'Au centre'], ['0.62', 'À droite']] },
+    { id: 'y', type: 'liste', label: 'Position verticale', defaut: '0.1',
+      valeurs: [['0.1', 'En bas'], ['0.45', 'Au milieu'], ['0.8', 'En haut']] }
+  ],
+  note: "La signature est dessinée dans le navigateur, transformée en image et posée sur la page choisie. Le reste du document n'est pas réencodé.",
+  garde: ['Tout le contenu existant, à l\'identique', 'Le texte sélectionnable', 'La qualité des pages'],
+  perdu: ['Rien : la signature est simplement ajoutée par-dessus'],
+  contexte: "Imprimer, signer, scanner, renvoyer : la boucle classique coûte dix minutes, une imprimante et une qualité dégradée. Signer directement le fichier évite les trois.",
+  usages: [
+    { t: 'Retourner un contrat', d: "Le document part signé sans passer par l'imprimante." },
+    { t: 'Valider un devis', d: "Un bon pour accord se pose en quelques secondes." },
+    { t: 'Signer un formulaire administratif', d: "Le fichier reçu repart signé, dans la même qualité." }
+  ],
+  format: "Il s'agit d'une signature manuscrite apposée visuellement, comme un paraphe sur papier. Ce n'est pas une signature électronique qualifiée : celle-ci suppose un certificat délivré par un tiers de confiance et une infrastructure dédiée.",
+  inverse: null,
+  lies: [
+    { cle: 'fusion', r: "Pour joindre le contrat signé à vos pièces justificatives." },
+    { cle: 'numeroter', r: "Un dossier contractuel se pagine avant d'être transmis." },
+    { cle: 'compresser', r: "Si le document signé doit tenir dans une pièce jointe." }
+  ],
+  faq: [
+    { q: 'Cette signature a-t-elle une valeur juridique ?',
+      r: "C'est l'équivalent numérique d'un paraphe manuscrit : largement accepté dans les échanges commerciaux courants, au même titre qu'un contrat scanné. Une signature électronique qualifiée au sens du règlement eIDAS est autre chose et suppose un prestataire certifié." },
+    { q: 'Ma signature est-elle enregistrée quelque part ?',
+      r: "Non. Elle est dessinée dans l'onglet, posée sur le document, puis disparaît quand vous fermez la page. Rien n'est transmis ni conservé." },
+    { q: 'Puis-je signer ailleurs que sur la dernière page ?',
+      r: "Oui : indiquez le numéro de la page voulue, et réglez la position avec les trois listes prévues." }
+  ]
+},
+
+'ocr': {
+  slug: 'ocr-pdf', carte: 'PDF scanné en texte', ico: ICO.loupe, couleur: 'i-violet',
+  resume: 'Reconnaissance de caractères', titre: 'OCR d\'un PDF',
+  h1: 'Extraire le texte d\'un PDF scanné', actionTexte: 'Reconnaître le texte',
+  titreSeo: 'OCR d\'un PDF scanné gratuitement, sans envoyer le document',
+  meta: "Reconnaissez le texte d'un PDF scanné dans votre navigateur et récupérez-le en .txt ou en Word. Gratuit, en français, sans téléversement.",
+  chapo: "Un document scanné n'est qu'une image : on ne peut ni le chercher, ni le copier. La reconnaissance de caractères le retranscrit en texte, ici sur votre machine, en français.",
+  accept: 'application/pdf', fonction: 'ocrVersTexte',
+  tesseract: true,
+  options: [{ id: 'sortie', type: 'choix', label: 'Format de sortie', defaut: 'txt',
+    valeurs: [['txt', 'Texte brut', 'fichier .txt'], ['docx', 'Document Word', 'fichier .docx']] }],
+  note: "La reconnaissance est en français et tourne entièrement dans votre navigateur. Comptez quelques secondes par page.",
+  garde: ['Le texte de chaque page, dans l\'ordre de lecture', 'Les accents et la ponctuation française',
+          'La séparation entre les pages', 'Les paragraphes, approximativement'],
+  perdu: ['La mise en page, les colonnes et les tableaux', 'Les images et les logos',
+          'Les polices et la mise en forme', 'Une part d\'exactitude sur un scan de mauvaise qualité'],
+  contexte: "La plupart des documents reçus par courrier et numérisés sont illisibles pour un ordinateur : rien n'y est cherchable. C'est précisément cette reconnaissance que les services en ligne réservent à leurs formules payantes, parce qu'elle leur coûte du temps de serveur.",
+  usages: [
+    { t: 'Retrouver une information dans un scan', d: "Le texte extrait se cherche au clavier, contrairement à l'image." },
+    { t: 'Reprendre un courrier reçu', d: "Un document papier numérisé redevient du texte à citer ou à corriger." },
+    { t: 'Archiver de façon exploitable', d: "Des années de courrier deviennent un corpus consultable." }
+  ],
+  format: "Le moteur est Tesseract, compilé pour le navigateur, avec les données de langue française embarquées. La qualité dépend surtout du scan : un document net et droit donne un excellent résultat, une photo de travers beaucoup moins.",
+  inverse: null,
+  lies: [
+    { cle: 'pdf-word', r: "Si votre PDF contient déjà du texte, la conversion directe sera parfaite." },
+    { cle: 'pivoter', r: "Redresser un scan de travers améliore nettement la reconnaissance." },
+    { cle: 'compresser', r: "Les scans sont lourds : la compression les rend transmissibles." }
+  ],
+  faq: [
+    { q: 'Comment savoir si mon PDF est un scan ?',
+      r: "Essayez de sélectionner une ligne avec la souris dans votre lecteur. Si rien ne se sélectionne, c'est une image : cet outil est fait pour ça." },
+    { q: 'La reconnaissance gère-t-elle les accents ?',
+      r: "Oui, le modèle est spécifiquement français : accents, cédilles et ponctuation française sont pris en charge." },
+    { q: 'Et si je veux corriger directement dans le PDF ?',
+      r: "Ouvrez-le plutôt dans l'éditeur : la reconnaissance s'y lance automatiquement et chaque ligne reconnue devient modifiable à sa place, dans le document." }
+  ]
+}
+};
+Object.assign(OUTILS, OUTILS2);
+
 const GROUPES = [
-  { titre: 'Convertir un PDF', cles: ['pdf-word', 'pdf-excel', 'pdf-ppt', 'pdf-jpg', 'pdf-png'] },
-  { titre: 'Créer un PDF',     cles: ['word-pdf', 'excel-pdf', 'ppt-pdf', 'jpg-pdf', 'png-pdf'] }
+  { titre: 'Convertir un PDF', cles: ['pdf-word', 'pdf-excel', 'pdf-ppt', 'pdf-jpg', 'pdf-png', 'ocr'] },
+  { titre: 'Créer un PDF',     cles: ['word-pdf', 'excel-pdf', 'ppt-pdf', 'jpg-pdf', 'png-pdf'] },
+  { titre: 'Travailler le PDF', cles: ['compresser', 'diviser', 'extraire-pages', 'supprimer-pages',
+                                       'organiser', 'pivoter', 'rogner', 'numeroter', 'filigrane',
+                                       'signer', 'deverrouiller', 'metadonnees'] }
 ];
 
 const DATA = { OUTILS, GROUPES, ICO, ETAPES_UN, SITE: 'https://editeur-pdf.netlify.app' };

@@ -12,14 +12,23 @@
 <meta property="og:title" content="Corriger le texte d'un PDF gratuitement, sans téléversement">
 <meta property="og:description" content="Cliquez sur une ligne, réécrivez-la, enregistrez. Même sur un document scanné. Gratuit, sans compte, et votre fichier ne quitte pas votre ordinateur.">
 <meta property="og:url" content="https://editeur-pdf.netlify.app/">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://editeur-pdf.netlify.app/apercu-editeur.png">
+<meta property="og:image:width" content="1360">
+<meta property="og:image:height" content="850">
+<meta property="og:image:alt" content="L'éditeur PDF ouvert sur une facture, une ligne en cours de correction">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://editeur-pdf.netlify.app/apercu-editeur.png">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[
-{"@type":"WebApplication","name":"Éditeur PDF","url":"https://editeur-pdf.netlify.app/","applicationCategory":"UtilitiesApplication","operatingSystem":"Tout navigateur web","inLanguage":"fr","description":"Modifier le texte d'un PDF, reconnaître les documents scannés et convertir entre PDF, Word, Excel, PowerPoint, JPG et PNG, entièrement dans le navigateur.","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}},
-{"@type":"FAQPage","inLanguage":"fr","mainEntity":[
+{"@type":"Organization","@id":"https://editeur-pdf.netlify.app/#editeur","name":"Éditeur PDF","url":"https://editeur-pdf.netlify.app/","description":"Outils PDF fonctionnant entièrement dans le navigateur, sans téléversement.","logo":{"@type":"ImageObject","url":"https://editeur-pdf.netlify.app/apercu-editeur.png"},"sameAs":["https://github.com/dilmseo/editeur-pdf"]},
+{"@type":"WebSite","@id":"https://editeur-pdf.netlify.app/#site","url":"https://editeur-pdf.netlify.app/","name":"Éditeur PDF","inLanguage":"fr","publisher":{"@id":"https://editeur-pdf.netlify.app/#editeur"}},
+{"@type":"WebPage","@id":"https://editeur-pdf.netlify.app/#page","url":"https://editeur-pdf.netlify.app/","name":"Corriger le texte d'un PDF gratuitement, sans téléversement","description":"Cliquez sur une ligne, réécrivez-la, enregistrez. Même sur un document scanné. Gratuit, sans compte, et votre fichier ne quitte pas votre ordinateur.","inLanguage":"fr","isPartOf":{"@id":"https://editeur-pdf.netlify.app/#site"}},
+{"@type":"SoftwareApplication","@id":"https://editeur-pdf.netlify.app/#app","name":"Éditeur PDF","url":"https://editeur-pdf.netlify.app/","applicationCategory":"UtilitiesApplication","applicationSubCategory":"Éditeur PDF en ligne","operatingSystem":"Windows, macOS, Linux, Android, iOS","browserRequirements":"Navigateur récent avec JavaScript","softwareRequirements":"Aucune installation","isAccessibleForFree":true,"inLanguage":"fr","description":"Modifier le texte d'un PDF, reconnaître les documents scannés et convertir entre PDF, Word, Excel, PowerPoint, JPG et PNG, entièrement dans le navigateur.","featureList":["Corriger le texte déjà présent dans un PDF","Reconnaissance de caractères des documents scannés","Ajouter du texte et masquer une zone","Vingt-quatre outils de conversion et de manipulation"],"publisher":{"@id":"https://editeur-pdf.netlify.app/#editeur"},"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR","availability":"https://schema.org/InStock"}},
+{"@type":"FAQPage","@id":"https://editeur-pdf.netlify.app/#questions","inLanguage":"fr","mainEntityOfPage":{"@id":"https://editeur-pdf.netlify.app/#page"},"mainEntity":[
 {"@type":"Question","name":"Combien ça coûte ?","acceptedAnswer":{"@type":"Answer","text":"Rien, et il n'y a rien à acheter : pas de version payante, pas d'essai limité, pas de filigrane. Y compris la correction du texte existant et la reconnaissance des scans, que les services en ligne réservent presque tous à leurs formules payantes."}},
 {"@type":"Question","name":"Mon fichier est-il vraiment confidentiel ?","acceptedAnswer":{"@type":"Answer","text":"Oui. Le PDF est ouvert et modifié par votre navigateur ; aucune donnée n'est envoyée. Le site ne contient aucun code serveur : il ne pourrait pas recevoir votre fichier même s'il le voulait."}},
 {"@type":"Question","name":"Ça marche avec un document scanné ?","acceptedAnswer":{"@type":"Answer","text":"Oui. Si la page est une image, la reconnaissance de caractères se lance automatiquement à l'ouverture et transforme chaque ligne en bloc modifiable, en français, sur votre machine."}}]}
 ]}</script>
+<script type="application/ld+json" id="ld-outils"></script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%235b9cf8'/%3E%3Cpath d='M9 10h14M9 16h10M9 22h7' stroke='%2307101f' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
   :root{
@@ -218,6 +227,17 @@
   .hero .accroche{margin:22px 0 0;font-size:18.5px;line-height:1.6;color:var(--encre2);max-width:30em}
   .hero .accroche strong{color:var(--encre);font-weight:600}
 
+  /* Démonstration en une ligne : montrer le geste vaut mieux que le décrire. */
+  .demo{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:24px 0 0}
+  .demo .ligne{display:inline-flex;align-items:center;gap:10px;background:#fff;
+    border:1px solid var(--trait);border-radius:10px;padding:10px 15px;font-size:15px;
+    color:var(--encre2);box-shadow:0 2px 8px rgba(20,26,36,.05)}
+  .demo s{color:#A9A294;text-decoration-color:var(--rouge);text-decoration-thickness:2px}
+  .demo .neuve{border-color:#B9CEF7;background:var(--bleu-clair);color:var(--encre)}
+  .demo .neuve b{color:var(--bleu);font-weight:700}
+  .demo .fleche-demo svg{width:34px;height:12px;stroke:#B3ACA0;fill:none;stroke-width:1.6;
+    stroke-linecap:round;stroke-linejoin:round}
+
   .depot{display:block;margin-top:30px;border:2px dashed #C6BFAF;border-radius:16px;
     background:#fff;padding:22px 24px;cursor:pointer;display:flex;align-items:center;gap:18px;
     transition:border-color .18s,box-shadow .18s,transform .18s}
@@ -269,10 +289,17 @@
   .i-rouge{background:#FBEAE6} .i-rouge svg{stroke:var(--rouge)}
 
   /* outils : deux colonnes nommées, pas une grille uniforme */
-  .outils-grille{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:8px}
+  .outils-grille{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:8px;
+    align-items:start}
   .colonne{background:#fff;border:1px solid var(--trait);border-radius:18px;padding:8px 8px 14px}
-  .colonne > h3{margin:16px 16px 10px;font-size:12.5px;letter-spacing:.12em;
-    text-transform:uppercase;color:#8A8577}
+  /* Un groupe trop fourni pour une colonne prend toute la largeur et répartit ses
+     outils, au lieu de laisser la moitié droite vide. */
+  .colonne.large{grid-column:1 / -1}
+  .colonne.large .rangee{display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:2px}
+  .colonne > h3{margin:16px 16px 12px;font-size:12.5px;letter-spacing:.12em;
+    text-transform:uppercase;color:#8A8577;display:flex;align-items:baseline;gap:9px}
+  .colonne > h3 em{font-style:normal;letter-spacing:0;text-transform:none;font-size:12.5px;
+    color:#B3ACA0;font-weight:400}
   #home .outil{display:flex;align-items:center;gap:13px;padding:12px 14px;border-radius:12px;color:var(--encre)}
   /* Préfixés par #home : sans l'id, « #home a:hover » l'emporterait et viendrait
      souligner les deux lignes de la carte au survol. */
@@ -334,30 +361,69 @@
   .final .sous{margin-top:12px;font-size:14px;color:var(--encre2)}
 
   /* ---- pied de page ---- */
-  .pied{background:var(--encre);color:#99A3B3;padding:56px 0 0;font-size:14.5px}
-  #home .pied a{color:#C6CEDA}
-  #home .pied a:hover{color:#fff}
-  .pied .cols{max-width:1120px;margin:0 auto;padding:0 28px;display:grid;
-    grid-template-columns:1.6fr 1fr 1fr 1fr;gap:34px}
-  #home .pied .marque{color:#fff;margin-bottom:14px}
+  .pied{position:relative;background:var(--encre);color:#97A2B2;font-size:14.5px;
+        border-top:3px solid var(--rouge)}
+  /* La même trame de lignes de texte que le hero, en négatif : le document
+     encadre la page du début à la fin. */
+  .pied::before{content:'';position:absolute;inset:0;pointer-events:none;
+    background:repeating-linear-gradient(to bottom,rgba(255,255,255,.03) 0 1px,transparent 1px 28px);
+    mask-image:linear-gradient(to bottom,#000,transparent 55%)}
+  .pied > *{position:relative}
+
+  .rappel{max-width:1120px;margin:0 auto;padding:36px 28px;display:flex;align-items:center;
+    gap:24px;flex-wrap:wrap;border-bottom:1px solid #212935}
+  .rappel .mot{font-family:'Instrument Serif',Georgia,serif;font-size:clamp(1.5rem,2.6vw,2.05rem);
+    color:#fff;line-height:1.15;letter-spacing:-.01em;margin:0}
+  .rappel .mot span{color:#8FB2FF}
+  #home .rappel .bouton{margin-left:auto;background:#fff;color:var(--encre);border-radius:11px;
+    padding:14px 26px;font-weight:700;font-size:15.5px;white-space:nowrap}
+  #home .rappel .bouton:hover{background:#8FB2FF}
+
+  /* La colonne « Travailler le PDF » compte douze liens : sur une seule file elle
+     doublerait la hauteur du pied de page, donc elle est large et sur deux files. */
+  .pied .cols{max-width:1120px;margin:0 auto;padding:46px 28px 10px;display:grid;
+    grid-template-columns:1.5fr .85fr .85fr 1.7fr .85fr;gap:36px 30px}
+  .pied .cols .double ul{grid-template-columns:1fr 1fr;gap:10px 22px}
+  #home .pied .marque{color:#fff;margin-bottom:16px;font-size:16px}
   .pied .marque .glyphe{background:#fff}
   .pied .marque .glyphe svg{stroke:var(--encre)}
   .pied .marque .glyphe::after{border-color:var(--encre)}
-  .pied .pitch{max-width:30em;line-height:1.6;margin:0 0 18px}
-  .pied h4{margin:0 0 14px;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:#6E7A8B}
-  .pied ul{margin:0;padding:0;list-style:none;display:grid;gap:9px}
-  #home .pied .etoiles{display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.06);
-    border:1px solid #2A3240;border-radius:10px;padding:10px 15px;color:#E7ECF3;font-weight:600}
-  .pied .etoiles svg{width:15px;height:15px;fill:#E8B64C;stroke:none}
-  .pied .bas{max-width:1120px;margin:40px auto 0;padding:20px 28px 28px;border-top:1px solid #222A36;
-    display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;font-size:13.5px;color:#6E7A8B}
+  .pied .pitch{max-width:27em;line-height:1.65;margin:0 0 18px;color:#8C97A8}
+  .sceau{display:flex;align-items:flex-start;gap:11px;background:rgba(49,178,114,.08);
+    border:1px solid rgba(49,178,114,.26);border-radius:12px;padding:13px 15px;max-width:27em;
+    font-size:13.5px;color:#A4C4B4;line-height:1.5}
+  .sceau svg{width:17px;height:17px;flex:0 0 auto;margin-top:2px;stroke:#35C286;fill:none;
+    stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .sceau b{color:#6FDCAA;display:block}
+  .pied h4{margin:0 0 15px;font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:#657284}
+  .pied ul{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+  #home .pied a{color:#B9C2CF}
+  #home .pied a:hover{color:#fff}
+  #home .pied ul a{position:relative;display:inline-block;transition:transform .16s,color .16s}
+  #home .pied ul a:hover{transform:translateX(7px)}
+  #home .pied ul a::before{content:'›';position:absolute;left:-11px;opacity:0;color:var(--rouge);
+    transition:opacity .16s}
+  #home .pied ul a:hover::before{opacity:1}
+  #home .pied .etoiles{display:inline-flex;align-items:center;gap:4px;margin-top:16px;
+    background:rgba(255,255,255,.055);border:1px solid #2A3240;border-radius:11px;
+    padding:11px 16px;color:#E7ECF3;font-weight:650;white-space:nowrap}
+  #home .pied .etoiles:hover{border-color:#3C4A5C;background:rgba(255,255,255,.09);color:#fff}
+  .pied .etoiles svg{width:14px;height:14px;fill:#E8B64C;stroke:none}
+  .pied .etoiles em{font-style:normal;margin-left:9px}
+  .pied .bas{max-width:1120px;margin:30px auto 0;padding:20px 28px 30px;border-top:1px solid #212935;
+    display:flex;flex-wrap:wrap;gap:10px 26px;align-items:center;font-size:13.5px;color:#64707F}
   #home .pied .bas a{color:#8794A6}
+  .pied .bas .fin{margin-left:auto;display:inline-flex;align-items:center;gap:8px}
+  .pied .bas .fin svg{width:15px;height:15px;stroke:#4E5B6B;fill:none;stroke-width:2.2;
+    stroke-linecap:round;stroke-linejoin:round}
 
   @media (max-width:960px){
     .hero .in{grid-template-columns:1fr;gap:38px;padding-top:40px}
     .fenetre{transform:none}
     .fonctions,.outils-grille,.phares,.face{grid-template-columns:1fr}
+    .colonne.large .rangee{grid-template-columns:1fr}
     .pied .cols{grid-template-columns:1fr 1fr}
+    .pied .cols > div:first-child{grid-column:1 / -1}
     .hnav nav a:not(.cta-nav){display:none}
   }
   @media (max-width:560px){
@@ -398,6 +464,13 @@
         <p class="accroche">Pas une annotation collée par-dessus : vous cliquez sur une ligne du
           document, vous la réécrivez, vous enregistrez. <strong>Même sur un scan.</strong>
           C'est la fonction que les autres services font payer.</p>
+
+        <p class="demo" aria-label="Exemple : un montant corrigé dans une facture">
+          <span class="ligne">Total TTC <s>1 240,00 €</s></span>
+          <span class="fleche-demo" aria-hidden="true">
+            <svg viewBox="0 0 40 12"><path d="M1 6h34m0 0-5-4m5 4-5 4"/></svg></span>
+          <span class="ligne neuve">Total TTC <b>1 540,00 €</b></span>
+        </p>
 
         <label class="depot" id="dropcard" for="file">
           <span class="ic"><svg viewBox="0 0 24 24"><path d="M12 16V4m0 0 4 4m-4-4L8 8"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></span>
@@ -585,6 +658,10 @@
   </section>
 
   <footer class="pied">
+    <div class="rappel">
+      <p class="mot">Un PDF à corriger ?<br><span>Il ne quittera pas votre ordinateur.</span></p>
+      <a class="bouton" href="#" id="pied-ouvrir">Ouvrir l'éditeur</a>
+    </div>
     <div class="cols">
       <div>
         <span class="marque">
@@ -592,19 +669,25 @@
           Éditeur PDF
         </span>
         <p class="pitch">Modifier, convertir et assembler des PDF sans rien téléverser.
-          Tout se passe dans votre navigateur : pas de compte, pas de file d'attente,
-          pas de fichier qui traîne sur un serveur.</p>
+          Vingt-quatre outils, pas de compte, pas de file d'attente, pas de fichier
+          qui traîne sur un serveur.</p>
+        <div class="sceau">
+          <svg viewBox="0 0 24 24"><path d="M12 3 5 6v6c0 4.2 2.9 7.9 7 9 4.1-1.1 7-4.8 7-9V6z"/><path d="m9 12 2 2 4-4"/></svg>
+          <span><b>Rien n'est téléversé</b>Tout le traitement a lieu dans votre navigateur,
+            y compris la reconnaissance des documents scannés.</span>
+        </div>
         <a class="etoiles" href="https://g.page/r/CfBfIXTvKKmwEAE/review" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg>
           <svg viewBox="0 0 24 24"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg>
           <svg viewBox="0 0 24 24"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg>
           <svg viewBox="0 0 24 24"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg>
           <svg viewBox="0 0 24 24"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg>
-          Donner mon avis
+          <em>Donner mon avis</em>
         </a>
       </div>
       <div><h4>Convertir un PDF</h4><ul id="pied-depuis"></ul></div>
       <div><h4>Créer un PDF</h4><ul id="pied-vers"></ul></div>
+      <div class="double"><h4>Travailler le PDF</h4><ul id="pied-travail"></ul></div>
       <div>
         <h4>Le projet</h4>
         <ul>
@@ -617,7 +700,11 @@
     </div>
     <div class="bas">
       <span>Construit avec pdf.js, pdf-lib, tesseract.js et fflate — tout est embarqué.</span>
-      <span style="margin-left:auto">Aucun suivi, aucun cookie, aucun compte.</span>
+      <a href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">Code source</a>
+      <span class="fin">
+        <svg viewBox="0 0 24 24"><path d="M12 3 5 6v6c0 4.2 2.9 7.9 7 9 4.1-1.1 7-4.8 7-9V6z"/></svg>
+        Aucun suivi, aucun cookie, aucun compte.
+      </span>
     </div>
   </footer>
 </div>
@@ -822,21 +909,40 @@ document.addEventListener('dragleave', e => {
     + `vous choisissez, sans perte de qualité.</span></span></a>`;
 
   g.innerHTML = GROUPES.map(gr =>
-    `<div class="colonne"><h3>${gr.titre}</h3>` + gr.cles.map(c => {
+    `<div class="colonne${gr.cles.length > 6 ? ' large' : ''}">`
+    + `<h3>${gr.titre}<em>${gr.cles.length} outils</em></h3><div class="rangee">`
+    + gr.cles.map(c => {
       const o = OUTILS[c];
       return `<a class="outil" href="/${o.slug}/"><span class="ic ${o.couleur}">${svg(o.ico)}</span>`
            + `<span><b>${o.carte}</b><span>${o.resume}</span></span>`
            + `<span class="fleche" aria-hidden="true">›</span></a>`;
-    }).join('') + '</div>').join('');
+    }).join('') + '</div></div>').join('');
 
   const liste = cles => cles.map(c =>
     `<li><a href="/${OUTILS[c].slug}/">${OUTILS[c].carte}</a></li>`).join('');
-  $('pied-depuis').innerHTML = liste(GROUPES[0].cles);
-  $('pied-vers').innerHTML   = liste(GROUPES[1].cles)
+  $('pied-depuis').innerHTML  = liste(GROUPES[0].cles);
+  $('pied-vers').innerHTML    = liste(GROUPES[1].cles)
     + `<li><a href="/${OUTILS.fusion.slug}/">Fusionner des PDF</a></li>`;
+  $('pied-travail').innerHTML = liste(GROUPES[2].cles);
+
+  // La liste des outils est injectée dans les données structurées depuis la même
+  // source que la grille : un outil ajouté au catalogue y figure sans oubli.
+  const bloc = document.getElementById('ld-outils');
+  if (bloc){
+    let n = 1;
+    const items = [{ '@type': 'ListItem', position: n++, name: "Modifier le texte d'un PDF", url: location.origin + '/' }];
+    for (const gr of GROUPES) for (const c of gr.cles)
+      items.push({ '@type': 'ListItem', position: n++, name: OUTILS[c].titre,
+                   url: location.origin + '/' + OUTILS[c].slug + '/' });
+    items.push({ '@type': 'ListItem', position: n++, name: 'Fusionner des PDF',
+                 url: location.origin + '/' + OUTILS.fusion.slug + '/' });
+    bloc.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'ItemList',
+      '@id': location.origin + '/#liste-outils', name: 'Les outils PDF',
+      numberOfItems: items.length, itemListElement: items });
+  }
 
   // Les appels à l'éditeur ouvrent le sélecteur sur place, sans recharger la page.
-  ['phare-editeur', 'nav-ouvrir', 'cta-final'].forEach(id => {
+  ['phare-editeur', 'nav-ouvrir', 'cta-final', 'pied-ouvrir'].forEach(id => {
     const e = $(id);
     if (e) e.addEventListener('click', ev => { ev.preventDefault(); $('file').click(); });
   });

@@ -10,6 +10,7 @@ const { OUTILS, GROUPES, SITE } = require('./outils-data.js');
 const RACINE = __dirname;
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
                           .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const JOUR = new Date().toISOString().slice(0, 10);
 const jsonEsc = s => JSON.stringify(String(s));
 
 const COCHE  = '<svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg>';
@@ -54,21 +55,47 @@ function page(cle){
   const url = `${SITE}/${o.slug}/`;
   const et = etapes(o);
 
+  /* Un graphe relié par @id plutôt que des blocs isolés : le moteur relie la page,
+     son fil d'ariane, l'application, le mode d'emploi et les questions à un même
+     site et à un même éditeur. */
   const jsonld = {
     '@context': 'https://schema.org',
     '@graph': [
-      { '@type': 'WebApplication', name: o.titre, url,
-        applicationCategory: 'UtilitiesApplication', operatingSystem: 'Tout navigateur web',
-        description: o.meta, inLanguage: 'fr',
-        offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' } },
-      { '@type': 'HowTo', name: o.h1, inLanguage: 'fr',
-        step: et.map((t, i) => ({ '@type': 'HowToStep', position: i + 1, text: t })) },
-      { '@type': 'FAQPage', inLanguage: 'fr',
-        mainEntity: o.faq.map(f => ({ '@type': 'Question', name: f.q,
-          acceptedAnswer: { '@type': 'Answer', text: f.r } })) },
-      { '@type': 'BreadcrumbList', itemListElement: [
+      { '@type': 'Organization', '@id': SITE + '/#editeur', name: 'Éditeur PDF', url: SITE + '/',
+        description: "Outils PDF fonctionnant entièrement dans le navigateur, sans téléversement.",
+        logo: { '@type': 'ImageObject', url: SITE + '/apercu-editeur.png' },
+        sameAs: ['https://github.com/dilmseo/editeur-pdf'] },
+      { '@type': 'WebSite', '@id': SITE + '/#site', url: SITE + '/', name: 'Éditeur PDF',
+        inLanguage: 'fr', publisher: { '@id': SITE + '/#editeur' } },
+      { '@type': 'ImageObject', '@id': url + '#image', url: SITE + '/apercu-editeur.png',
+        width: 1360, height: 850,
+        caption: "L'éditeur ouvert sur une facture, une ligne en cours de correction." },
+      { '@type': 'WebPage', '@id': url + '#page', url, name: o.titreSeo, description: o.meta,
+        inLanguage: 'fr', isPartOf: { '@id': SITE + '/#site' },
+        primaryImageOfPage: { '@id': url + '#image' },
+        breadcrumb: { '@id': url + '#fil' }, dateModified: JOUR },
+      { '@type': 'BreadcrumbList', '@id': url + '#fil', itemListElement: [
           { '@type': 'ListItem', position: 1, name: 'Accueil', item: SITE + '/' },
-          { '@type': 'ListItem', position: 2, name: o.carte, item: url } ] }
+          { '@type': 'ListItem', position: 2, name: o.carte, item: url } ] },
+      { '@type': 'SoftwareApplication', '@id': url + '#outil', name: o.titre, url,
+        description: o.meta, applicationCategory: 'UtilitiesApplication',
+        applicationSubCategory: 'Outil PDF en ligne',
+        operatingSystem: 'Windows, macOS, Linux, Android, iOS',
+        browserRequirements: 'Navigateur récent avec JavaScript',
+        softwareRequirements: 'Aucune installation', isAccessibleForFree: true,
+        inLanguage: 'fr', featureList: o.garde, publisher: { '@id': SITE + '/#editeur' },
+        offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR',
+                  availability: 'https://schema.org/InStock' } },
+      { '@type': 'HowTo', '@id': url + '#mode-emploi', name: o.h1, description: o.chapo,
+        inLanguage: 'fr', totalTime: 'PT1M', estimatedCost: { '@type': 'MonetaryAmount', currency: 'EUR', value: '0' },
+        tool: [{ '@type': 'HowToTool', name: 'Un navigateur web' }],
+        step: et.map((t, i) => ({ '@type': 'HowToStep', position: i + 1,
+          name: ['Ouvrir le fichier', 'Lancer le traitement', 'Télécharger le résultat'][i],
+          text: t, url: url + '#etape-' + (i + 1) })) },
+      { '@type': 'FAQPage', '@id': url + '#questions', inLanguage: 'fr',
+        mainEntityOfPage: { '@id': url + '#page' },
+        mainEntity: o.faq.map(f => ({ '@type': 'Question', name: f.q,
+          acceptedAnswer: { '@type': 'Answer', text: f.r } })) }
     ]
   };
 
@@ -86,7 +113,12 @@ function page(cle){
 <meta property="og:title" content="${esc(o.titreSeo)}">
 <meta property="og:description" content="${esc(o.meta)}">
 <meta property="og:url" content="${url}">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="${SITE}/apercu-editeur.png">
+<meta property="og:image:width" content="1360">
+<meta property="og:image:height" content="850">
+<meta property="og:image:alt" content="L'éditeur PDF ouvert sur une facture, une ligne en cours de correction">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="${SITE}/apercu-editeur.png">
 <link rel="icon" href="${FAVICON}">
 <link rel="stylesheet" href="/style-outil.css">
 <script type="application/ld+json">${JSON.stringify(jsonld)}</script>
@@ -115,7 +147,9 @@ function page(cle){
   </label>
   <input id="fichier" type="file" hidden>
   <ul class="liste" id="liste"></ul>
-  <button class="go" id="go" disabled>Convertir</button>
+  <div class="panneau" id="panneau" hidden></div>
+  <div class="reglages" id="reglages" hidden></div>
+  <button class="go" id="go" disabled>${esc(o.actionTexte || 'Convertir')}</button>
 
   <div class="barre" id="barre" hidden><i></i></div>
   <div class="etat" id="etat" hidden></div>
@@ -123,8 +157,9 @@ function page(cle){
 
   <div class="fini" id="fini" hidden>
     <div class="ok"><svg viewBox="0 0 24 24"><path d="m4 12.5 5.5 5.5L20 7"/></svg></div>
-    <b>Conversion terminée</b>
+    <b>C'est prêt</b>
     <div class="nom" id="fini-nom"></div>
+    <div class="note-fini" id="fini-note" hidden></div>
     <a class="dl" id="dl" download>Télécharger</a>
     <button class="encore" id="encore">Convertir un autre fichier</button>
     <a class="avis" href="https://g.page/r/CfBfIXTvKKmwEAE/review" target="_blank" rel="noopener">
@@ -208,9 +243,10 @@ function page(cle){
 
 <script src="/vendor/pdf.min.js"></script>
 <script src="/vendor/pdf-lib.min.js"></script>
-<script src="/vendor/fflate.min.js"></script>
+<script src="/vendor/fflate.min.js"></script>${o.tesseract ? '\n<script src="/vendor/tesseract.min.js"></script>' : ''}
 <script src="/outils-data.js"></script>
 <script src="/convert.js"></script>
+<script src="/pdf-outils.js"></script>
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/vendor/pdf.worker.min.js';
 window.OUTIL_COURANT = ${jsonEsc(cle)};
@@ -232,11 +268,10 @@ for (const cle of Object.keys(OUTILS)){
   n++;
 }
 
-const jour = new Date().toISOString().slice(0, 10);
 fs.writeFileSync(path.join(RACINE, 'sitemap.xml'),
   '<?xml version="1.0" encoding="UTF-8"?>\n' +
   '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
-  urls.map((u, i) => `  <url><loc>${u}</loc><lastmod>${jour}</lastmod>` +
+  urls.map((u, i) => `  <url><loc>${u}</loc><lastmod>${JOUR}</lastmod>` +
     `<priority>${i === 0 ? '1.0' : '0.8'}</priority></url>`).join('\n') +
   '\n</urlset>\n', 'utf8');
 
