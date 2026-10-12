@@ -1,6 +1,28 @@
 [build]
   publish = "."
 
+# Une seule adresse indexée. Le .fr et le www renvoient vers voilapdf.com en 301,
+# sinon la popularité se disperserait entre quatre versions du même site.
+# La redirection depuis editeur-pdf.netlify.app n'est posée qu'une fois le DNS
+# actif : l'activer avant couperait l'accès au site.
+[[redirects]]
+  from = "https://voilapdf.fr/*"
+  to = "https://voilapdf.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.voilapdf.fr/*"
+  to = "https://voilapdf.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.voilapdf.com/*"
+  to = "https://voilapdf.com/:splat"
+  status = 301
+  force = true
+
 # Tesseract décompresse lui-même les données de langue avec pako. Si le CDN
 # annonçait un Content-Encoding: gzip, le navigateur décompresserait d'abord et
 # pako recevrait du texte clair : échec. On fige donc le type en binaire opaque.
