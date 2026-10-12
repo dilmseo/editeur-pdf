@@ -1235,6 +1235,31 @@ for (const lang of LANGUES){
 fs.writeFileSync(path.join(RACINE, 'llms.txt'), court.trimEnd() + '\n', 'utf8');
 fs.writeFileSync(path.join(RACINE, 'llms-full.txt'), complet.trimEnd() + '\n', 'utf8');
 
+/* ---------------- .gitignore ----------------
+   Les pages produites ici ne sont pas versionnees : elles se regenerent d'une
+   commande et noyaient la racine du depot sous cinquante dossiers, ce qui donnait
+   a un visiteur l'impression d'un entrepot plutot que d'un projet. Le deploiement
+   lit le disque, pas le depot : il n'est pas concerne.
+   Ce fichier est engendre ici pour qu'il suive le catalogue sans intervention. */
+const dossiers = [];
+for (const lang of LANGUES){
+  const p = lang.prefixe.replace(/^\//, '');
+  if (p) { dossiers.push('/' + p + '/'); continue; }   // /en/ en entier
+  for (const cle of Object.keys(lang.outils)) dossiers.push('/' + lang.outils[cle].slug + '/');
+  dossiers.push('/' + lang.ui.contact.slug + '/');
+  for (const cle of Object.keys(lang.ui.pages)) dossiers.push('/' + lang.ui.pages[cle].slug + '/');
+}
+fs.writeFileSync(path.join(RACINE, '.gitignore'),
+  "# Engendre par build-pages.js — ne pas modifier a la main.\n"
+  + "#\n"
+  + "# Les pages ci-dessous sont produites par `node build-pages.js` a partir de\n"
+  + "# outils-data.js et de textes/. Les versionner remplirait la racine du depot\n"
+  + "# de dossiers generes sans rien apporter : une commande les reconstruit.\n"
+  + "\n.DS_Store\n*.pdf\n\n# pages d'outil et pages de texte, par langue\n"
+  + dossiers.sort().join('\n') + '\n'
+  + "\n# fichiers produits par la meme commande\n/sitemap.xml\n/sitemap2.xml\n/robots.txt\n"
+  + "/llms.txt\n/llms-full.txt\n/" + INDEXNOW + ".txt\n", 'utf8');
+
 console.log(`${n} page(s) d'outil sur ${LANGUES.length} langue(s), sitemap de ${urls.length} adresses.`);
 console.log(`llms.txt : ${Math.round(court.length / 1024)} Ko · llms-full.txt : ${Math.round(complet.length / 1024)} Ko`);
 module.exports = { LANGUES, urlDe, accueilDe, hreflangs, selecteurLangue, UI_FR, esc, LOGO, FAVICON, JOUR };

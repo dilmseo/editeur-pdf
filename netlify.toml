@@ -1,4 +1,8 @@
+# Le site est publie par l'API digest depuis le disque, sans build. Cette section
+# sert au cas ou le depot serait un jour relie directement a Netlify : les pages
+# n'etant plus versionnees, il faudrait alors les reconstruire avant publication.
 [build]
+  command = "node build-pages.js"
   publish = "."
   functions = "netlify/functions"
 
