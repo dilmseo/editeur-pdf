@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512"
+     role="img" aria-label="VoilàPDF">
+  <!-- VoilaPDF - https://voilapdf.com - GNU AGPL v3, voir LICENSE
+       Icone carree sur fond transparent : le glyphe de la barre de navigation du
+       site, agrandi. Trois lignes de texte decroissantes pour le document, et le
+       point rouge du correcteur au bout de la plus courte — c'est la correction
+       qui distingue l'outil, l'icone le dit. Tout tient dans le carre pour rester
+       lisible a 32 pixels. -->
+  <rect width="512" height="512" rx="114" fill="#141A24"/>
+  <g stroke="#FBF9F5" stroke-width="42" stroke-linecap="round" fill="none">
+    <path d="M136 184h240"/>
+    <path d="M136 268h164"/>
+    <path d="M136 352h96"/>
+  </g>
+  <circle cx="310" cy="352" r="34" fill="#CE4A32"/>
+</svg>

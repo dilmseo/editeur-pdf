@@ -16,7 +16,17 @@ const MIME = {
   '.wasm': 'application/wasm',
   '.pdf' : 'application/pdf',
   '.png' : 'image/png',
-  '.ico' : 'image/x-icon'
+  '.ico' : 'image/x-icon',
+  /* Sans ces trois-la, le navigateur recoit application/octet-stream et refuse
+     d'afficher le fichier — l'icone du site et les textes pour les moteurs de
+     reponse en faisaient les frais. */
+  '.svg' : 'image/svg+xml',
+  '.jpg' : 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.webp': 'image/webp',
+  '.woff2': 'font/woff2',
+  '.txt' : 'text/plain; charset=utf-8',
+  '.xml' : 'text/xml; charset=utf-8'
 };
 
 const server = http.createServer((req, res) => {
