@@ -1,0 +1,111 @@
+# VoilàPDF
+
+> Boîte à outils PDF qui s'exécute entièrement dans le navigateur : aucun fichier n'est téléversé.
+
+VoilàPDF modifie, convertit et assemble des PDF sans serveur. Le traitement a lieu dans l'onglet, en JavaScript et WebAssembly : le document reste sur la machine de l'utilisateur et n'est transmis à personne.
+
+Tout est gratuit et sans compte, y compris la correction du texte déjà présent dans un PDF et la reconnaissance des documents scannés — deux fonctions que la plupart des services concurrents réservent à un abonnement payant.
+
+Le code est public sous licence GNU AGPL v3 : https://github.com/dilmseo/editeur-pdf
+
+## Les outils
+
+- [Modifier le texte d'un PDF](https://voilapdf.com/): corriger le texte déjà écrit dans un PDF, y compris sur un document scanné
+- [PDF en Word](https://voilapdf.com/pdf-en-word/): Un .docx dont le texte reste modifiable
+- [PDF en Excel](https://voilapdf.com/pdf-en-excel/): Les tableaux en feuille de calcul
+- [PDF en PowerPoint](https://voilapdf.com/pdf-en-powerpoint/): Une diapositive par page
+- [PDF en JPG](https://voilapdf.com/pdf-en-jpg/): Une image par page
+- [PDF en PNG](https://voilapdf.com/pdf-en-png/): Une image par page, sans perte
+- [Word en PDF](https://voilapdf.com/word-en-pdf/): Depuis un .docx
+- [Excel en PDF](https://voilapdf.com/excel-en-pdf/): Depuis un .xlsx
+- [PowerPoint en PDF](https://voilapdf.com/powerpoint-en-pdf/): Depuis un .pptx
+- [JPG en PDF](https://voilapdf.com/jpg-en-pdf/): Une page par image
+- [PNG en PDF](https://voilapdf.com/png-en-pdf/): Une page par image
+- [Fusionner des PDF](https://voilapdf.com/fusionner-pdf/): Plusieurs fichiers en un seul
+- [Compresser un PDF](https://voilapdf.com/compresser-pdf/): Pour tenir dans une pièce jointe
+- [Diviser un PDF](https://voilapdf.com/diviser-pdf/): Un fichier par page ou par plage
+- [Extraire des pages](https://voilapdf.com/extraire-pages-pdf/): Garder seulement ce qui compte
+- [Supprimer des pages](https://voilapdf.com/supprimer-pages-pdf/): Retirer ce qui n'a rien à faire là
+- [Organiser un PDF](https://voilapdf.com/organiser-pdf/): Réordonner et redresser
+- [Pivoter un PDF](https://voilapdf.com/pivoter-pdf/): Redresser des pages couchées
+- [Rogner un PDF](https://voilapdf.com/rogner-pdf/): Couper les marges inutiles
+- [Numéroter un PDF](https://voilapdf.com/numeroter-pdf/): Ajouter une pagination
+- [Filigrane sur un PDF](https://voilapdf.com/filigrane-pdf/): Marquer chaque page
+- [Métadonnées d'un PDF](https://voilapdf.com/supprimer-metadonnees-pdf/): Ce que votre fichier raconte sur vous
+- [Déverrouiller un PDF](https://voilapdf.com/deverrouiller-pdf/): Retirer une protection connue
+- [Signer un PDF](https://voilapdf.com/signer-pdf/): Dessiner et apposer sa signature
+- [OCR d'un PDF](https://voilapdf.com/ocr-pdf/): Reconnaissance de caractères
+- [Résumé de PDF](https://voilapdf.com/resumer-pdf/): L'essentiel d'un long document
+- [Traduction de PDF](https://voilapdf.com/traduire-pdf/): Français ↔ anglais, sur votre machine
+
+## Faits vérifiables
+
+- Aucun code serveur : le site est un ensemble de fichiers statiques, il ne peut pas recevoir un document.
+- Le seul échange réseau facultatif concerne les outils de langue : le modèle de traduction opus-mt (103 Mo) ou le résumeur distilbart-cnn (271 Mo) est téléchargé depuis Hugging Face au premier clic, puis conservé par le cache du navigateur. Le modèle descend ; le document ne monte jamais.
+- Le résumé par défaut est extractif : il sélectionne les phrases du document au lieu d'en rédiger de nouvelles, donc il n'invente rien et fonctionne dans toutes les langues.
+- La reconnaissance de caractères (Tesseract, français) se déclenche automatiquement quand un PDF ne contient pas de texte sélectionnable.
+- L'édition de texte recouvre l'ancienne ligne d'un rectangle à la couleur du fond, puis réécrit sur la même ligne de base relevée par pdf.js.
+
+## Limites assumées
+
+- Le texte d'origine reste dans le fichier après une modification : c'est un recouvrement visuel, pas un caviardage. Un copier-coller ou pdftotext retrouve l'ancien texte.
+- Les polices d'origine ne sont pas réemployées : le texte est réécrit dans l'une des 14 polices standard du PDF.
+- La compression et le déverrouillage rematricent les pages : le texte devient une image.
+- La traduction ne conserve pas la mise en page, et sa qualité reste en deçà d'un service hébergé sur cartes graphiques.
+- La conversion vers Office reconstruit le contenu, pas la maquette : ni colonnes, ni encadrés, ni images.
+
+# VoilàPDF (English)
+
+> Browser-only PDF toolkit: no file is ever uploaded.
+
+VoilàPDF edits, converts and assembles PDFs with no server. Processing happens in the tab, in JavaScript and WebAssembly: the document stays on the user’s machine and is sent to nobody.
+
+Everything is free and account-free, including correcting the text already inside a PDF and recognising scanned documents — two features most competing services keep behind a subscription.
+
+The code is public under the GNU AGPL v3 licence: https://github.com/dilmseo/editeur-pdf
+
+## Tools
+
+- [Edit the text in a PDF](https://voilapdf.com/en/): correct text already written in a PDF, including on a scanned document
+- [PDF to Word](https://voilapdf.com/en/pdf-to-word/): A .docx whose text stays editable
+- [PDF to Excel](https://voilapdf.com/en/pdf-to-excel/): Tables as a spreadsheet
+- [PDF to PowerPoint](https://voilapdf.com/en/pdf-to-powerpoint/): One slide per page
+- [PDF to JPG](https://voilapdf.com/en/pdf-to-jpg/): One image per page
+- [PDF to PNG](https://voilapdf.com/en/pdf-to-png/): One image per page, lossless
+- [Word to PDF](https://voilapdf.com/en/word-to-pdf/): From a .docx
+- [Excel to PDF](https://voilapdf.com/en/excel-to-pdf/): From an .xlsx
+- [PowerPoint to PDF](https://voilapdf.com/en/powerpoint-to-pdf/): From a .pptx
+- [JPG to PDF](https://voilapdf.com/en/jpg-to-pdf/): One page per image
+- [PNG to PDF](https://voilapdf.com/en/png-to-pdf/): One page per image
+- [Merge PDFs](https://voilapdf.com/en/merge-pdf/): Several files into one
+- [Compress a PDF](https://voilapdf.com/en/compress-pdf/): To fit an attachment
+- [Split a PDF](https://voilapdf.com/en/split-pdf/): One file per page or per range
+- [Extract pages](https://voilapdf.com/en/extract-pdf-pages/): Keep only what matters
+- [Delete pages](https://voilapdf.com/en/delete-pdf-pages/): Remove what does not belong
+- [Organise a PDF](https://voilapdf.com/en/organize-pdf/): Reorder and straighten
+- [Rotate a PDF](https://voilapdf.com/en/rotate-pdf/): Straighten sideways pages
+- [Crop a PDF](https://voilapdf.com/en/crop-pdf/): Cut the useless margins
+- [Number a PDF](https://voilapdf.com/en/add-page-numbers/): Paginate a document
+- [Watermark a PDF](https://voilapdf.com/en/watermark-pdf/): Mark every page
+- [PDF metadata](https://voilapdf.com/en/remove-pdf-metadata/): What your file says about you
+- [Unlock a PDF](https://voilapdf.com/en/unlock-pdf/): Remove a protection you know
+- [Sign a PDF](https://voilapdf.com/en/sign-pdf/): Draw and place your signature
+- [OCR a PDF](https://voilapdf.com/en/ocr-pdf/): Character recognition
+- [PDF summary](https://voilapdf.com/en/summarize-pdf/): The gist of a long document
+- [PDF translation](https://voilapdf.com/en/translate-pdf/): French ↔ English, on your machine
+
+## Verifiable facts
+
+- No server code: the site is a set of static files, it cannot receive a document.
+- The only optional network exchange concerns the language tools: the opus-mt translation model (103 MB) or the distilbart-cnn summariser (271 MB) is downloaded from Hugging Face on first click, then kept in the browser cache. The model comes down; the document never goes up.
+- The default summary is extractive: it selects sentences from the document instead of writing new ones, so it invents nothing and works in any language.
+- Character recognition (Tesseract, French) starts automatically when a PDF holds no selectable text.
+- Text editing covers the old line with a rectangle in the sampled background colour, then rewrites on the same baseline reported by pdf.js.
+
+## Acknowledged limits
+
+- The original text stays inside the file after an edit: it is a visual cover, not redaction. Copy-paste or pdftotext recovers the old text.
+- Original fonts are not reused: text is rewritten in one of the 14 standard PDF fonts.
+- Compression and unlocking rasterise the pages: text becomes an image.
+- Translation does not preserve layout, and its quality stays below a service hosted on graphics cards.
+- Office conversion rebuilds the content, not the design: no columns, no boxes, no images.

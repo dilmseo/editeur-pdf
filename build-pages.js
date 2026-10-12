@@ -650,19 +650,136 @@ for (const lang of LANGUES){
 }
 
 /* Le sitemap porte les alternatives : c'est la déclaration de langues la plus sûre,
-   un lien hreflang oublié dans une page passant alors inaperçu. */
+   un lien hreflang oublié dans une page passant alors inaperçu. Le x-default y
+   figure aussi : les pages le déclarent déjà, les deux sources doivent dire la
+   même chose, sinon Google arbitre tout seul. */
 const alt = u => LANGUES.map(l =>
-  `    <xhtml:link rel="alternate" hreflang="${l.ui.htmlLang}" href="${u.cle ? urlDe(l, u.cle) : accueilDe(l)}"/>`).join('\n');
+    `    <xhtml:link rel="alternate" hreflang="${l.ui.htmlLang}" href="${u.cle ? urlDe(l, u.cle) : accueilDe(l)}"/>`).join('\n')
+  + `\n    <xhtml:link rel="alternate" hreflang="x-default" href="${u.cle ? urlDe(LANGUES[0], u.cle) : accueilDe(LANGUES[0])}"/>`;
 
 fs.writeFileSync(path.join(RACINE, 'sitemap.xml'),
+  /* Pas de feuille XSL : elle rendait le fichier lisible dans le navigateur, mais
+     Chrome coiffe désormais toute page XSLT d'un bandeau rouge annonçant le
+     retrait de la fonction. Un sitemap affiché en vrac est normal — il s'adresse
+     aux robots — et vaut mieux qu'un avertissement de dépréciation. */
   '<?xml version="1.0" encoding="UTF-8"?>\n' +
   '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n' +
   urls.map(u => `  <url>\n    <loc>${u.loc}</loc>\n${alt(u)}\n` +
     `    <lastmod>${JOUR}</lastmod>\n    <priority>${u.prio}</priority>\n  </url>`).join('\n') +
   '\n</urlset>\n', 'utf8');
 
+/* Les robots des moteurs génératifs sont nommés un par un. « User-agent: * » les
+   autorise déjà, mais plusieurs n'obéissent qu'à une règle qui les désigne, et
+   une mention explicite vaut déclaration d'intention si la règle générale change. */
+const IA_ROBOTS = ['GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-User',
+                   'anthropic-ai', 'PerplexityBot', 'Perplexity-User', 'Google-Extended',
+                   'Applebot-Extended', 'Bingbot', 'CCBot', 'meta-externalagent',
+                   'Amazonbot', 'DuckAssistBot', 'MistralAI-User', 'cohere-ai'];
+
 fs.writeFileSync(path.join(RACINE, 'robots.txt'),
-  `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`, 'utf8');
+  'User-agent: *\nAllow: /\n\n'
+  /* Commentaires en ASCII pur : robots.txt est lu par des analyseurs orientes
+     octet, inutile d'y risquer un accent. */
+  + '# Answer engines welcome. Nothing here is reserved.\n'
+  + IA_ROBOTS.map(r => `User-agent: ${r}\nAllow: /`).join('\n\n') + '\n\n'
+  + `Sitemap: ${SITE}/sitemap.xml\n\n`
+  + `# Structured summary of this site:\n`
+  + `# ${SITE}/llms.txt       - inventory\n`
+  + `# ${SITE}/llms-full.txt  - facts and limits, tool by tool\n`, 'utf8');
+
+/* ---------------- llms.txt ----------------
+   Les moteurs de réponse ne citent bien que ce qu'ils ont compris. Une page HTML
+   leur impose de deviner la structure ; ce fichier la leur donne en clair, et il
+   est engendré depuis le même catalogue que les pages, donc il ne peut pas
+   diverger d'elles. Deux niveaux : llms.txt pour l'inventaire, llms-full.txt
+   pour les faits qu'un modèle peut citer — y compris les limites, qui sont ce
+   qui distingue une réponse exacte d'une réponse flatteuse. */
+const PRESENTATION = {
+  fr: {
+    accroche: "Boîte à outils PDF qui s'exécute entièrement dans le navigateur : aucun fichier n'est téléversé.",
+    quoi: [
+      "VoilàPDF modifie, convertit et assemble des PDF sans serveur. Le traitement a lieu dans l'onglet, en JavaScript et WebAssembly : le document reste sur la machine de l'utilisateur et n'est transmis à personne.",
+      "Tout est gratuit et sans compte, y compris la correction du texte déjà présent dans un PDF et la reconnaissance des documents scannés — deux fonctions que la plupart des services concurrents réservent à un abonnement payant.",
+      "Le code est public sous licence GNU AGPL v3 : https://github.com/dilmseo/editeur-pdf"
+    ],
+    titreOutils: 'Les outils', titreFaits: 'Faits vérifiables', titreLimites: 'Limites assumées',
+    conserve: 'Conservé', perd: 'Non repris', questions: 'Questions',
+    faits: [
+      "Aucun code serveur : le site est un ensemble de fichiers statiques, il ne peut pas recevoir un document.",
+      "Le seul échange réseau facultatif concerne les outils de langue : le modèle de traduction opus-mt (103 Mo) ou le résumeur distilbart-cnn (271 Mo) est téléchargé depuis Hugging Face au premier clic, puis conservé par le cache du navigateur. Le modèle descend ; le document ne monte jamais.",
+      "Le résumé par défaut est extractif : il sélectionne les phrases du document au lieu d'en rédiger de nouvelles, donc il n'invente rien et fonctionne dans toutes les langues.",
+      "La reconnaissance de caractères (Tesseract, français) se déclenche automatiquement quand un PDF ne contient pas de texte sélectionnable.",
+      "L'édition de texte recouvre l'ancienne ligne d'un rectangle à la couleur du fond, puis réécrit sur la même ligne de base relevée par pdf.js."
+    ],
+    limites: [
+      "Le texte d'origine reste dans le fichier après une modification : c'est un recouvrement visuel, pas un caviardage. Un copier-coller ou pdftotext retrouve l'ancien texte.",
+      "Les polices d'origine ne sont pas réemployées : le texte est réécrit dans l'une des 14 polices standard du PDF.",
+      "La compression et le déverrouillage rematricent les pages : le texte devient une image.",
+      "La traduction ne conserve pas la mise en page, et sa qualité reste en deçà d'un service hébergé sur cartes graphiques.",
+      "La conversion vers Office reconstruit le contenu, pas la maquette : ni colonnes, ni encadrés, ni images."
+    ]
+  },
+  en: {
+    accroche: 'Browser-only PDF toolkit: no file is ever uploaded.',
+    quoi: [
+      'VoilàPDF edits, converts and assembles PDFs with no server. Processing happens in the tab, in JavaScript and WebAssembly: the document stays on the user’s machine and is sent to nobody.',
+      'Everything is free and account-free, including correcting the text already inside a PDF and recognising scanned documents — two features most competing services keep behind a subscription.',
+      'The code is public under the GNU AGPL v3 licence: https://github.com/dilmseo/editeur-pdf'
+    ],
+    titreOutils: 'Tools', titreFaits: 'Verifiable facts', titreLimites: 'Acknowledged limits',
+    conserve: 'Kept', perd: 'Not carried over', questions: 'Questions',
+    faits: [
+      'No server code: the site is a set of static files, it cannot receive a document.',
+      'The only optional network exchange concerns the language tools: the opus-mt translation model (103 MB) or the distilbart-cnn summariser (271 MB) is downloaded from Hugging Face on first click, then kept in the browser cache. The model comes down; the document never goes up.',
+      'The default summary is extractive: it selects sentences from the document instead of writing new ones, so it invents nothing and works in any language.',
+      'Character recognition (Tesseract, French) starts automatically when a PDF holds no selectable text.',
+      'Text editing covers the old line with a rectangle in the sampled background colour, then rewrites on the same baseline reported by pdf.js.'
+    ],
+    limites: [
+      'The original text stays inside the file after an edit: it is a visual cover, not redaction. Copy-paste or pdftotext recovers the old text.',
+      'Original fonts are not reused: text is rewritten in one of the 14 standard PDF fonts.',
+      'Compression and unlocking rasterise the pages: text becomes an image.',
+      'Translation does not preserve layout, and its quality stays below a service hosted on graphics cards.',
+      'Office conversion rebuilds the content, not the design: no columns, no boxes, no images.'
+    ]
+  }
+};
+
+const listeMd = t => t.map(x => `- ${x}`).join('\n');
+
+let court = '', complet = '';
+for (const lang of LANGUES){
+  const pr = PRESENTATION[lang.code];
+  if (!pr) continue;
+  const tete = `# VoilàPDF${lang.code === 'fr' ? '' : ' (English)'}\n\n> ${pr.accroche}\n\n`
+             + pr.quoi.join('\n\n') + '\n\n';
+
+  court += tete + `## ${pr.titreOutils}\n\n`
+    + `- [${lang.ui.plan.editeur}](${accueilDe(lang)}): ${lang.code === 'fr'
+        ? "corriger le texte déjà écrit dans un PDF, y compris sur un document scanné"
+        : 'correct text already written in a PDF, including on a scanned document'}\n`
+    + Object.keys(lang.outils).map(k =>
+        `- [${lang.outils[k].titre}](${urlDe(lang, k)}): ${lang.outils[k].resume}`).join('\n')
+    + `\n\n## ${pr.titreFaits}\n\n${listeMd(pr.faits)}\n\n`
+    + `## ${pr.titreLimites}\n\n${listeMd(pr.limites)}\n\n`;
+
+  complet += tete
+    + `## ${pr.titreFaits}\n\n${listeMd(pr.faits)}\n\n`
+    + `## ${pr.titreLimites}\n\n${listeMd(pr.limites)}\n\n`
+    + `## ${pr.titreOutils}\n\n`
+    + Object.keys(lang.outils).map(k => {
+        const o = lang.outils[k];
+        return `### ${o.titre}\n\n${urlDe(lang, k)}\n\n${o.chapo}\n\n${o.format}\n\n`
+          + `**${pr.conserve}** : ${o.garde.join(' · ')}\n\n`
+          + `**${pr.perd}** : ${o.perdu.join(' · ')}\n\n`
+          + `**${pr.questions}**\n\n`
+          + o.faq.map(f => `- *${f.q}* ${f.r}`).join('\n');
+      }).join('\n\n') + '\n\n';
+}
+
+fs.writeFileSync(path.join(RACINE, 'llms.txt'), court.trimEnd() + '\n', 'utf8');
+fs.writeFileSync(path.join(RACINE, 'llms-full.txt'), complet.trimEnd() + '\n', 'utf8');
 
 console.log(`${n} page(s) d'outil sur ${LANGUES.length} langue(s), sitemap de ${urls.length} adresses.`);
+console.log(`llms.txt : ${Math.round(court.length / 1024)} Ko · llms-full.txt : ${Math.round(complet.length / 1024)} Ko`);
 module.exports = { LANGUES, urlDe, accueilDe, hreflangs, selecteurLangue, UI_FR, esc, LOGO, FAVICON, JOUR };
