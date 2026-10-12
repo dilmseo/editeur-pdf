@@ -230,8 +230,8 @@
 
   /* La colonne « Travailler le PDF » compte douze liens : sur une seule file elle
      doublerait la hauteur du pied de page, donc elle est large et sur deux files. */
-  .pied .cols{max-width:1120px;margin:0 auto;padding:46px 28px 10px;display:grid;
-    grid-template-columns:1.5fr .85fr .85fr 1.7fr .85fr;gap:36px 30px}
+  .pied .cols{max-width:1180px;margin:0 auto;padding:46px 28px 10px;display:grid;
+    grid-template-columns:1.35fr .78fr .78fr 1.5fr .8fr .78fr;gap:36px 26px}
   .pied .cols .double ul{display:block;columns:2;column-gap:26px}
   .pied .cols .double li{break-inside:avoid;margin-bottom:10px}
   #home .pied .marque{color:#fff;margin-bottom:16px;font-size:16px}
@@ -290,3 +290,21 @@
     font-size:12.5px;font-weight:700;letter-spacing:.03em;color:#8A8577;text-decoration:none}
   #home .langues b{background:var(--encre);color:var(--papier)}
   #home .langues a:hover{background:var(--papier2);color:var(--encre)}
+
+/* Badge d'origine, en bas à gauche. Discret et renvoyant au dépôt : c'est le
+   seul endroit où le site se présente lui-même. Masqué sous 760 px, où un
+   élément flottant mangerait une place qui manque déjà. */
+.badge-fr{position:fixed;left:18px;bottom:18px;z-index:60;display:inline-flex;align-items:center;
+  gap:9px;background:#fff;border:1px solid var(--trait);border-radius:999px;
+  padding:8px 16px 8px 10px;font-size:13px;line-height:1;color:#4A5260;
+  box-shadow:0 6px 22px rgba(20,26,36,.13);transition:transform .18s,box-shadow .18s,color .18s}
+.badge-fr:hover{transform:translateY(-2px);box-shadow:0 11px 28px rgba(20,26,36,.18);
+  color:var(--encre);text-decoration:none}
+.badge-fr b{color:var(--rouge);font-weight:400}
+.badge-fr .drapeau{display:inline-flex;width:21px;height:14px;flex:0 0 auto;border-radius:3px;
+  overflow:hidden;box-shadow:0 0 0 1px rgba(20,26,36,.1)}
+.badge-fr .drapeau i{flex:1}
+.badge-fr .drapeau i:nth-child(1){background:#10287F}
+.badge-fr .drapeau i:nth-child(2){background:#fff}
+.badge-fr .drapeau i:nth-child(3){background:#E1162C}
+@media (max-width:760px){.badge-fr{display:none}}

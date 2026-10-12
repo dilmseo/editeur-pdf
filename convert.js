@@ -745,8 +745,44 @@ function texteVersDocx(nom, paragraphes){
     { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }) };
 }
 
+/* Les deux sorties ci-dessus coupent une page par entrée, ce qui convient à de
+   l'OCR page par page mais pas à de la prose : un résumé ou une traduction est un
+   texte suivi, ses paragraphes doivent s'enchaîner. */
+function proseVersDocx(nom, paragraphes){
+  let corps = '';
+  for (const bloc of paragraphes){
+    corps += '<w:p><w:pPr><w:spacing w:after="160"/></w:pPr><w:r><w:rPr>'
+           + '<w:rFonts w:ascii="Calibri" w:hAnsi="Calibri"/><w:sz w:val="22"/></w:rPr>'
+           + `<w:t xml:space="preserve">${esc(String(bloc))}</w:t></w:r></w:p>`;
+  }
+  return { nom, blob: new Blob([paquetDocx(corps)],
+    { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }) };
+}
+
+async function proseVersPdf(nom, paragraphes, titre){
+  const doc = await PDFLib.PDFDocument.create();
+  const pol = await policesStandard(doc);
+  const [L, H, m] = [595.28, 841.89, 64];
+  const large = L - m * 2;
+  const f = new Feuille(doc, L, H, m);
+  if (titre){
+    for (const l of decouper(sain(pol.B, titre), pol.B, 16, large))
+      f.page.drawText(l, { x: m, y: f.place(21), size: 16, font: pol.B });
+    f.place(14);
+  }
+  for (const bloc of paragraphes){
+    for (const l of decouper(sain(pol[''], String(bloc)), pol[''], 11, large))
+      f.page.drawText(l, { x: m, y: f.place(16), size: 11, font: pol[''] });
+    f.place(8);
+  }
+  return { nom, blob: new Blob([await doc.save()], { type: 'application/pdf' }) };
+}
+
 window.Conv = {
-  texteVersDocx,
+  texteVersDocx, proseVersDocx, proseVersPdf,
+  /* exposés pour l'outillage local (ia.js) : relire le texte d'un PDF sans
+     redupliquer le regroupement par ligne de base. */
+  fragments,
   pdfVersPng:  (f, p) => pdfVersImages(f, 'image/png', p),
   pdfVersJpg:  (f, p) => pdfVersImages(f, 'image/jpeg', p),
   imagesVersPdf,

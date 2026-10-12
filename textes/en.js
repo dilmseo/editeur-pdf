@@ -25,12 +25,14 @@ const UI = {
   gratuitTitre: "Why it's free",
   gratuitP1: "Online converters receive your file on their servers, process it, then promise to delete it. Every document costs them computing time: that is why they charge, and why they cap file sizes.",
   gratuitP2fort: 'Here, the work happens on your own computer.',
-  gratuitP2: " The page contains no server code: your document cannot be received, because it is never sent. So there is nothing to bill, nothing to cap, and nothing to delete afterwards. Cut your connection once the page has loaded — everything keeps working.",
+  gratuitP2: " The page contains no server code: your document cannot be received, because it is never sent. So there is nothing to bill, nothing to cap, and nothing to delete afterwards.",
+  gratuitHorsLigne: ' Cut your connection once the page has loaded — everything keeps working.',
+  gratuitModele: ' One exception here: the language model, fetched once and then kept in your browser cache. It is the only network exchange on this page, and it runs that way round — your document never goes up.',
   questionsTitre: 'Frequently asked questions',
   autresTitre: 'Other tools',
   inverseTexte: (lien) => `Need the other direction? ${lien} does exactly the opposite, with the same guarantees.`,
   editeurRenvoi: 'Fix a line that is already written, even on a scanned document. This is the feature other services charge for, and the natural starting point when you need to retouch before converting.',
-  piedPhrase: 'Built with pdf.js, pdf-lib and fflate — everything is bundled, no network calls.',
+  piedPhrase: 'Built with pdf.js, pdf-lib, tesseract.js and fflate — your files stay in your browser.',
   codeSource: 'Source code',
   plan: { autres: 'More tools', editeur: 'Edit the text in a PDF', fusion: 'Merge PDFs' },
   etapes: multiple => [
@@ -107,7 +109,8 @@ const UI = {
     introOutils: 'Convert both ways, assemble, extract. Every tool has its own page, with what it keeps and what it drops stated before you begin.',
     phare1t: 'Edit the text in a PDF', phare1d: 'Fix a line that is already written, even on a scanned document. This is the feature others charge for.',
     phare2t: 'Merge PDFs', phare2d: 'Several documents end to end, in the order you choose, with no loss of quality.',
-    groupes: ['Convert a PDF', 'Create a PDF', 'Work on the PDF'],
+    groupes: ['Convert a PDF', 'Create a PDF', 'Work on the PDF', 'Understand a PDF'],
+    badgeA: 'Open source, made with ', badgeB: ' in France',
     outilsCompte: 'tools',
     surtitreConfiance: 'What really changes', titreConfiance: 'The paywall is editing the text',
     introConfiance: 'Online editors happily let you <em>add</em> text on top of the document. But fixing a line that is already written — the very thing you came for — almost always requires a subscription. And your file left for their servers before you even noticed.',
@@ -139,7 +142,7 @@ const UI = {
     finalSous: 'Free, no account, and your document never leaves your computer.',
     rappelA: 'A PDF to fix?', rappelB: 'It will not leave your computer.',
     rappelBouton: 'Open the editor',
-    piedPitch: 'Edit, convert and assemble PDFs without uploading anything. Twenty-four tools, no account, no queue, no file left lying on a server.',
+    piedPitch: 'Edit, convert and assemble PDFs without uploading anything. Twenty-six tools, no account, no queue, no file left lying on a server.',
     sceauTitre: 'Nothing is uploaded',
     sceauTexte: 'All processing happens in your browser, including the recognition of scanned documents.',
     piedProjet: 'The project', piedEditeur: 'The editor',
@@ -806,6 +809,71 @@ const OUTILS = {
     { q: 'What if I want to correct inside the PDF itself?',
       r: 'Open it in the editor instead: recognition starts automatically there and every recognised line becomes editable in place, inside the document.' }
   ]
+},
+
+'resumer': {
+  slug: 'summarize-pdf', carte: 'Summarise a PDF', resume: 'The gist of a long document',
+  titre: 'PDF summary', h1: 'Summarise a PDF without sending it anywhere',
+  actionTexte: 'Summarise the document',
+  titreSeo: 'Summarise a PDF for free, without sending the document',
+  meta: 'Get the gist of a long PDF in seconds, inside your browser. Free, no account, and your document is sent to no server and to no online AI.',
+  chapo: 'A forty-page report, a contract, a set of minutes: the summary keeps the passages that carry the information and drops the rest. The work happens on your machine; the document goes nowhere.',
+  note: 'The summary appears on screen as soon as it is ready, and stays downloadable in the format you chose. If the document is a scan, character recognition runs automatically before the analysis.',
+  garde: ['Sentences exactly as the document writes them', 'The original reading order',
+          'Figures, dates and proper nouns, untouched', 'The split into paragraphs'],
+  perdu: ['Tables, images and captions', 'Layout, headers and footers',
+          'Passages judged secondary, by design',
+          'Footnotes, swallowed into the body text'],
+  contexte: 'Online summarisers almost all require uploading the document to their servers, then forwarding it to a third-party AI. For internal minutes, a contract or a medical file, that amounts to publishing the document to save three minutes.',
+  usages: [
+    { t: 'Size up a report', d: 'Know within a minute whether the forty pages deserve a full read.' },
+    { t: 'Prepare for a meeting', d: 'Pull the salient points out of the minutes before going back to them.' },
+    { t: 'Sort through a file', d: 'Review twenty documents without opening every one.' }
+  ],
+  format: 'The default method is extractive: every sentence is scored on the words it shares with the rest of the document, and the best-scoring ones are returned in their original order. That is deliberate — on a document that commits you, a plausible but inaccurate rewording is worse than a faithful extract. The written mode relies on distilbart-cnn, a model trained on English only.',
+  faq: [
+    { q: 'Is my document sent to an AI?',
+      r: 'No. The default method is a statistical computation that runs in the tab, with no network. The written mode downloads a model onto your machine and runs it there: the model weights come down, your document never goes up.' },
+    { q: 'Does the summary invent sentences?',
+      r: 'Not with the default method: every sentence of the summary appears word for word in the document. That is why it is offered first.' },
+    { q: 'Does it work on a scanned PDF?',
+      r: 'Yes. If the document holds no readable text, character recognition starts on its own before the summary, on your own machine. Allow a few extra seconds per page.' },
+    { q: 'Which length should I pick?',
+      r: '“Medium” suits almost everything. “Short” helps decide whether a document deserves reading; “Detailed” keeps a usable record without rereading the original.' }
+  ]
+},
+
+'traduire': {
+  slug: 'translate-pdf', carte: 'Translate a PDF', resume: 'French ↔ English, on your machine',
+  titre: 'PDF translation', h1: 'Translate a PDF without uploading it',
+  actionTexte: 'Translate the document',
+  titreSeo: 'Translate a PDF for free, without uploading the document',
+  meta: 'Translate a PDF from French to English or the other way round, entirely inside your browser. Free, no account, and the document is sent to no translation server.',
+  chapo: 'The text of the PDF is translated sentence by sentence by a language model running on your own computer. No translation service receives your document, and none keeps it.',
+  note: 'On first use the translation model — about 103 MB — downloads once, then stays in the browser cache: later translations start immediately. A scanned document goes through character recognition automatically.',
+  garde: ['The full text, in reading order', 'The split into paragraphs',
+          'Figures, dates and amounts', 'Proper nouns, left as they are'],
+  perdu: ['Layout, columns and tables', 'Images, logos and signatures',
+          'Fonts and styling', 'Headers and footers, mixed into the text'],
+  contexte: 'Translating a PDF online nearly always means handing it to a provider, who forwards it to a third-party engine. For a contract, a commercial offer or a letter from a lawyer, the document ends up on two servers you know nothing about.',
+  usages: [
+    { t: 'Read a foreign contract', d: 'Understand what you are signing without handing the contract to a third party.' },
+    { t: 'Answer an English-speaking client', d: 'Translate a quote or a technical note before adapting it.' },
+    { t: 'Work through documentation', d: 'Make an English manual or standard readable.' }
+  ],
+  format: 'The engine is Marian (opus-mt), the open translation model from the University of Helsinki, converted to ONNX and run by transformers.js. Translation covers the text alone: the result is a clean document, not a copy of the original layout.',
+  faq: [
+    { q: 'Does my document go to Google or DeepL?',
+      r: 'No, and it goes nowhere else either. The translation model is downloaded onto your machine and runs there. The model comes down to you; your document never goes up.' },
+    { q: 'Why a 103 MB download?',
+      r: 'That is the weight of the language model itself. It is fetched only when you start a translation, once: the browser then keeps it in cache for subsequent runs.' },
+    { q: 'Is the layout preserved?',
+      r: 'No, and that is deliberate: translation changes the length of the text, so the original layout would no longer hold. You get a clean document containing the translation, paragraph by paragraph.' },
+    { q: 'Which languages are available?',
+      r: 'French to English and English to French. Those two directions cover the vast majority of needs, and each extra pair would mean another full model.' },
+    { q: 'Is the quality as good as DeepL?',
+      r: 'No. A model that fits in a browser does not rival a service hosted on graphics cards. It is more than enough to understand a document; for a translation meant to be published, have it proofread.' }
+  ]
 }
 };
 
@@ -835,7 +903,19 @@ const OPTIONS = {
     largeur: { label: 'Signature size', valeurs: { '0.18': ['Small'], '0.26': ['Normal'], '0.36': ['Large'] } },
     x: { label: 'Horizontal position', valeurs: { '0.08': ['Left'], '0.37': ['Centre'], '0.62': ['Right'] } },
     y: { label: 'Vertical position', valeurs: { '0.1': ['Bottom'], '0.45': ['Middle'], '0.8': ['Top'] } } },
-  ocr: { sortie: { label: 'Output format', valeurs: { txt: ['Plain text', '.txt file'], docx: ['Word document', '.docx file'] } } }
+  ocr: { sortie: { label: 'Output format', valeurs: { txt: ['Plain text', '.txt file'], docx: ['Word document', '.docx file'] } } },
+  resumer: {
+    longueur: { label: 'Summary length', valeurs: { court: ['Short', 'about a tenth'],
+      moyen: ['Medium', 'about a fifth'], long: ['Detailed', 'about a third'] } },
+    moteur: { label: 'Method', valeurs: { extrait: ['Sentences from the document', 'any language · instant'],
+      redige: ['Written summary', 'English · 271 MB model'] },
+      aide: 'The first method picks the most load-bearing sentences of the document: it invents nothing and works in any language. The second writes fresh text, but the model exists in English only and is a 271 MB one-off download.' },
+    sortie: { label: 'Summary format', valeurs: { txt: ['Plain text', '.txt file'],
+      pdf: ['PDF', '.pdf file'], docx: ['Word', '.docx file'] } } },
+  traduire: {
+    sens: { label: 'Direction', valeurs: { 'fr-en': ['French → English'], 'en-fr': ['English → French'] } },
+    sortie: { label: 'Output format', valeurs: { pdf: ['PDF', '.pdf file'],
+      docx: ['Word', '.docx file'], txt: ['Plain text', '.txt file'] } } }
 };
 
 /* Panneaux d'aperçu : textes affichés autour des vignettes. */
@@ -865,7 +945,24 @@ const SUFFIXES = {
   compresse: '-compressed', decoupe: '-split', pages: '-pages', extrait: '-extract',
   allege: '-trimmed', reorganise: '-reordered', pivote: '-rotated', rogne: '-cropped',
   numerote: '-numbered', filigrane: '-watermarked', anonymise: '-anonymised',
-  deverrouille: '-unlocked', signe: '-signed'
+  deverrouille: '-unlocked', signe: '-signed',
+  traduit: '-translated', resume: '-summary'
+};
+
+/* Messages des outils de langue. Le téléchargement du modèle est long : il doit
+   se raconter dans la langue de la page, sinon l'attente paraît un blocage. */
+const IA = {
+  telechargement: 'Downloading the model…',
+  traduction: 'Translating passage',
+  redaction: 'Writing the summary, block',
+  analyse: 'Analysing the document…',
+  reconnaissance: 'Scanned document: reading page',
+  vide: 'This document holds no usable text, even after recognition.',
+  rienTraduit: 'No passage could be translated.',
+  rienResume: 'The document is too short to summarise.',
+  libIntrouvable: 'The language engine could not be loaded. Reload the page and try again.',
+  titreResume: 'Summary',
+  compte: (m, t, p) => `${m} words instead of ${t}, ${p} % shorter.`
 };
 
 /* Traduction de l'éditeur lui-même. Le générateur applique ces paires au fichier
@@ -958,7 +1055,7 @@ const REMPLACEMENTS = [
   ['>Supprimer<', '>Delete<']
 ];
 
-const DATA = { UI, OUTILS, OPTIONS, PANNEAUX, SUFFIXES, REMPLACEMENTS };
+const DATA = { UI, OUTILS, OPTIONS, PANNEAUX, SUFFIXES, REMPLACEMENTS, IA };
 if (typeof module !== 'undefined' && module.exports) module.exports = DATA;
 else global.TEXTES = DATA;
 

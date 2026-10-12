@@ -493,7 +493,9 @@ Object.assign(ICO, {
   cadenas:    '<rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0"/>',
   stylo:      '<path d="M3 20c3 .5 5-1 6.5-3.5M5.5 14.5 15 5a2.1 2.1 0 0 1 3 3l-9.5 9.5-4 1z"/>',
   etiquette:  '<path d="M3 7a2 2 0 0 1 2-2h6l9 9-6 6-9-9z"/><circle cx="8" cy="10" r="1.2"/>',
-  loupe:      '<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>'
+  loupe:      '<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
+  globe:      '<circle cx="12" cy="12" r="9"/><path d="M3.3 9h17.4M3.3 15h17.4"/><path d="M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18"/>',
+  condense:   '<path d="M4 5h16M4 10h16M7 15h10M10 20h4"/>'
 });
 
 const OUTILS2 = {
@@ -996,6 +998,108 @@ const OUTILS2 = {
     { q: 'Et si je veux corriger directement dans le PDF ?',
       r: "Ouvrez-le plutôt dans l'éditeur : la reconnaissance s'y lance automatiquement et chaque ligne reconnue devient modifiable à sa place, dans le document." }
   ]
+},
+
+/* ------------------------- comprendre un document ------------------------ */
+
+'resumer': {
+  slug: 'resumer-pdf', carte: 'Résumer un PDF', ico: ICO.condense, couleur: 'i-ambre',
+  resume: "L'essentiel d'un long document", titre: 'Résumé de PDF',
+  h1: "Résumer un PDF sans l'envoyer nulle part", actionTexte: 'Résumer le document',
+  titreSeo: 'Résumer un PDF gratuitement, sans envoyer le document',
+  meta: "Obtenez l'essentiel d'un PDF long en quelques secondes, dans votre navigateur. Gratuit, sans compte, et votre document n'est transmis à aucun serveur ni à aucune IA en ligne.",
+  chapo: "Un rapport de quarante pages, un contrat, un compte rendu : le résumé retient les passages qui portent l'information et écarte le reste. Le calcul se fait sur votre machine, le document ne part nulle part.",
+  accept: 'application/pdf', fonction: 'resumerPdf', ia: true, tesseract: true,
+  options: [
+    { id: 'longueur', type: 'choix', label: 'Longueur du résumé', defaut: 'moyen',
+      valeurs: [['court', 'Court', 'environ un dixième'],
+                ['moyen', 'Moyen', 'environ un cinquième'],
+                ['long', 'Détaillé', 'environ un tiers']] },
+    { id: 'moteur', type: 'choix', label: 'Méthode', defaut: 'extrait',
+      valeurs: [['extrait', 'Phrases du document', 'toutes langues · instantané'],
+                ['redige', 'Résumé rédigé', 'anglais · modèle de 271 Mo']],
+      aide: "La première méthode sélectionne les phrases les plus porteuses du document : elle n'invente rien et fonctionne dans toutes les langues. La seconde rédige un texte neuf, mais le modèle n'existe qu'en anglais et pèse 271 Mo à télécharger une fois." },
+    { id: 'sortie', type: 'choix', label: 'Format du résumé', defaut: 'txt',
+      valeurs: [['txt', 'Texte brut', 'fichier .txt'], ['pdf', 'PDF', 'fichier .pdf'],
+                ['docx', 'Word', 'fichier .docx']] }
+  ],
+  note: "Le résumé s'affiche à l'écran dès qu'il est prêt, et reste téléchargeable dans le format choisi. Si le document est un scan, la reconnaissance de caractères se lance automatiquement avant l'analyse.",
+  garde: ["Les phrases telles qu'elles sont écrites dans le document",
+          "L'ordre de lecture d'origine", 'Les chiffres, dates et noms propres, intacts',
+          'La découpe en paragraphes'],
+  perdu: ['Les tableaux, les images et les légendes', 'La mise en page et les en-têtes',
+          'Les passages jugés secondaires, par construction',
+          'Les notes de bas de page, noyées dans le fil du texte'],
+  contexte: "Les résumeurs en ligne demandent presque tous de téléverser le document sur leurs serveurs, puis de l'envoyer à une IA tierce. Pour un compte rendu interne, un contrat ou un dossier médical, cela revient à publier le document pour gagner trois minutes.",
+  usages: [
+    { t: "Dégrossir un rapport", d: "Savoir en une minute si les quarante pages méritent d'être lues en entier." },
+    { t: 'Préparer une réunion', d: "Extraire les points saillants d'un compte rendu avant d'y revenir." },
+    { t: 'Trier un dossier', d: "Passer vingt pièces en revue sans toutes les ouvrir." }
+  ],
+  format: "La méthode par défaut est extractive : chaque phrase est notée d'après les mots qu'elle partage avec le reste du document, et les mieux notées sont restituées dans leur ordre d'origine. C'est volontaire — sur un document qui engage, une reformulation plausible mais inexacte est pire qu'un extrait fidèle. Le mode rédigé s'appuie sur distilbart-cnn, un modèle entraîné sur de l'anglais uniquement.",
+  inverse: null,
+  lies: [
+    { cle: 'ocr', r: "Pour récupérer le texte intégral d'un scan plutôt que son résumé." },
+    { cle: 'traduire', r: "Pour lire un document étranger avant de le résumer." },
+    { cle: 'pdf-word', r: "Pour reprendre le document entier plutôt que son résumé." }
+  ],
+  faq: [
+    { q: 'Mon document est-il envoyé à une IA ?',
+      r: "Non. La méthode par défaut est un calcul statistique qui tourne dans l'onglet, sans réseau. Le mode rédigé télécharge un modèle sur votre machine et l'exécute là : ce sont les poids du modèle qui descendent, jamais votre document qui monte." },
+    { q: 'Le résumé invente-t-il des phrases ?',
+      r: "Pas avec la méthode par défaut : chaque phrase du résumé est présente mot pour mot dans le document. C'est la raison pour laquelle elle est proposée en premier." },
+    { q: 'Ça marche sur un PDF scanné ?',
+      r: "Oui. Si le document n'a aucun texte à lire, la reconnaissance de caractères se lance d'elle-même avant le résumé, en français et sur votre machine. Comptez quelques secondes de plus par page." },
+    { q: 'Quelle longueur choisir ?',
+      r: "« Moyen » convient à presque tout. « Court » sert à décider si un document mérite une lecture ; « Détaillé » à garder une trace exploitable sans relire l'original." }
+  ]
+},
+
+'traduire': {
+  slug: 'traduire-pdf', carte: 'Traduire un PDF', ico: ICO.globe, couleur: 'i-violet',
+  resume: 'Français ↔ anglais, sur votre machine', titre: 'Traduction de PDF',
+  h1: 'Traduire un PDF sans le téléverser', actionTexte: 'Traduire le document',
+  titreSeo: 'Traduire un PDF gratuitement, sans téléverser le document',
+  meta: "Traduisez un PDF du français vers l'anglais ou l'inverse, entièrement dans votre navigateur. Gratuit, sans compte, et le document n'est envoyé sur aucun serveur de traduction.",
+  chapo: "Le texte du PDF est traduit phrase par phrase par un modèle de langue qui s'exécute sur votre ordinateur. Aucun service de traduction ne reçoit votre document, ni ne le conserve.",
+  accept: 'application/pdf', fonction: 'traduirePdf', ia: true, tesseract: true,
+  options: [
+    { id: 'sens', type: 'choix', label: 'Sens de la traduction', defaut: 'fr-en',
+      valeurs: [['fr-en', 'Français → anglais', ''], ['en-fr', 'Anglais → français', '']] },
+    { id: 'sortie', type: 'choix', label: 'Format de sortie', defaut: 'pdf',
+      valeurs: [['pdf', 'PDF', 'fichier .pdf'], ['docx', 'Word', 'fichier .docx'],
+                ['txt', 'Texte brut', 'fichier .txt']] }
+  ],
+  note: "Au premier usage, le modèle de traduction — environ 103 Mo — se télécharge une fois, puis reste dans le cache du navigateur : les traductions suivantes démarrent immédiatement. Un document scanné passe automatiquement par la reconnaissance de caractères.",
+  garde: ['Le texte intégral, dans son ordre de lecture', 'Le découpage en paragraphes',
+          'Les chiffres, dates et montants', 'Les noms propres, laissés tels quels'],
+  perdu: ['La mise en page, les colonnes et les tableaux', 'Les images, logos et signatures',
+          'Les polices et la mise en forme', "Les en-têtes et pieds de page, mêlés au texte"],
+  contexte: "Traduire un PDF en ligne suppose presque toujours de le déposer chez un prestataire, qui l'envoie lui-même à un moteur tiers. Pour un contrat, une offre commerciale ou un courrier d'avocat, le document se retrouve ainsi sur deux serveurs dont vous ignorez tout.",
+  usages: [
+    { t: 'Lire un contrat étranger', d: "Comprendre ce qu'on signe sans confier le contrat à un tiers." },
+    { t: 'Répondre à un client anglophone', d: "Traduire un devis ou une note technique avant de l'adapter." },
+    { t: 'Dépouiller une documentation', d: "Rendre lisible une notice ou une norme rédigée en anglais." }
+  ],
+  format: "Le moteur est Marian (opus-mt), le modèle de traduction ouvert de l'université d'Helsinki, converti au format ONNX et exécuté par transformers.js. La traduction porte sur le texte seul : le résultat est un document propre, pas une copie de la mise en page d'origine.",
+  inverse: null,
+  lies: [
+    { cle: 'resumer', r: "Pour ne garder que l'essentiel du document traduit." },
+    { cle: 'ocr', r: "Pour obtenir le texte d'un scan dans sa langue d'origine." },
+    { cle: 'pdf-word', r: "Pour retravailler la traduction dans un traitement de texte." }
+  ],
+  faq: [
+    { q: 'Mon document part-il chez Google ou DeepL ?',
+      r: "Non, et il ne part nulle part. Le modèle de traduction est téléchargé sur votre machine et s'y exécute. C'est le modèle qui descend vers vous, jamais votre document qui monte." },
+    { q: "Pourquoi un téléchargement de 103 Mo ?",
+      r: "C'est le poids du modèle de langue lui-même. Il n'est récupéré qu'au moment où vous lancez une traduction, une seule fois : le navigateur le conserve ensuite en cache pour les fois suivantes." },
+    { q: 'La mise en page est-elle conservée ?',
+      r: "Non, et c'est assumé : une traduction change la longueur du texte, donc la mise en page d'origine ne tiendrait plus. Vous recevez un document propre contenant la traduction, paragraphe par paragraphe." },
+    { q: 'Quelles langues sont disponibles ?',
+      r: "Français vers anglais et anglais vers français. Ce sont les deux sens qui couvrent l'immense majorité des besoins, et chaque paire supplémentaire demanderait un modèle complet de plus." },
+    { q: 'La qualité vaut-elle celle de DeepL ?',
+      r: "Non. Un modèle qui tient dans un navigateur ne rivalise pas avec un service hébergé sur des cartes graphiques. Il est largement suffisant pour comprendre un document ; pour une traduction destinée à être publiée, faites-la relire." }
+  ]
 }
 };
 Object.assign(OUTILS, OUTILS2);
@@ -1005,7 +1109,8 @@ const GROUPES = [
   { titre: 'Créer un PDF',     cles: ['word-pdf', 'excel-pdf', 'ppt-pdf', 'jpg-pdf', 'png-pdf'] },
   { titre: 'Travailler le PDF', cles: ['compresser', 'diviser', 'extraire-pages', 'supprimer-pages',
                                        'organiser', 'pivoter', 'rogner', 'numeroter', 'filigrane',
-                                       'signer', 'deverrouiller', 'metadonnees'] }
+                                       'signer', 'deverrouiller', 'metadonnees'] },
+  { titre: 'Comprendre un PDF', cles: ['resumer', 'traduire'] }
 ];
 
 const DATA = { OUTILS, GROUPES, ICO, ETAPES_UN, SITE: 'https://voilapdf.com' };

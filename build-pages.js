@@ -46,18 +46,23 @@ const UI_FR = {
   gratuitTitre: "Pourquoi c'est gratuit",
   gratuitP1: "Les services de conversion en ligne reçoivent votre fichier sur leurs serveurs, le traitent, puis promettent de l'effacer. Chaque document leur coûte du temps de calcul : c'est pour cela qu'ils facturent, et qu'ils limitent la taille des fichiers.",
   gratuitP2fort: "Ici, la conversion se fait sur votre ordinateur.",
-  gratuitP2: " La page ne contient aucun code serveur : votre document ne peut pas être reçu, puisqu'il n'est jamais envoyé. Il n'y a donc rien à facturer, rien à limiter, et rien à effacer ensuite. Coupez votre connexion après le chargement de la page : tout continue de fonctionner.",
+  gratuitP2: " La page ne contient aucun code serveur : votre document ne peut pas être reçu, puisqu'il n'est jamais envoyé. Il n'y a donc rien à facturer, rien à limiter, et rien à effacer ensuite.",
+  gratuitHorsLigne: " Coupez votre connexion après le chargement de la page : tout continue de fonctionner.",
+  /* Sur les outils de langue, promettre le hors-ligne serait faux : le modèle se
+     télécharge. On le dit, en précisant le sens de l'échange. */
+  gratuitModele: " Seule exception ici : le modèle de langue, récupéré une fois puis gardé en cache par votre navigateur. C'est le seul échange réseau de la page, et il va dans ce sens-là — votre document, lui, ne monte jamais.",
   questionsTitre: 'Questions fréquentes',
   autresTitre: 'Les autres outils',
   inverseTexte: lien => `Besoin du chemin inverse ? ${lien} fait exactement l'opération contraire, avec les mêmes garanties.`,
   editeurRenvoi: "corriger une ligne déjà écrite, même sur un document scanné. C'est la fonction que les autres services réservent à leurs formules payantes, et le point de départ naturel quand il faut retoucher avant de convertir.",
-  piedPhrase: 'Construit avec pdf.js, pdf-lib et fflate — tout est embarqué, aucun appel réseau.',
+  piedPhrase: 'Construit avec pdf.js, pdf-lib, tesseract.js et fflate — vos fichiers restent dans votre navigateur.',
   codeSource: 'Code source',
   rappelA: 'Un PDF à corriger ?', rappelB: 'Il ne quittera pas votre ordinateur.',
   rappelBouton: "Ouvrir l'éditeur",
-  piedPitch: "Modifier, convertir et assembler des PDF sans rien téléverser. Vingt-quatre outils, pas de compte, pas de file d'attente, pas de fichier qui traîne sur un serveur.",
+  piedPitch: "Modifier, convertir et assembler des PDF sans rien téléverser. Vingt-six outils, pas de compte, pas de file d'attente, pas de fichier qui traîne sur un serveur.",
   sceauTitre: "Rien n'est téléversé",
   sceauTexte: 'Tout le traitement a lieu dans votre navigateur, y compris la reconnaissance des documents scannés.',
+  badgeA: 'Outil open source, fait avec ', badgeB: ' en France',
   piedProjet: 'Le projet', piedEditeur: "L'éditeur",
   piedConfidentialite: 'Confidentialité', piedQuestions: 'Questions fréquentes',
   piedFin: 'Aucun suivi, aucun cookie, aucun compte.',
@@ -282,7 +287,8 @@ ${hreflangs(cle)}
   <h2>${esc(ui.gratuitTitre)}</h2>
   <div class="confiance">
     <p style="margin:0">${esc(ui.gratuitP1)}</p>
-    <p style="margin:12px 0 0"><b>${esc(ui.gratuitP2fort)}</b>${esc(ui.gratuitP2)}</p>
+    <p style="margin:12px 0 0"><b>${esc(ui.gratuitP2fort)}</b>${esc(ui.gratuitP2)}${
+      esc(o.ia ? (ui.gratuitModele || '') : (ui.gratuitHorsLigne || ''))}</p>
   </div>
 
   <h2>${esc(ui.questionsTitre)}</h2>
@@ -333,12 +339,17 @@ ${hreflangs(cle)}
   </div>
 </footer>
 
+<a class="badge-fr" href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">
+  <span class="drapeau" aria-hidden="true"><i></i><i></i><i></i></span>
+  <span>${esc(p.badgeA)}<b>&#9829;</b>${esc(p.badgeB)}</span>
+</a>
+
 <script src="/vendor/pdf.min.js"></script>
 <script src="/vendor/pdf-lib.min.js"></script>
 <script src="/vendor/fflate.min.js"></script>${o.tesseract ? '\n<script src="/vendor/tesseract.min.js"></script>' : ''}
 <script src="/outils-data.js"></script>${lang.code === 'fr' ? '' : `\n<script src="/textes/${lang.code}.js"></script>`}
 <script src="/convert.js"></script>
-<script src="/pdf-outils.js"></script>
+<script src="/pdf-outils.js"></script>${o.ia ? '\n<script src="/ia.js"></script>' : ''}
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/vendor/pdf.worker.min.js';
 window.OUTIL_COURANT = ${jsonEsc(cle)};
@@ -543,10 +554,11 @@ function accueilTraduit(lang){
         <a class="etoiles" href="https://g.page/r/CfBfIXTvKKmwEAE/review" target="_blank" rel="noopener">
           ${ETOILE.repeat(5)}<em>${esc(ui.avisLien)}</em></a>
       </div>
-      <div><h4>${esc(lang.groupes[0])}</h4><ul>${listePied(base.GROUPES[0].cles)}</ul></div>
-      <div><h4>${esc(lang.groupes[1])}</h4><ul>${listePied(base.GROUPES[1].cles)}
-        <li><a href="${lang.prefixe}/${lang.outils.fusion.slug}/">${esc(ui.plan.fusion)}</a></li></ul></div>
-      <div class="double"><h4>${esc(lang.groupes[2])}</h4><ul>${listePied(base.GROUPES[2].cles)}</ul></div>
+      ${base.GROUPES.map((gr, i) =>
+        `<div${gr.cles.length > 6 ? ' class="double"' : ''}><h4>${esc(lang.groupes[i])}</h4><ul>`
+        + listePied(gr.cles)
+        + (i === 1 ? `<li><a href="${lang.prefixe}/${lang.outils.fusion.slug}/">${esc(ui.plan.fusion)}</a></li>` : '')
+        + '</ul></div>').join('\n      ')}
       <div><h4>${esc(a.piedProjet)}</h4><ul>
         <li><a href="#fonctions">${esc(a.piedEditeur)}</a></li>
         <li><a href="#confiance">${esc(a.piedConfidentialite)}</a></li>
@@ -563,6 +575,11 @@ function accueilTraduit(lang){
       </span>
     </div>
   </footer>
+
+  <a class="badge-fr" href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">
+    <span class="drapeau" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span>${esc(a.badgeA)}<b>&#9829;</b>${esc(a.badgeB)}</span>
+  </a>
 </div>
 `};
 }

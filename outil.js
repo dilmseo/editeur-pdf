@@ -56,7 +56,8 @@ const APPELS = {
   imagesVersPdf: (f, o, p) => Conv.imagesVersPdf(f, p),
   fusionnerPdf:  (f, o, p) => Conv.fusionnerPdf(f, p)
 };
-for (const nom in (window.Outils || {})) if (typeof Outils[nom] === 'function') APPELS[nom] = Outils[nom];
+for (const sac of [window.Outils, window.IA])
+  for (const nom in (sac || {})) if (typeof sac[nom] === 'function') APPELS[nom] = sac[nom];
 
 let fichiers = [];
 let doc = null;                 // document pdf.js courant, pour les aperçus
@@ -440,9 +441,12 @@ $('go').onclick = async () => {
   $('go').disabled = true;
   $('barre').hidden = false; $('etat').hidden = false;
   $('etat').textContent = P.lecture2;
-  const avance = p => {
+  /* Le second argument permet à un outil long — téléchargement d'un modèle,
+     traduction passage par passage — de dire ce qu'il fait plutôt que d'afficher
+     un pourcentage muet pendant une minute. */
+  const avance = (p, texte) => {
     $('barre').firstElementChild.style.width = Math.round(p * 100) + '%';
-    $('etat').textContent = P.traitement + Math.round(p * 100) + ' %';
+    $('etat').textContent = texte || (P.traitement + Math.round(p * 100) + ' %');
   };
   try {
     reglages.onOcr = avance;
@@ -454,8 +458,21 @@ $('go').onclick = async () => {
       detail += ' · ' + P.reduction(poids(r.avant), poids(r.apres),
                                     Math.round((1 - r.apres / r.avant) * 100));
     $('fini-nom').textContent = detail;
-    $('fini-note').textContent = r.inchange ? P.inchange : '';
-    $('fini-note').hidden = !r.inchange;
+    const note = r.inchange ? P.inchange : (r.note || '');
+    $('fini-note').textContent = note;
+    $('fini-note').hidden = !note;
+    /* Un résumé se lit sur place : obliger à télécharger un .txt pour savoir ce
+       qu'il dit ferait perdre l'intérêt de l'outil. */
+    let sortie = $('fini-texte');
+    if (r.texte){
+      if (!sortie){
+        sortie = document.createElement('div');
+        sortie.id = 'fini-texte'; sortie.className = 'sortie';
+        $('fini-note').after(sortie);
+      }
+      sortie.textContent = r.texte;
+      sortie.hidden = false;
+    } else if (sortie) sortie.hidden = true;
     $('dl').href = URL.createObjectURL(r.blob);
     $('dl').download = r.nom;
     $('fini').hidden = false;

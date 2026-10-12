@@ -176,6 +176,20 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://voilapdf.com/resumer-pdf/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://voilapdf.com/resumer-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://voilapdf.com/en/summarize-pdf/"/>
+    <lastmod>2026-10-12</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://voilapdf.com/traduire-pdf/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://voilapdf.com/traduire-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://voilapdf.com/en/translate-pdf/"/>
+    <lastmod>2026-10-12</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://voilapdf.com/en/</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://voilapdf.com/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://voilapdf.com/en/"/>
@@ -347,6 +361,20 @@
     <loc>https://voilapdf.com/en/ocr-pdf/</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://voilapdf.com/ocr-pdf/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://voilapdf.com/en/ocr-pdf/"/>
+    <lastmod>2026-10-12</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://voilapdf.com/en/summarize-pdf/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://voilapdf.com/resumer-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://voilapdf.com/en/summarize-pdf/"/>
+    <lastmod>2026-10-12</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://voilapdf.com/en/translate-pdf/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://voilapdf.com/traduire-pdf/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://voilapdf.com/en/translate-pdf/"/>
     <lastmod>2026-10-12</lastmod>
     <priority>0.8</priority>
   </url>

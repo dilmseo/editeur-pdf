@@ -397,7 +397,7 @@
           VoilàPDF
         </span>
         <p class="pitch">Modifier, convertir et assembler des PDF sans rien téléverser.
-          Vingt-quatre outils, pas de compte, pas de file d'attente, pas de fichier
+          Vingt-six outils, pas de compte, pas de file d'attente, pas de fichier
           qui traîne sur un serveur.</p>
         <div class="sceau">
           <svg viewBox="0 0 24 24"><path d="M12 3 5 6v6c0 4.2 2.9 7.9 7 9 4.1-1.1 7-4.8 7-9V6z"/><path d="m9 12 2 2 4-4"/></svg>
@@ -413,10 +413,9 @@
           <em>Donner mon avis</em>
         </a>
       </div>
-      <div><h4>Convertir un PDF</h4><ul id="pied-depuis"></ul></div>
-      <div><h4>Créer un PDF</h4><ul id="pied-vers"></ul></div>
-      <div class="double"><h4>Travailler le PDF</h4><ul id="pied-travail"></ul></div>
-      <div>
+      <!-- Les colonnes d'outils sont posées ici par grilleOutils(), d'après le
+           catalogue : un groupe ajouté apparaît sans qu'on touche à ce fichier. -->
+      <div id="pied-projet">
         <h4>Le projet</h4>
         <ul>
           <li><a href="#fonctions">L'éditeur</a></li>
@@ -435,6 +434,13 @@
       </span>
     </div>
   </footer>
+
+  <!-- Le badge vit dans #home : il disparaît de lui-même dès que l'éditeur
+       s'ouvre, où chaque pixel compte. -->
+  <a class="badge-fr" href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">
+    <span class="drapeau" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span>Outil open source, fait avec <b>&#9829;</b> en France</span>
+  </a>
 </div>
 
 <header>
@@ -648,10 +654,15 @@ document.addEventListener('dragleave', e => {
 
   const liste = cles => cles.map(c =>
     `<li><a href="/${OUTILS[c].slug}/">${OUTILS[c].carte}</a></li>`).join('');
-  $('pied-depuis').innerHTML  = liste(GROUPES[0].cles);
-  $('pied-vers').innerHTML    = liste(GROUPES[1].cles)
-    + `<li><a href="/${OUTILS.fusion.slug}/">Fusionner des PDF</a></li>`;
-  $('pied-travail').innerHTML = liste(GROUPES[2].cles);
+  const projet = $('pied-projet');
+  if (projet) GROUPES.forEach((gr, i) => {
+    const col = document.createElement('div');
+    if (gr.cles.length > 6) col.className = 'double';
+    col.innerHTML = `<h4>${gr.titre}</h4><ul>${liste(gr.cles)}`
+      + (i === 1 ? `<li><a href="/${OUTILS.fusion.slug}/">Fusionner des PDF</a></li>` : '')
+      + '</ul>';
+    projet.before(col);
+  });
 
   // La liste des outils est injectée dans les données structurées depuis la même
   // source que la grille : un outil ajouté au catalogue y figure sans oubli.

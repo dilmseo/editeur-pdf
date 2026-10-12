@@ -150,6 +150,12 @@ button.mini:hover{border-color:var(--bleu);color:var(--bleu)}
 .note-fini{margin-top:10px;font-size:13.5px;color:#8A6A2A;background:#FDF4E3;
   border-radius:10px;padding:10px 14px;text-align:left}
 
+/* Un résumé se lit sur place. Le bloc est plafonné en hauteur pour ne pas
+   repousser le bouton de téléchargement hors de l'écran sur un long document. */
+.sortie{margin-top:14px;text-align:left;white-space:pre-wrap;font-size:14.5px;
+  line-height:1.62;color:#2B3340;background:var(--papier2);border:1px solid var(--trait);
+  border-radius:12px;padding:16px 18px;max-height:340px;overflow:auto}
+
 /* contenu éditorial */
 .corps{padding-bottom:70px}
 .corps p{color:var(--encre2)}
@@ -218,8 +224,8 @@ details p{margin:0 0 22px;font-size:15.5px;max-width:62ch}
   padding:14px 26px;font-weight:700;font-size:15.5px;white-space:nowrap}
 .rappel .bouton:hover{background:#8FB2FF;color:var(--encre)}
 
-.pied .cols{max-width:1120px;margin:0 auto;padding:46px 24px 10px;display:grid;
-  grid-template-columns:1.5fr .85fr .85fr 1.7fr .85fr;gap:36px 30px}
+.pied .cols{max-width:1180px;margin:0 auto;padding:46px 24px 10px;display:grid;
+  grid-template-columns:1.35fr .78fr .78fr 1.5fr .8fr .78fr;gap:36px 26px}
 /* Douze liens sur deux colonnes. En grille, un libellé sur deux lignes creuse un
    trou en face de lui ; le multi-colonne laisse couler les éléments sans aligner
    les rangées, donc sans trou. */
@@ -275,3 +281,21 @@ details p{margin:0 0 22px;font-size:15.5px;max-width:62ch}
   font-weight:700;letter-spacing:.03em;color:#8A8577;text-decoration:none}
 .langues b{background:var(--encre);color:var(--papier)}
 .langues a:hover{background:var(--papier2);color:var(--encre)}
+
+/* Badge d'origine, en bas à gauche. Discret et renvoyant au dépôt : c'est le
+   seul endroit où le site se présente lui-même. Masqué sous 760 px, où un
+   élément flottant mangerait une place qui manque déjà. */
+.badge-fr{position:fixed;left:18px;bottom:18px;z-index:60;display:inline-flex;align-items:center;
+  gap:9px;background:#fff;border:1px solid var(--trait);border-radius:999px;
+  padding:8px 16px 8px 10px;font-size:13px;line-height:1;color:#4A5260;
+  box-shadow:0 6px 22px rgba(20,26,36,.13);transition:transform .18s,box-shadow .18s,color .18s}
+.badge-fr:hover{transform:translateY(-2px);box-shadow:0 11px 28px rgba(20,26,36,.18);
+  color:var(--encre);text-decoration:none}
+.badge-fr b{color:var(--rouge);font-weight:400}
+.badge-fr .drapeau{display:inline-flex;width:21px;height:14px;flex:0 0 auto;border-radius:3px;
+  overflow:hidden;box-shadow:0 0 0 1px rgba(20,26,36,.1)}
+.badge-fr .drapeau i{flex:1}
+.badge-fr .drapeau i:nth-child(1){background:#10287F}
+.badge-fr .drapeau i:nth-child(2){background:#fff}
+.badge-fr .drapeau i:nth-child(3){background:#E1162C}
+@media (max-width:760px){.badge-fr{display:none}}
