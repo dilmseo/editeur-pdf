@@ -127,6 +127,48 @@
   #rail.ouvert .vide.on{display:block}
   @media (max-width:860px){ #rail{display:none} }
 
+  /* ---- l'atelier sans document ----
+     Fermer un PDF ramenait a l'accueil, donc hors de l'editeur : pour en ouvrir
+     un autre il fallait refaire le chemin. On reste desormais dans l'atelier, et
+     la place vide sert a quelque chose. */
+  body.sans-doc #viewer{display:none}
+  #vide-editeur{display:none}
+  body.sans-doc #vide-editeur{flex:1;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;gap:4px;position:relative;overflow:hidden;padding:40px 24px;
+    background:radial-gradient(60% 50% at 50% 38%,#1c2130,transparent 70%),#111419}
+  #vide-editeur::before{content:'';position:absolute;inset:0;pointer-events:none;
+    background:repeating-linear-gradient(to bottom,rgba(255,255,255,.028) 0 1px,transparent 1px 30px);
+    mask-image:radial-gradient(58% 52% at 50% 42%,#000,transparent 74%)}
+  #vide-editeur > *{position:relative}
+  #vide-editeur .sceau{width:104px;height:104px;border-radius:26px;background:#f7f5f0;
+    display:grid;place-items:center;position:relative;margin-bottom:22px;
+    box-shadow:0 26px 60px -18px rgba(0,0,0,.7)}
+  #vide-editeur .sceau svg{width:52px;height:52px;stroke:#141A24;fill:none;stroke-width:2.1;stroke-linecap:round}
+  #vide-editeur .sceau::after{content:'';position:absolute;right:-7px;bottom:-7px;width:30px;height:30px;
+    border-radius:50%;background:#CE4A32;border:5px solid #111419}
+  #vide-editeur h2{margin:0;font-family:'Instrument Serif',Georgia,serif;font-weight:400;
+    font-size:46px;letter-spacing:-.015em;color:#f2f5f9}
+  #vide-editeur p{margin:10px 0 0;color:#8b96a6;font-size:15.5px;text-align:center;max-width:30em;line-height:1.6}
+  #vide-editeur .depot{margin-top:28px;display:inline-flex;align-items:center;gap:11px;
+    background:var(--accent);color:#fff;border:0;border-radius:12px;padding:15px 30px;
+    font:inherit;font-size:16px;font-weight:650;cursor:pointer;
+    box-shadow:0 14px 34px -8px rgba(27,74,203,.65)}
+  #vide-editeur .depot:hover{filter:brightness(1.1)}
+  #vide-editeur .depot svg{width:19px;height:19px;stroke:#fff;fill:none;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
+  #vide-editeur .glisse{margin-top:16px;font-size:13.5px;color:#6d7787}
+  #vide-editeur.survol{outline:2px dashed var(--accent);outline-offset:-22px}
+  #fermer{display:none}
+  body.loaded:not(.sans-doc) #fermer{display:inline-flex}
+  /* Sans document, tout ce qui agit sur un document n'a rien a faire a l'ecran :
+     des boutons inertes se cliquent quand meme, et donnent l'impression d'une
+     panne. Seuls restent le retour a l'accueil, l'ouverture et le rail. */
+  body.sans-doc header .group,
+  body.sans-doc header .sep,
+  body.sans-doc #hl, body.sans-doc #ocr,
+  body.sans-doc #count, body.sans-doc #reset, body.sans-doc #save,
+  body.sans-doc aside{display:none}
+  body.sans-doc #fname{color:#6d7787}
+
   #viewer{flex:1;overflow:auto;padding:28px 24px 60px;display:flex;flex-direction:column;
     align-items:center;gap:30px;
     background:radial-gradient(70% 50% at 50% 0%,#1b1f28,transparent 70%),#111419}
@@ -487,6 +529,8 @@
     <svg viewBox="0 0 24 24"><path d="M14 3v5h5M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/></svg></label>
   <input id="file" type="file" accept="application/pdf">
   <span id="fname">aucun fichier</span>
+  <button id="fermer" class="ghost" title="Fermer ce document sans quitter l'éditeur">
+    <svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
   <span class="sep"></span>
 
   <div class="group">
@@ -531,6 +575,18 @@
     <p class="vide" id="rail-vide">Aucun outil ne correspond.</p>
   </nav>
   <div id="viewer"></div>
+
+  <section id="vide-editeur" aria-label="Aucun document ouvert">
+    <span class="sceau"><svg viewBox="0 0 24 24"><path d="M6 6h12M6 12h8M6 18h5"/></svg></span>
+    <h2>VoilàPDF</h2>
+    <p>Aucun document ouvert. Déposez un PDF ici pour le corriger —
+       il restera sur votre ordinateur.</p>
+    <button class="depot" id="vide-ouvrir" type="button">
+      <svg viewBox="0 0 24 24"><path d="M12 16V4m0 0 4 4m-4-4L8 8"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+      Ouvrir un PDF
+    </button>
+    <span class="glisse">ou glissez-le n'importe où sur cette zone</span>
+  </section>
   <aside>
     <div id="insp">
       <h3>Sélection</h3>
@@ -808,10 +864,9 @@ let savedAt = -1;
 
 $('accueil').onclick = () => retourAccueil(false);
 
-function retourAccueil(force){
-  const n = nbModifs();
-  if (!force && n && n !== savedAt
-      && !confirm(n + ' modification(s) non enregistrée(s). Revenir à l\'accueil ?')) return;
+/* Vider l'etat du document sans decider ou l'on va ensuite : c'est la partie
+   commune a « revenir a l'accueil » et a « fermer le document ». */
+function viderDocument(){
   commitPending(); editing = null;
   pages = []; pdf = null; originalBytes = null; sel = null;
   viewer.innerHTML = '';
@@ -819,11 +874,47 @@ function retourAccueil(force){
   $('fname').textContent = 'aucun fichier';
   $('save').disabled = $('ocr').disabled = true;
   document.title = 'Éditeur PDF gratuit : modifier le texte en ligne — VoilàPDF';
-  document.body.classList.remove('loaded');
   $('done').hidden = true;
   savedAt = -1;
   refreshCount(); fillInspector();
 }
+
+const peutQuitter = (verbe) => {
+  const n = nbModifs();
+  return !(n && n !== savedAt) || confirm(n + ' modification(s) non enregistrée(s). ' + verbe);
+};
+
+function retourAccueil(force){
+  if (!force && !peutQuitter("Revenir à l'accueil ?")) return;
+  viderDocument();
+  document.body.classList.remove('loaded', 'sans-doc');
+}
+
+/* Fermer sans quitter l'atelier : auparavant il fallait repasser par l'accueil
+   pour ouvrir un autre fichier, ce qui faisait refaire tout le chemin. */
+function fermerDocument(){
+  if (!peutQuitter('Fermer ce document ?')) return;
+  viderDocument();
+  document.body.classList.add('loaded', 'sans-doc');
+}
+$('fermer').onclick = fermerDocument;
+$('vide-ouvrir').onclick = () => $('file').click();
+
+/* La zone vide accepte le glisser-deposer, sans quoi l'invitation affichee
+   serait un mensonge. */
+(function deposerSurLeVide(){
+  const z = $('vide-editeur');
+  if (!z) return;
+  const sur = e => { e.preventDefault(); z.classList.add('survol'); };
+  z.addEventListener('dragover', sur);
+  z.addEventListener('dragenter', sur);
+  z.addEventListener('dragleave', e => { if (!z.contains(e.relatedTarget)) z.classList.remove('survol'); });
+  z.addEventListener('drop', e => {
+    e.preventDefault(); z.classList.remove('survol');
+    const f = [...(e.dataTransfer?.files || [])].find(x => /pdf$/i.test(x.type) || /\.pdf$/i.test(x.name));
+    if (f) open(f).catch(err => toast('Erreur : ' + (err.message || err)));
+  });
+})();
 
 async function open(file){
   const buf = await file.arrayBuffer();
@@ -834,6 +925,7 @@ async function open(file){
   sel = null;
   await build();
   document.body.classList.add('loaded');
+  document.body.classList.remove('sans-doc');
   $('save').disabled = false;
   $('ocr').disabled = !OCR_OK;
   // Une page sans couche de texte n'offre rien à cliquer : on la reconnaît d'office.
