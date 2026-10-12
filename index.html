@@ -91,6 +91,42 @@
   .spacer{flex:1}
 
   main{flex:1;display:flex;min-height:0}
+
+  /* ---- rail d'outils ----
+     L'éditeur ne montrait que lui-même : les trente-deux autres outils vivaient
+     sur des pages séparées, invisibles depuis ici. Le rail les ramène dans
+     l'atelier. Replié il ne coûte que 52 px ; déplié il se cherche au clavier. */
+  #rail{width:52px;flex:0 0 auto;background:#15181e;border-right:1px solid var(--line);
+    display:flex;flex-direction:column;transition:width .18s ease;overflow:hidden}
+  #rail.ouvert{width:262px}
+  #rail .tete{display:flex;align-items:center;gap:8px;padding:9px;flex:0 0 auto;
+    border-bottom:1px solid var(--line);min-height:50px}
+  #rail-bascule{width:34px;height:34px;flex:0 0 auto;background:none;border:0;border-radius:8px;
+    display:grid;place-items:center;cursor:pointer;color:#9aa4b2}
+  #rail-bascule:hover{background:#1f242c;color:#e8edf4}
+  #rail-bascule svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+  #rail-q{flex:1;min-width:0;background:#10131a;border:1px solid var(--line);border-radius:8px;
+    padding:7px 10px;color:#e8edf4;font:inherit;font-size:13px;outline:0;display:none}
+  #rail.ouvert #rail-q{display:block}
+  #rail-q:focus{border-color:var(--accent)}
+  #rail .corps{flex:1;overflow:auto;padding:6px 0 14px}
+  #rail h4{margin:14px 11px 6px;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:#6b7585;white-space:nowrap;display:none}
+  #rail.ouvert h4{display:block}
+  #rail a{display:flex;align-items:center;gap:10px;padding:7px 9px;margin:1px 7px;border-radius:8px;
+    color:#c3cbd6;text-decoration:none;font-size:13.5px;white-space:nowrap}
+  #rail a:hover{background:#1f242c;color:#fff}
+  #rail a i{width:34px;height:34px;flex:0 0 auto;border-radius:8px;display:grid;place-items:center;
+    background:#1b1f27}
+  #rail a svg{width:17px;height:17px;stroke:#8fa0b6;fill:none;stroke-width:1.9;
+    stroke-linecap:round;stroke-linejoin:round}
+  #rail a:hover svg{stroke:#cfe0ff}
+  #rail a span{display:none;overflow:hidden;text-overflow:ellipsis}
+  #rail.ouvert a span{display:block}
+  #rail .vide{display:none;color:#6b7585;font-size:13px;padding:14px 16px}
+  #rail.ouvert .vide.on{display:block}
+  @media (max-width:860px){ #rail{display:none} }
+
   #viewer{flex:1;overflow:auto;padding:28px 24px 60px;display:flex;flex-direction:column;
     align-items:center;gap:30px;
     background:radial-gradient(70% 50% at 50% 0%,#1b1f28,transparent 70%),#111419}
@@ -483,6 +519,17 @@
 </header>
 
 <main>
+  <nav id="rail" aria-label="Les autres outils">
+    <div class="tete">
+      <button id="rail-bascule" type="button" title="Afficher les outils" aria-expanded="false">
+        <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <input id="rail-q" type="search" placeholder="Chercher un outil…" autocomplete="off"
+             aria-label="Chercher un outil">
+    </div>
+    <div class="corps" id="rail-liste"></div>
+    <p class="vide" id="rail-vide">Aucun outil ne correspond.</p>
+  </nav>
   <div id="viewer"></div>
   <aside>
     <div id="insp">
@@ -685,6 +732,66 @@ document.addEventListener('dragleave', e => {
 
 /* Câblage indépendant de la grille : une page traduite fournit son sommaire en
    HTML statique, mais doit quand même pouvoir ouvrir l'éditeur. */
+/* Le rail d'outils de l'éditeur. Il est bâti depuis le même catalogue que les
+   pages : un outil ajouté y apparaît sans qu'on touche à ce fichier. La recherche
+   ignore les accents, parce que personne ne tape « numéroter » avec l'accent
+   quand il cherche vite. */
+(function railOutils(){
+  const hote = $('rail-liste'), rail = $('rail'), q = $('rail-q'),
+        bascule = $('rail-bascule'), vide = $('rail-vide');
+  if (!hote || typeof OUTILS_DATA === 'undefined') return;
+  const { OUTILS, GROUPES } = OUTILS_DATA;
+
+  const sansAccent = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+
+  GROUPES.forEach(gr => {
+    const h = document.createElement('h4');
+    h.textContent = gr.titre;
+    hote.append(h);
+    gr.cles.forEach(c => {
+      const o = OUTILS[c];
+      if (!o) return;
+      const a = document.createElement('a');
+      a.href = '/' + o.slug + '/';
+      a.title = o.titre + ' — ' + o.resume;
+      a.dataset.cherche = sansAccent(o.carte + ' ' + o.titre + ' ' + o.resume);
+      a.innerHTML = `<i><svg viewBox="0 0 24 24">${o.ico}</svg></i><span>${o.carte}</span>`;
+      hote.append(a);
+    });
+  });
+
+  const ouvrir = etat => {
+    rail.classList.toggle('ouvert', etat);
+    bascule.setAttribute('aria-expanded', String(etat));
+    bascule.title = etat ? 'Replier les outils' : 'Afficher les outils';
+    if (etat) q.focus();
+  };
+  bascule.onclick = () => ouvrir(!rail.classList.contains('ouvert'));
+
+  q.addEventListener('input', () => {
+    const t = sansAccent(q.value.trim());
+    let n = 0;
+    hote.querySelectorAll('a').forEach(a => {
+      const ok = !t || a.dataset.cherche.includes(t);
+      a.style.display = ok ? '' : 'none';
+      if (ok) n++;
+    });
+    /* Un titre de groupe dont tous les outils sont masqués n'a plus de sens. */
+    hote.querySelectorAll('h4').forEach(h => {
+      let v = false;
+      for (let e = h.nextElementSibling; e && e.tagName === 'A'; e = e.nextElementSibling)
+        if (e.style.display !== 'none') { v = true; break; }
+      h.style.display = v ? '' : 'none';
+    });
+    vide.classList.toggle('on', n === 0);
+  });
+
+  /* Échap referme le rail plutôt que de sortir de la recherche sans rien faire. */
+  q.addEventListener('keydown', e => {
+    if (e.key === 'Escape'){ e.stopPropagation(); q.value = ''; q.dispatchEvent(new Event('input')); ouvrir(false); }
+  });
+})();
+
 (function brancherAccueil(){
   ['phare-editeur', 'nav-ouvrir', 'cta-final', 'pied-ouvrir'].forEach(id => {
     const e = $(id);
