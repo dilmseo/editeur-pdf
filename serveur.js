@@ -20,9 +20,12 @@ const MIME = {
 
 const server = http.createServer((req, res) => {
   let rel = decodeURIComponent(req.url.split('?')[0]);
-  if (rel === '/') rel = '/index.html';
-  const file = path.join(ROOT, path.normalize(rel).replace(/^[\\/]+/, ''));
+  let file = path.join(ROOT, path.normalize(rel).replace(/^[\\/]+/, ''));
   if (!file.startsWith(ROOT)) { res.writeHead(403).end('403'); return; }
+  // Un dossier sert son index.html, comme le fait l'hébergeur : c'est ce qui
+  // donne aux pages d'outil des adresses du type /pdf-en-word/.
+  try { if (fs.statSync(file).isDirectory()) file = path.join(file, 'index.html'); }
+  catch { /* inexistant : le lecteur ci-dessous répondra 404 */ }
 
   fs.readFile(file, (err, data) => {
     if (err) { res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' }).end('Introuvable : ' + rel); return; }

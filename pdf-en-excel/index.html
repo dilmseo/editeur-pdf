@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Convertir un PDF en Excel gratuitement, sans envoi de fichier</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Extrayez les tableaux d'un PDF vers un classeur Excel .xlsx, directement dans votre navigateur. Gratuit, sans compte, sans limite de taille, sans téléversement.">
+<link rel="canonical" href="https://editeur-pdf.netlify.app/pdf-en-excel/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Éditeur PDF">
+<meta property="og:title" content="Convertir un PDF en Excel gratuitement, sans envoi de fichier">
+<meta property="og:description" content="Extrayez les tableaux d'un PDF vers un classeur Excel .xlsx, directement dans votre navigateur. Gratuit, sans compte, sans limite de taille, sans téléversement.">
+<meta property="og:url" content="https://editeur-pdf.netlify.app/pdf-en-excel/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231762e0'/%3E%3Cpath d='M9 10h14M9 16h10M9 22h7' stroke='%23fff' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/style-outil.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"PDF en Excel","url":"https://editeur-pdf.netlify.app/pdf-en-excel/","applicationCategory":"UtilitiesApplication","operatingSystem":"Tout navigateur web","description":"Extrayez les tableaux d'un PDF vers un classeur Excel .xlsx, directement dans votre navigateur. Gratuit, sans compte, sans limite de taille, sans téléversement.","inLanguage":"fr","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}},{"@type":"HowTo","name":"Convertir un PDF en Excel","inLanguage":"fr","step":[{"@type":"HowToStep","position":1,"text":"Déposez votre fichier sur la page, ou cliquez pour le choisir dans vos dossiers."},{"@type":"HowToStep","position":2,"text":"Lancez la conversion. Elle se déroule dans votre navigateur : rien n'est envoyé sur un serveur."},{"@type":"HowToStep","position":3,"text":"Téléchargez le résultat. Sans compte, sans filigrane et sans attente dans une file."}]},{"@type":"FAQPage","inLanguage":"fr","mainEntity":[{"@type":"Question","name":"Mon tableau sort décalé, que faire ?","acceptedAnswer":{"@type":"Answer","text":"Le découpage en colonnes repose sur l'alignement horizontal du texte. Si le PDF aligne mal ses colonnes, ou mélange tableau et paragraphes, le résultat se décale. Dans ce cas, convertissez plutôt la page concernée et recollez les colonnes à la main dans Excel."}},{"@type":"Question","name":"Les nombres sont-ils de vrais nombres ?","acceptedAnswer":{"@type":"Answer","text":"Ils sont écrits tels qu'ils apparaissent dans le PDF, texte compris : séparateurs de milliers, symbole monétaire, pourcentages. Un collage spécial ou la fonction de conversion d'Excel les transforme ensuite en valeurs calculables."}},{"@type":"Question","name":"Combien de pages puis-je convertir ?","acceptedAnswer":{"@type":"Answer","text":"Autant que votre ordinateur peut en traiter : il n'y a aucune limite imposée, puisque rien n'est envoyé sur un serveur. Chaque page devient une feuille distincte du classeur."}}]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Accueil","item":"https://editeur-pdf.netlify.app/"},{"@type":"ListItem","position":2,"name":"PDF → Excel","item":"https://editeur-pdf.netlify.app/pdf-en-excel/"}]}]}</script>
+</head>
+<body>
+
+<div class="hnav"><div class="in">
+  <a class="brand" href="/"><i><svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h10M5 18h7"/></svg></i>Éditeur PDF</a>
+  <nav>
+    <a href="/">Modifier un PDF</a>
+    <a href="/#outils">Tous les outils</a>
+    <a href="/#confiance">Confidentialité</a>
+  </nav>
+</div></div>
+
+<header class="tete"><div class="sec">
+  <p class="fil"><a href="/">Accueil</a> › PDF → Excel</p>
+  <h1>Convertir un PDF en Excel</h1>
+  <p class="chapo">Récupérez un tableau enfermé dans un PDF sous forme de feuille de calcul, prête à être triée et recalculée. Les colonnes sont retrouvées à partir de l'alignement du texte sur la page.</p>
+  <p style="margin-top:18px"><span class="pastille"><b></b>Gratuit · sans compte · aucun fichier téléversé</span></p>
+
+  <label class="zone" id="zone" for="fichier">
+    <div class="gros">Déposez votre fichier ici</div>
+    <div class="pet">ou cliquez pour le choisir</div>
+  </label>
+  <input id="fichier" type="file" hidden>
+  <ul class="liste" id="liste"></ul>
+  <button class="go" id="go" disabled>Convertir</button>
+
+  <div class="barre" id="barre" hidden><i></i></div>
+  <div class="etat" id="etat" hidden></div>
+  <div class="err" id="err" hidden></div>
+
+  <div class="fini" id="fini" hidden>
+    <div class="ok"><svg viewBox="0 0 24 24"><path d="m4 12.5 5.5 5.5L20 7"/></svg></div>
+    <b>Conversion terminée</b>
+    <div class="nom" id="fini-nom"></div>
+    <a class="dl" id="dl" download>Télécharger</a>
+    <button class="encore" id="encore">Convertir un autre fichier</button>
+    <a class="avis" href="https://g.page/r/CfBfIXTvKKmwEAE/review" target="_blank" rel="noopener">
+      Ça vous a rendu service ?<br><b>Donner mon avis</b></a>
+  </div>
+</div></header>
+
+<main class="sec corps">
+
+  <p class="intro">Les chiffres finissent souvent prisonniers d'un PDF : relevé, facture fournisseur, export d'un logiciel métier. Les recopier à la main est long et source d'erreurs ; les retrouver en colonnes permet de trier, additionner et comparer immédiatement.</p>
+
+  <h2>Convertir un PDF en Excel en trois étapes</h2>
+  <div class="etapes">
+    <div class="etape"><p>Déposez votre fichier sur la page, ou cliquez pour le choisir dans vos dossiers.</p></div>
+    <div class="etape"><p>Lancez la conversion. Elle se déroule dans votre navigateur : rien n'est envoyé sur un serveur.</p></div>
+    <div class="etape"><p>Téléchargez le résultat. Sans compte, sans filigrane et sans attente dans une file.</p></div>
+  </div>
+
+  <h2>Quand cet outil sert vraiment</h2>
+  <div class="usages">
+    <div class="usage"><h3>Exploiter un relevé ou une facture</h3><p>Récupérez les lignes et les montants pour les rapprocher de votre comptabilité.</p></div>
+    <div class="usage"><h3>Reprendre un export qui ne propose que le PDF</h3><p>Beaucoup de logiciels n'exportent qu'en PDF : cet outil referme la porte qu'ils avaient laissée close.</p></div>
+    <div class="usage"><h3>Comparer deux tableaux</h3><p>Une fois les deux documents en feuilles de calcul, un simple tri met les écarts en évidence.</p></div>
+  </div>
+
+  <h2>Ce que la conversion conserve, et ce qu'elle perd</h2>
+  <p>Convertir dans un navigateur impose des limites qu'un service hébergé n'a pas.
+     Les voici en clair, pour que vous sachiez à quoi vous attendre avant de commencer.</p>
+  <div class="deux">
+    <div class="bloc oui">
+      <h3>Conservé</h3>
+      <ul><li><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg><span>Chaque page devient une feuille du classeur</span></li><li><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg><span>Les colonnes, déduites des positions de départ du texte</span></li><li><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg><span>Les lignes, regroupées par ligne de base commune</span></li><li><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg><span>Les valeurs telles qu'elles sont écrites, accents compris</span></li></ul>
+    </div>
+    <div class="bloc non">
+      <h3>Non repris</h3>
+      <ul><li><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg><span>Les formules : un PDF ne contient que des résultats</span></li><li><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg><span>Les fusions de cellules et les bordures</span></li><li><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg><span>Les couleurs et la mise en forme conditionnelle</span></li><li><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg><span>Les colonnes mal alignées, qui peuvent se retrouver décalées</span></li></ul>
+    </div>
+  </div>
+  <p class="apres">Besoin du chemin inverse ? <a href="/excel-en-pdf/">Excel → PDF</a>
+     fait exactement l'opération contraire, avec les mêmes garanties.</p>
+
+  <h2>Bon à savoir sur le format</h2>
+  <p>Le .xlsx est le format d'Excel depuis 2007, lui aussi une archive de fichiers XML. Le classeur produit ici contient du texte brut, sans mise en forme : c'est volontaire, les valeurs comptent plus que l'habillage quand il s'agit de recalculer.</p>
+
+  <h2>Et si ce n'est pas le bon outil ?</h2>
+  <ul class="renvois">
+    <li><a href="/pdf-en-word/">PDF → Word</a> — Si votre PDF est surtout du texte suivi, la conversion en document Word sera plus lisible.</li>
+    <li><a href="/excel-en-pdf/">Excel → PDF</a> — Pour refaire le chemin inverse et diffuser votre tableau sans qu'il soit modifié.</li>
+    <li><a href="/pdf-en-png/">PDF → PNG</a> — Pour conserver l'apparence exacte du tableau plutôt que ses valeurs.</li>
+  </ul>
+
+  <h2>Pourquoi c'est gratuit</h2>
+  <div class="confiance">
+    <p style="margin:0">Les services de conversion en ligne reçoivent votre fichier sur leurs
+    serveurs, le traitent, puis promettent de l'effacer. Chaque document leur coûte du temps de
+    calcul : c'est pour cela qu'ils facturent, et qu'ils limitent la taille des fichiers.</p>
+    <p style="margin:12px 0 0"><b>Ici, la conversion se fait sur votre ordinateur.</b> La page
+    ne contient aucun code serveur : votre document ne peut pas être reçu, puisqu'il n'est jamais
+    envoyé. Il n'y a donc rien à facturer, rien à limiter, et rien à effacer ensuite. Coupez votre
+    connexion après le chargement de la page : tout continue de fonctionner.</p>
+  </div>
+
+  <h2>Questions fréquentes</h2>
+  <details open>
+    <summary>Mon tableau sort décalé, que faire ?</summary>
+    <p>Le découpage en colonnes repose sur l'alignement horizontal du texte. Si le PDF aligne mal ses colonnes, ou mélange tableau et paragraphes, le résultat se décale. Dans ce cas, convertissez plutôt la page concernée et recollez les colonnes à la main dans Excel.</p>
+  </details>
+  <details>
+    <summary>Les nombres sont-ils de vrais nombres ?</summary>
+    <p>Ils sont écrits tels qu'ils apparaissent dans le PDF, texte compris : séparateurs de milliers, symbole monétaire, pourcentages. Un collage spécial ou la fonction de conversion d'Excel les transforme ensuite en valeurs calculables.</p>
+  </details>
+  <details>
+    <summary>Combien de pages puis-je convertir ?</summary>
+    <p>Autant que votre ordinateur peut en traiter : il n'y a aucune limite imposée, puisque rien n'est envoyé sur un serveur. Chaque page devient une feuille distincte du classeur.</p>
+  </details>
+
+  <h2>Les autres outils</h2>
+  <div class="autres">
+    <a href="/pdf-en-word/"><span class="ico i-bleu"><svg viewBox="0 0 24 24"><path d="M14 3v5h5M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M8 13l1.5 4 1.5-4 1.5 4L14 13"/></svg></span>PDF → Word</a>
+    <a href="/excel-en-pdf/"><span class="ico i-vert"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 10v10"/></svg></span>Excel → PDF</a>
+    <a href="/pdf-en-png/"><span class="ico i-ambre"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m5 17 4.5-4.5L13 16l2.5-2.5L19 17"/></svg></span>PDF → PNG</a>
+  </div>
+  <p class="apres"><a href="/"><strong>Modifier le texte d'un PDF</strong></a> —
+     corriger une ligne déjà écrite, même sur un document scanné. C'est la fonction que les
+     autres services réservent à leurs formules payantes, et le point de départ naturel quand
+     il faut retoucher avant de convertir.</p>
+</main>
+
+<nav class="plan" aria-label="Tous les outils"><div class="in">
+  <div><strong>Convertir un PDF</strong><ul><li><a href="/pdf-en-word/">PDF → Word</a></li><li><span aria-current="page">PDF → Excel</span></li><li><a href="/pdf-en-powerpoint/">PDF → PowerPoint</a></li><li><a href="/pdf-en-jpg/">PDF → JPG</a></li><li><a href="/pdf-en-png/">PDF → PNG</a></li></ul></div>
+    <div><strong>Créer un PDF</strong><ul><li><a href="/word-en-pdf/">Word → PDF</a></li><li><a href="/excel-en-pdf/">Excel → PDF</a></li><li><a href="/powerpoint-en-pdf/">PowerPoint → PDF</a></li><li><a href="/jpg-en-pdf/">JPG → PDF</a></li><li><a href="/png-en-pdf/">PNG → PDF</a></li></ul></div>
+    <div><strong>Autres outils</strong><ul><li><a href="/">Modifier le texte d'un PDF</a></li><li><a href="/fusionner-pdf/">Fusionner des PDF</a></li></ul></div>
+</div></nav>
+
+<div class="pied"><div class="in">
+  <span>Construit avec pdf.js, pdf-lib et fflate — tout est embarqué, aucun appel réseau.</span>
+  <a href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">Code source</a>
+</div></div>
+
+<script src="/vendor/pdf.min.js"></script>
+<script src="/vendor/pdf-lib.min.js"></script>
+<script src="/vendor/fflate.min.js"></script>
+<script src="/outils-data.js"></script>
+<script src="/convert.js"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = '/vendor/pdf.worker.min.js';
+window.OUTIL_COURANT = "pdf-excel";
+</script>
+<script src="/outil.js"></script>
+</body>
+</html>
