@@ -69,7 +69,7 @@ function page(cle){
         inLanguage: 'fr', publisher: { '@id': SITE + '/#editeur' } },
       { '@type': 'ImageObject', '@id': url + '#image', url: SITE + '/apercu-editeur.png',
         width: 1360, height: 850,
-        caption: "L'éditeur ouvert sur une facture, une ligne en cours de correction." },
+        caption: "L'éditeur ouvert sur une convocation, une date en cours de correction." },
       { '@type': 'WebPage', '@id': url + '#page', url, name: o.titreSeo, description: o.meta,
         inLanguage: 'fr', isPartOf: { '@id': SITE + '/#site' },
         primaryImageOfPage: { '@id': url + '#image' },
@@ -116,7 +116,7 @@ function page(cle){
 <meta property="og:image" content="${SITE}/apercu-editeur.png">
 <meta property="og:image:width" content="1360">
 <meta property="og:image:height" content="850">
-<meta property="og:image:alt" content="L'éditeur PDF ouvert sur une facture, une ligne en cours de correction">
+<meta property="og:image:alt" content="L'éditeur PDF ouvert sur une convocation, une date en cours de correction">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="${SITE}/apercu-editeur.png">
 <link rel="icon" href="${FAVICON}">
