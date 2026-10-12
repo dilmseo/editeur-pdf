@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8">
 <title>Éditeur PDF — texte</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Modifier le texte d'un PDF dans le navigateur : édition, ajout, masquage et OCR des scans. Rien n'est téléversé.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%235b9cf8'/%3E%3Cpath d='M9 10h14M9 16h10M9 22h7' stroke='%2307101f' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
   :root{
     --bg:#15171c; --panel:#1c1f26; --panel2:#23272f; --line:#2f343e;
@@ -25,8 +28,6 @@
 
   main{flex:1;display:flex;min-height:0}
   #viewer{flex:1;overflow:auto;padding:24px;display:flex;flex-direction:column;align-items:center;gap:24px}
-  #drop{margin:auto;text-align:center;color:var(--dim);border:2px dashed var(--line);border-radius:16px;padding:60px 70px}
-  #drop b{color:var(--txt);display:block;font-size:17px;margin-bottom:6px}
 
   .page{position:relative;box-shadow:0 10px 30px rgba(0,0,0,.5);background:#fff;flex:0 0 auto}
   .page canvas{display:block}
@@ -62,13 +63,153 @@
   .hint kbd{background:var(--panel2);border:1px solid var(--line);border-radius:4px;padding:0 4px}
   .over{color:var(--warn)}
   #toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#0d1017;border:1px solid var(--line);
-         padding:10px 16px;border-radius:9px;opacity:0;transition:.25s;pointer-events:none}
+         padding:10px 16px;border-radius:9px;opacity:0;transition:.25s;pointer-events:none;z-index:50}
   #toast.show{opacity:1}
+
+  /* ---------- page d'accueil ---------- */
+  body:not(.loaded) > header, body:not(.loaded) > main{display:none}
+  body.loaded #home{display:none}
+
+  /* overflow-x bridé : les halos débordent volontairement des bords. */
+  #home{flex:1;overflow:hidden auto;position:relative;background:#0b0d12}
+  /* Le décor vient du métier : une trame de lignes de texte, et deux halos qui
+     donnent la profondeur sans virer au dégradé de modèle générique. */
+  #home::before{content:'';position:absolute;inset:0;pointer-events:none;
+    background:repeating-linear-gradient(to bottom,rgba(255,255,255,.05) 0 1px,transparent 1px 26px);
+    mask-image:linear-gradient(to bottom,#000 0 62%,transparent)}
+  #home::after{content:'';position:absolute;inset:-26% -12% auto -12%;height:900px;pointer-events:none;
+    background:radial-gradient(52% 62% at 20% 24%,rgba(91,156,248,.42),transparent 68%),
+               radial-gradient(44% 54% at 78% 10%,rgba(56,184,124,.26),transparent 70%),
+               radial-gradient(38% 44% at 68% 44%,rgba(91,156,248,.18),transparent 72%)}
+  .wrap{position:relative;max-width:1080px;margin:0 auto;padding:62px 28px 56px}
+
+  .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:52px;align-items:center}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;letter-spacing:.06em;
+    text-transform:uppercase;color:#8fb6f5;background:rgba(91,156,248,.10);
+    border:1px solid rgba(91,156,248,.28);border-radius:999px;padding:6px 13px}
+  .eyebrow b{width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 10px var(--ok)}
+  .hero h1{margin:20px 0 0;font-size:clamp(2.3rem,5.2vw,4rem);line-height:1.04;letter-spacing:-.025em;font-weight:700}
+  .hero h1 em{font-style:normal;color:#7fb2ff;
+    text-shadow:0 0 36px rgba(91,156,248,.45)}
+  .lede{margin:20px 0 0;font-size:17px;line-height:1.6;color:#aeb7c6;max-width:30em}
+  .cta{display:inline-block;margin-top:30px;background:var(--acc);color:#07101f;border:0;border-radius:11px;
+    padding:15px 30px;font-size:16.5px;font-weight:700;cursor:pointer;
+    box-shadow:0 10px 30px rgba(91,156,248,.35)}
+  .cta:hover{background:#79aefa;box-shadow:0 12px 34px rgba(91,156,248,.45)}
+  .cta-note{display:block;margin-top:13px;font-size:13px;color:#79828f}
+
+  .dropcard{position:relative;border:2px dashed #39414f;border-radius:20px;padding:26px 22px 22px;
+    background:linear-gradient(180deg,rgba(28,33,43,.9),rgba(16,19,26,.9));text-align:center;
+    transition:border-color .18s,box-shadow .18s,transform .18s}
+  .dropcard:hover,.dropcard.over{border-color:var(--acc);box-shadow:0 0 0 5px rgba(91,156,248,.13),0 24px 60px rgba(0,0,0,.5);transform:translateY(-3px)}
+  .dropcard svg{display:block;width:100%;max-width:250px;margin:0 auto}
+  .dropcard .t{margin-top:16px;font-size:17px;font-weight:650}
+  .dropcard .s{margin-top:5px;font-size:13.5px;color:#79828f}
+
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:64px}
+  .card{background:rgba(28,32,41,.72);border:1px solid var(--line);border-radius:14px;padding:19px}
+  .card h3{margin:13px 0 7px;font-size:15.5px;letter-spacing:0;text-transform:none;color:var(--txt)}
+  .card p{margin:0;font-size:13.5px;line-height:1.55;color:#98a1b0}
+  .card .ico{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;
+    background:rgba(91,156,248,.13);border:1px solid rgba(91,156,248,.26)}
+  .card .ico svg{width:17px;height:17px;stroke:#8fb6f5;fill:none;stroke-width:1.9;
+    stroke-linecap:round;stroke-linejoin:round}
+
+  .note{margin-top:34px;display:flex;gap:13px;align-items:flex-start;
+    border-left:3px solid var(--warn);background:rgba(224,163,58,.07);padding:14px 17px;border-radius:0 11px 11px 0}
+  .note p{margin:0;font-size:13.5px;line-height:1.6;color:#c3b394}
+  .note b{color:#e8cf9f}
+  #home footer{margin-top:30px;font-size:13px;color:#6c7683;display:flex;gap:18px;flex-wrap:wrap}
+  #home footer a{color:#8fa0b5}
+
+  @media (max-width:860px){
+    .hero{grid-template-columns:1fr;gap:34px}
+    .cards{grid-template-columns:1fr 1fr}
+    .wrap{padding:40px 20px}
+  }
+  @media (max-width:520px){ .cards{grid-template-columns:1fr} }
 </style>
 </head>
 <body>
 
+<div id="home">
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <span class="eyebrow"><b></b>Tout se passe dans ton navigateur</span>
+        <h1>Modifie le <em>texte</em><br>d'un PDF.</h1>
+        <p class="lede">Clique une ligne, change-la, enregistre. Les pages scannées
+          passent par la reconnaissance de caractères et deviennent modifiables elles aussi.</p>
+        <label class="cta" for="file">Ouvrir un PDF</label>
+        <span class="cta-note">ou dépose le fichier n'importe où sur cette page</span>
+      </div>
+
+      <label class="dropcard" id="dropcard" for="file">
+        <svg viewBox="0 0 260 230" role="img" aria-label="Une ligne de texte en cours de modification dans une page">
+          <defs>
+            <filter id="lueur" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="9" result="f"/>
+              <feMerge><feMergeNode in="f"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <rect x="52" y="12" width="168" height="196" rx="7" fill="#1a1f29" stroke="#2c3341"/>
+          <rect x="38" y="24" width="168" height="196" rx="7" fill="#f5f7fb"/>
+          <rect x="56" y="46"  width="86"  height="9" rx="3" fill="#2b3444"/>
+          <rect x="56" y="70"  width="132" height="6" rx="3" fill="#c6cfdd"/>
+          <rect x="56" y="86"  width="118" height="6" rx="3" fill="#c6cfdd"/>
+          <g filter="url(#lueur)">
+            <rect x="50" y="102" width="138" height="20" rx="4" fill="#5b9cf8" opacity=".22"/>
+            <rect x="50" y="102" width="138" height="20" rx="4" fill="none" stroke="#5b9cf8" stroke-width="1.5"/>
+          </g>
+          <rect x="56" y="109" width="104" height="6" rx="3" fill="#1d3f74"/>
+          <rect x="164" y="104" width="2"  height="16" rx="1" fill="#5b9cf8"/>
+          <rect x="56" y="136" width="126" height="6" rx="3" fill="#c6cfdd"/>
+          <rect x="56" y="152" width="96"  height="6" rx="3" fill="#c6cfdd"/>
+          <rect x="56" y="178" width="62"  height="6" rx="3" fill="#dde3ec"/>
+        </svg>
+        <div class="t">Dépose ton PDF ici</div>
+        <div class="s">il ne quitte pas ta machine</div>
+      </label>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 20h16M5 15.5 15.5 5a2.1 2.1 0 0 1 3 3L8 18.5l-4 1z"/></svg></div>
+        <h3>Éditer</h3>
+        <p>Chaque ligne du PDF devient un bloc cliquable. Tu tapes par-dessus, à la même place.</p>
+      </div>
+      <div class="card">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
+        <h3>Ajouter</h3>
+        <p>Pose un texte où tu cliques, avec sa police, sa taille et sa couleur.</p>
+      </div>
+      <div class="card">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M3 5h18v14H3z"/><path d="M7 9h10v6H7z"/></svg></div>
+        <h3>Masquer</h3>
+        <p>Glisse pour couvrir une zone ; la couleur du fond est reprise automatiquement.</p>
+      </div>
+      <div class="card">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M8 12h8"/></svg></div>
+        <h3>OCR</h3>
+        <p>Une page scannée est reconnue sur place, en français, puis devient modifiable.</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <p><b>Un recouvrement, pas un caviardage.</b> Le texte remplacé reste présent dans le
+        fichier : un copier-coller peut le retrouver. Pour effacer vraiment une donnée, masque
+        la zone puis réimprime le résultat en PDF.</p>
+    </div>
+
+    <footer>
+      <span>pdf.js · pdf-lib · tesseract.js — tout est embarqué, aucun appel réseau</span>
+      <a href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">Code source</a>
+    </footer>
+  </div>
+</div>
+
 <header>
+  <button id="accueil" title="Revenir à l'accueil et ouvrir un autre fichier">← Accueil</button>
   <label class="btn" for="file">Ouvrir un PDF</label>
   <input id="file" type="file" accept="application/pdf">
   <span id="fname">aucun fichier</span>
@@ -88,9 +229,7 @@
 </header>
 
 <main>
-  <div id="viewer">
-    <div id="drop"><b>Dépose un PDF ici</b>ou clique « Ouvrir un PDF »</div>
-  </div>
+  <div id="viewer"></div>
   <aside>
     <div id="insp">
       <h3>Sélection</h3>
@@ -195,9 +334,32 @@ function widthOf(txt, fam, sty, size){
 $('file').onchange = e => { if (e.target.files[0]) open(e.target.files[0]); };
 ['dragover','drop'].forEach(ev => document.addEventListener(ev, e => e.preventDefault()));
 document.addEventListener('drop', e => {
+  $('dropcard').classList.remove('over');
   const f = [...(e.dataTransfer?.files || [])].find(f => /\.pdf$/i.test(f.name));
   if (f) open(f);
+  else if (e.dataTransfer?.files?.length) toast('Ce fichier n\'est pas un PDF.');
 });
+document.addEventListener('dragover', () => {
+  if (!document.body.classList.contains('loaded')) $('dropcard').classList.add('over');
+});
+document.addEventListener('dragleave', e => {
+  if (!e.relatedTarget) $('dropcard').classList.remove('over');
+});
+
+$('accueil').onclick = () => {
+  let n = 0;
+  pages.forEach(p => { n += p.lines.filter(l => l.newText !== null).length + p.adds.length + p.erases.length; });
+  if (n && !confirm(n + ' modification(s) non enregistrée(s). Revenir à l\'accueil ?')) return;
+  commitPending(); editing = null;
+  pages = []; pdf = null; originalBytes = null; sel = null;
+  viewer.innerHTML = '';
+  $('file').value = '';
+  $('fname').textContent = 'aucun fichier';
+  $('save').disabled = $('ocr').disabled = true;
+  document.title = 'Éditeur PDF — texte';
+  document.body.classList.remove('loaded');
+  refreshCount(); fillInspector();
+};
 
 async function open(file){
   const buf = await file.arrayBuffer();
@@ -207,6 +369,7 @@ async function open(file){
   document.title = file.name + ' — Éditeur PDF';
   sel = null;
   await build();
+  document.body.classList.add('loaded');
   $('save').disabled = false;
   $('ocr').disabled = !OCR_OK;
   toast(pdf.numPages + ' page(s) chargée(s)');
