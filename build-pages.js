@@ -13,6 +13,9 @@ const RACINE = __dirname;
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
                           .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const JOUR = new Date().toISOString().slice(0, 10);
+/* Vérification de propriété Google Search Console, posée sur toutes les pages :
+   la validation tient quelle que soit l'URL déclarée dans la console. */
+const GSC = '<meta name="google-site-verification" content="vbmtfEKob3NfEM7iX_1giermuIPpd27wY6HxTupUOTY">';
 const jsonEsc = s => JSON.stringify(String(s));
 
 const COCHE = '<svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg>';
@@ -163,6 +166,7 @@ function page(lang, cle){
 <title>${esc(o.titreSeo)}</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="${esc(o.meta)}">
+${GSC}
 <link rel="canonical" href="${url}">
 ${hreflangs(cle)}
 <meta property="og:type" content="website">
@@ -544,7 +548,8 @@ function pageAppli(lang){
   const tete = html.slice(0, html.indexOf('</head>'));
   let nouvelleTete = tete
     .replace(/<title>[\s\S]*?<\/title>/, `<title>${esc(a.titreSeo)}</title>`)
-    .replace(/<meta name="description"[^>]*>/, `<meta name="description" content="${esc(a.meta)}">`)
+    .replace(/<meta name="description"[^>]*>/, `<meta name="description" content="${esc(a.meta)}">
+${GSC}`)
     .replace(/<link rel="canonical"[^>]*>/, `<link rel="canonical" href="${accueilDe(lang)}">`)
     .replace(/<link rel="alternate"[^>]*>\s*/g, '')
     .replace(/<meta property="og:title"[^>]*>/, `<meta property="og:title" content="${esc(a.titreSeo)}">`)
