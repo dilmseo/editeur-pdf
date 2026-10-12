@@ -1,5 +1,14 @@
 [build]
   publish = "."
+  functions = "netlify/functions"
+
+# Les deux types sont admis par Google pour un sitemap ; text/xml est celui que
+# servent la plupart des sites, et certains outils d'analyse refusent l'autre.
+# Autant ne pas laisser cette variable dans l'equation.
+[[headers]]
+  for = "/sitemap*.xml"
+  [headers.values]
+    Content-Type = "text/xml; charset=UTF-8"
 
 # Une seule adresse indexée. Le .fr, les www et l'ancienne adresse Netlify
 # renvoient vers voilapdf.com en 301, sinon la popularité se disperserait entre

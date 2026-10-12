@@ -18,6 +18,10 @@ const JOUR = new Date().toISOString().slice(0, 10);
    la validation tient quelle que soit l'URL déclarée dans la console. */
 const GSC = '<meta name="google-site-verification" content="vbmtfEKob3NfEM7iX_1giermuIPpd27wY6HxTupUOTY">';
 const jsonEsc = s => JSON.stringify(String(s));
+/* Clé de site Turnstile : publique par construction, elle est faite pour être
+   lue dans le HTML. La clé secrète, elle, vit dans l'environnement Netlify sous
+   TURNSTILE_SECRET et n'apparaît nulle part dans ce dépôt, qui est public. */
+const TURNSTILE_SITEKEY = '0x4AAAAAAFU9P7fPGn42gSV-';
 
 const COCHE = '<svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg>';
 const CROIX = '<svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>';
@@ -73,7 +77,40 @@ const UI_FR = {
     "Téléchargez le résultat. Sans compte, sans filigrane et sans attente dans une file."
   ],
   etapesNoms: ['Ouvrir le fichier', 'Lancer le traitement', 'Télécharger le résultat'],
-  plan: { autres: 'Autres outils', editeur: "Modifier le texte d'un PDF", fusion: 'Fusionner des PDF' }
+  plan: { autres: 'Autres outils', editeur: "Modifier le texte d'un PDF", fusion: 'Fusionner des PDF' },
+  contact: {
+    slug: 'contact', lien: 'Nous écrire',
+    titreSeo: 'Contact — VoilàPDF',
+    meta: "Signaler un défaut, proposer un outil ou poser une question sur VoilàPDF. Une réponse sous quelques jours, par une personne.",
+    h1: 'Nous écrire',
+    chapo: "Un outil qui se comporte mal, un PDF qu'il refuse, une idée d'outil manquant : écrivez. C'est la seule page du site qui envoie quelque chose sur un serveur, et elle le dit.",
+    nom: 'Votre nom', nomEx: 'Prénom et nom',
+    email: 'Votre adresse e-mail', emailEx: 'pour recevoir la réponse',
+    sujet: 'Sujet',
+    sujets: [['bug', 'Un défaut à signaler'], ['outil', 'Une idée d\'outil'],
+             ['question', 'Une question'], ['autre', 'Autre chose']],
+    message: 'Votre message',
+    messageEx: "Décrivez ce que vous avez fait, ce que vous attendiez, et ce qui s'est passé à la place.",
+    fichier: 'Joindre un fichier',
+    fichierAide: "Facultatif, 3 Mo maximum (PDF, image ou texte). Attention : ce fichier-là, contrairement à ceux que vous traitez avec les outils, est bien envoyé sur un serveur. N'y mettez rien de confidentiel.",
+    fichierChoisir: 'Choisir un fichier', fichierRetirer: 'Retirer',
+    envoyer: 'Envoyer le message', envoi: 'Envoi…',
+    merciTitre: 'Message envoyé',
+    merci: "Merci. Nous lisons tout et répondons sous quelques jours, à l'adresse que vous avez indiquée.",
+    encore: 'Écrire un autre message',
+    avertTitre: 'Ce que devient votre message',
+    avert: "Les messages arrivent dans une boîte hébergée par Netlify et ne servent qu'à vous répondre : ni liste de diffusion, ni revente, ni statistiques. Cloudflare Turnstile protège le formulaire des robots ; il ne pose pas de cookie publicitaire et ne vous suit pas d'un site à l'autre. Le reste de VoilàPDF continue de fonctionner sans rien envoyer : ouvrez n'importe quel outil, coupez votre connexion, il marche toujours.",
+    erreurs: {
+      champs: 'Le nom et le message sont obligatoires.',
+      email: "Cette adresse e-mail ne semble pas valide.",
+      jeton: "Veuillez patienter : la vérification anti-robot n'est pas terminée.",
+      refus: "La vérification anti-robot a échoué. Rechargez la page et réessayez.",
+      taille: 'Le fichier dépasse 3 Mo.',
+      type: 'Ce type de fichier n\'est pas accepté.',
+      reseau: "L'envoi a échoué. Vérifiez votre connexion et réessayez.",
+      config: "Le formulaire est momentanément indisponible."
+    }
+  }
 };
 
 /* Assemble la version d'une langue : le fonctionnel vient toujours du catalogue
@@ -118,6 +155,68 @@ function hreflangs(cle){
     + `\n<link rel="alternate" hreflang="x-default" href="${cle ? urlDe(LANGUES[0], cle) : accueilDe(LANGUES[0])}">`;
 }
 
+/* Pied commun aux pages d'outil et a la page de contact : c'est lui qui porte le
+   maillage vers les 24 outils, il n'y avait pas de raison de l'ecrire deux fois.
+   `cle` vaut null hors d'une page d'outil ; aucun lien n'est alors neutralise.
+   Un renvoi vers la page courante n'est pas un lien : il ne sert ni le lecteur
+   ni le maillage, d'ou `estContact`. */
+function pied(lang, cle, estContact){
+  const ui = lang.ui;
+  const p = ui.accueil || ui;
+  const lien = (k, texte) => `<a href="${lang.prefixe}/${lang.outils[k].slug}/">${esc(texte || lang.outils[k].carte)}</a>`;
+  const ligne = k => k === cle
+    ? `<li><span aria-current="page">${esc(lang.outils[k].carte)}</span></li>`
+    : `<li>${lien(k)}</li>`;
+  const colonnes = base.GROUPES.map((gr, i) =>
+      `<div${gr.cles.length > 6 ? ' class="double"' : ''}><h4>${esc(lang.groupes[i])}</h4><ul>`
+      + gr.cles.map(ligne).join('')
+      + (i === 1 ? ligne('fusion') : '')
+      + '</ul></div>').join('\n    ');
+  const contact = `${lang.prefixe}/${ui.contact.slug}/`;
+
+  return `<footer class="pied">
+  <div class="rappel">
+    <p class="mot">${esc(p.rappelA)}<br><span>${esc(p.rappelB)}</span></p>
+    <a class="bouton" href="${lang.prefixe}/">${esc(p.rappelBouton)}</a>
+  </div>
+  <div class="cols">
+    <div>
+      <span class="marque">${GLYPHE}VoilàPDF</span>
+      <p class="pitch">${esc(p.piedPitch)}</p>
+      <div class="sceau">
+        <svg viewBox="0 0 24 24"><path d="M12 3 5 6v6c0 4.2 2.9 7.9 7 9 4.1-1.1 7-4.8 7-9V6z"/><path d="m9 12 2 2 4-4"/></svg>
+        <span><b>${esc(p.sceauTitre)}</b>${esc(p.sceauTexte)}</span>
+      </div>
+      <a class="etoiles" href="https://g.page/r/CfBfIXTvKKmwEAE/review" target="_blank" rel="noopener">
+        ${ETOILE.repeat(5)}<em>${esc(ui.avisLien)}</em></a>
+    </div>
+    ${colonnes}
+    <div><h4>${esc(p.piedProjet)}</h4><ul>
+      <li><a href="${lang.prefixe}/">${esc(p.piedEditeur)}</a></li>
+      <li><a href="${lang.prefixe}/#confiance">${esc(p.piedConfidentialite)}</a></li>
+      <li><a href="${lang.prefixe}/#questions">${esc(p.piedQuestions)}</a></li>
+      <li>${estContact ? `<span aria-current="page">${esc(ui.contact.lien)}</span>`
+                        : `<a href="${contact}">${esc(ui.contact.lien)}</a>`}</li>
+      <li><a href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">${esc(ui.codeSource)}</a></li>
+    </ul></div>
+  </div>
+  <div class="bas">
+    <span>${esc(ui.piedPhrase)}</span>
+    <a href="${contact}">${esc(ui.contact.lien)}</a>
+    <a href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">${esc(ui.codeSource)}</a>
+    <span class="fin">
+      <svg viewBox="0 0 24 24"><path d="M12 3 5 6v6c0 4.2 2.9 7.9 7 9 4.1-1.1 7-4.8 7-9V6z"/></svg>
+      ${esc(p.piedFin)}
+    </span>
+  </div>
+</footer>
+
+<a class="badge-fr" href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">
+  <span class="drapeau" aria-hidden="true"><i></i><i></i><i></i></span>
+  <span>${esc(p.badgeA)}<b>&#9829;</b>${esc(p.badgeB)}</span>
+</a>`;
+}
+
 function page(lang, cle){
   const o = lang.outils[cle];
   const ui = lang.ui;
@@ -128,19 +227,6 @@ function page(lang, cle){
     const x = lang.outils[k];
     return `<a href="${lang.prefixe}/${x.slug}/"><span class="ico ${x.couleur}"><svg viewBox="0 0 24 24">${x.ico}</svg></span>${esc(x.carte)}</a>`;
   };
-  /* Le pied reprend celui de l'accueil : c'est lui qui porte le maillage vers les
-     24 outils. Les textes propres au pied vivent dans `accueil` côté traductions
-     et à plat dans UI_FR, d'où ce `p`. L'outil courant n'est pas un lien : un
-     renvoi vers soi-même ne sert ni le lecteur ni le maillage. */
-  const p = ui.accueil || ui;
-  const ligne = k => k === cle
-    ? `<li><span aria-current="page">${esc(lang.outils[k].carte)}</span></li>`
-    : `<li>${lien(k)}</li>`;
-  const colonnes = base.GROUPES.map((gr, i) =>
-      `<div${gr.cles.length > 6 ? ' class="double"' : ''}><h4>${esc(lang.groupes[i])}</h4><ul>`
-      + gr.cles.map(ligne).join('')
-      + (i === 1 ? ligne('fusion') : '')
-      + '</ul></div>').join('\n    ');
 
   const jsonld = {
     '@context': 'https://schema.org',
@@ -306,44 +392,7 @@ ${hreflangs(cle)}
      ${esc(ui.editeurRenvoi)}</p>
 </main>
 
-<footer class="pied">
-  <div class="rappel">
-    <p class="mot">${esc(p.rappelA)}<br><span>${esc(p.rappelB)}</span></p>
-    <a class="bouton" href="${lang.prefixe}/">${esc(p.rappelBouton)}</a>
-  </div>
-  <div class="cols">
-    <div>
-      <span class="marque">${GLYPHE}VoilàPDF</span>
-      <p class="pitch">${esc(p.piedPitch)}</p>
-      <div class="sceau">
-        <svg viewBox="0 0 24 24"><path d="M12 3 5 6v6c0 4.2 2.9 7.9 7 9 4.1-1.1 7-4.8 7-9V6z"/><path d="m9 12 2 2 4-4"/></svg>
-        <span><b>${esc(p.sceauTitre)}</b>${esc(p.sceauTexte)}</span>
-      </div>
-      <a class="etoiles" href="https://g.page/r/CfBfIXTvKKmwEAE/review" target="_blank" rel="noopener">
-        ${ETOILE.repeat(5)}<em>${esc(ui.avisLien)}</em></a>
-    </div>
-    ${colonnes}
-    <div><h4>${esc(p.piedProjet)}</h4><ul>
-      <li><a href="${lang.prefixe}/">${esc(p.piedEditeur)}</a></li>
-      <li><a href="${lang.prefixe}/#confiance">${esc(p.piedConfidentialite)}</a></li>
-      <li><a href="${lang.prefixe}/#questions">${esc(p.piedQuestions)}</a></li>
-      <li><a href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">${esc(ui.codeSource)}</a></li>
-    </ul></div>
-  </div>
-  <div class="bas">
-    <span>${esc(ui.piedPhrase)}</span>
-    <a href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">${esc(ui.codeSource)}</a>
-    <span class="fin">
-      <svg viewBox="0 0 24 24"><path d="M12 3 5 6v6c0 4.2 2.9 7.9 7 9 4.1-1.1 7-4.8 7-9V6z"/></svg>
-      ${esc(p.piedFin)}
-    </span>
-  </div>
-</footer>
-
-<a class="badge-fr" href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">
-  <span class="drapeau" aria-hidden="true"><i></i><i></i><i></i></span>
-  <span>${esc(p.badgeA)}<b>&#9829;</b>${esc(p.badgeB)}</span>
-</a>
+${pied(lang, cle)}
 
 <script src="/vendor/pdf.min.js"></script>
 <script src="/vendor/pdf-lib.min.js"></script>
@@ -357,6 +406,208 @@ window.OUTIL_COURANT = ${jsonEsc(cle)};
 window.LANGUE = ${jsonEsc(lang.code)};
 </script>
 <script src="/outil.js"></script>
+</body>
+</html>
+`;
+}
+
+/* ---------------- page de contact ----------------
+   La seule page du site qui parle a un serveur. Le formulaire ne s'envoie pas
+   tout seul a Netlify Forms : il passe par une fonction qui verifie d'abord le
+   jeton Turnstile aupres de Cloudflare, car un widget pose dans une page ne
+   prouve rien tant que personne n'a pose la question avec la cle secrete.
+   Un formulaire statique cache accompagne le tout : c'est lui que Netlify
+   detecte au deploiement pour creer la boite de reception et son schema. */
+function pageContact(lang){
+  const ui = lang.ui;
+  const p = ui.accueil || ui;
+  const k = ui.contact;
+  const url = `${SITE}${lang.prefixe}/${k.slug}/`;
+  const altsContact = LANGUES.map(l =>
+      `<link rel="alternate" hreflang="${l.ui.htmlLang}" href="${SITE}${l.prefixe}/${l.ui.contact.slug}/">`).join('\n')
+    + `\n<link rel="alternate" hreflang="x-default" href="${SITE}${LANGUES[0].prefixe}/${LANGUES[0].ui.contact.slug}/">`;
+
+  const jsonld = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      { '@type': 'Organization', '@id': SITE + '/#editeur', name: 'VoilàPDF', url: SITE + '/',
+        sameAs: ['https://github.com/dilmseo/editeur-pdf'] },
+      { '@type': 'ContactPage', '@id': url + '#page', url, name: k.titreSeo,
+        description: k.meta, inLanguage: ui.htmlLang,
+        isPartOf: { '@id': SITE + '/#site' }, dateModified: JOUR,
+        mainEntity: { '@id': SITE + '/#editeur' } }
+    ]
+  };
+
+  const champsCaches = `<form name="contact" data-netlify="true" netlify-honeypot="site"
+    enctype="multipart/form-data" hidden aria-hidden="true">
+    <input type="text" name="nom"><input type="email" name="email">
+    <input type="text" name="sujet"><textarea name="message"></textarea>
+    <input type="file" name="fichier"><input type="text" name="site">
+  </form>`;
+
+  return `<!doctype html>
+<html lang="${ui.htmlLang}">
+<head>
+<meta charset="utf-8">
+<title>${esc(k.titreSeo)}</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="${esc(k.meta)}">
+${GSC}
+<link rel="canonical" href="${url}">
+${altsContact}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VoilàPDF">
+<meta property="og:title" content="${esc(k.titreSeo)}">
+<meta property="og:description" content="${esc(k.meta)}">
+<meta property="og:url" content="${url}">
+<link rel="icon" href="${FAVICON}">
+<link rel="stylesheet" href="/style-outil.css">
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script type="application/ld+json">${JSON.stringify(jsonld)}</script>
+</head>
+<body>
+
+<div class="hnav"><div class="in">
+  <a class="brand" href="${lang.prefixe}/"><i>${LOGO}</i>VoilàPDF</a>
+  <nav>
+    <a href="${lang.prefixe}/#outils">${esc(ui.navOutils)}</a>
+    <a href="${lang.prefixe}/#confiance">${esc(ui.navConfiance)}</a>
+    <a href="${lang.prefixe}/#questions">${esc(ui.navQuestions)}</a>
+    ${selecteurLangue(lang, null).replace(/href="[^"]*"/g, m =>
+      m.includes('/en/') ? 'href="/en/' + LANGUES[1].ui.contact.slug + '/"' : 'href="/' + UI_FR.contact.slug + '/"')}
+    <a class="cta-nav" href="${lang.prefixe}/">${esc(ui.navEditer)}</a>
+  </nav>
+</div></div>
+
+<header class="tete"><div class="sec">
+  <p class="fil"><a href="${lang.prefixe}/">${esc(ui.filAccueil)}</a> › ${esc(k.lien)}</p>
+  <h1>${esc(k.h1)}</h1>
+  <p class="chapo">${esc(k.chapo)}</p>
+
+  ${champsCaches}
+
+  <form class="ecrire" id="ecrire" novalidate>
+    <div class="reglage">
+      <label for="c-nom">${esc(k.nom)}</label>
+      <input id="c-nom" name="nom" type="text" autocomplete="name" required
+             placeholder="${esc(k.nomEx)}" maxlength="120">
+    </div>
+    <div class="reglage">
+      <label for="c-email">${esc(k.email)}</label>
+      <input id="c-email" name="email" type="email" autocomplete="email" required
+             placeholder="${esc(k.emailEx)}" maxlength="200">
+    </div>
+    <div class="reglage">
+      <label for="c-sujet">${esc(k.sujet)}</label>
+      <select id="c-sujet" name="sujet">
+        ${k.sujets.map(([v, t]) => `<option value="${v}">${esc(t)}</option>`).join('\n        ')}
+      </select>
+    </div>
+    <div class="reglage">
+      <label for="c-message">${esc(k.message)}</label>
+      <textarea id="c-message" name="message" rows="7" required
+                placeholder="${esc(k.messageEx)}" maxlength="8000"></textarea>
+    </div>
+    <div class="reglage">
+      <label for="c-fichier">${esc(k.fichier)}</label>
+      <input id="c-fichier" name="fichier" type="file"
+             accept="application/pdf,image/png,image/jpeg,image/webp,text/plain">
+      <p class="aide">${esc(k.fichierAide)}</p>
+    </div>
+
+    <input type="text" name="site" id="c-site" tabindex="-1" autocomplete="off"
+           aria-hidden="true" style="position:absolute;left:-9999px;opacity:0">
+
+    <div class="cf-turnstile" data-sitekey="${TURNSTILE_SITEKEY}"
+         data-language="${ui.htmlLang}" data-theme="light"></div>
+
+    <button class="go" id="c-envoyer" type="submit">${esc(k.envoyer)}</button>
+    <div class="err" id="c-err" hidden></div>
+  </form>
+
+  <div class="fini" id="c-fini" hidden>
+    <div class="ok"><svg viewBox="0 0 24 24"><path d="m4 12.5 5.5 5.5L20 7"/></svg></div>
+    <b>${esc(k.merciTitre)}</b>
+    <div class="nom">${esc(k.merci)}</div>
+    <button class="encore" id="c-encore" type="button">${esc(k.encore)}</button>
+  </div>
+</div></header>
+
+<main class="sec corps">
+  <h2>${esc(k.avertTitre)}</h2>
+  <div class="confiance"><p style="margin:0">${esc(k.avert)}</p></div>
+</main>
+
+${pied(lang, null, true)}
+
+<script>
+(function(){
+  var $ = function(i){ return document.getElementById(i); };
+  var MSG = ${JSON.stringify(k.erreurs)};
+  var MAX = 3 * 1024 * 1024;
+  var form = $('ecrire'), err = $('c-err'), bouton = $('c-envoyer');
+
+  function faute(cle){
+    err.textContent = MSG[cle] || MSG.reseau;
+    err.hidden = false;
+    err.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  var lireFichier = function(f){
+    return new Promise(function(ok, non){
+      var r = new FileReader();
+      r.onload = function(){ ok(String(r.result).split(',')[1]); };
+      r.onerror = non;
+      r.readAsDataURL(f);
+    });
+  };
+
+  form.addEventListener('submit', async function(e){
+    e.preventDefault();
+    err.hidden = true;
+
+    var nom = $('c-nom').value.trim(), email = $('c-email').value.trim();
+    var message = $('c-message').value.trim();
+    if (!nom || !message) return faute('champs');
+    if (!/^[^@\\s]+@[^@\\s.]+\\.[^@\\s]+$/.test(email)) return faute('email');
+
+    // Le jeton est depose par Turnstile dans un champ cache qu'il cree lui-meme.
+    var champ = form.querySelector('[name="cf-turnstile-response"]');
+    var jeton = champ ? champ.value : '';
+    if (!jeton) return faute('jeton');
+
+    var charge = { nom: nom, email: email, sujet: $('c-sujet').value,
+                   message: message, jeton: jeton, site: $('c-site').value };
+
+    var f = $('c-fichier').files[0];
+    if (f){
+      if (f.size > MAX) return faute('taille');
+      try {
+        charge.fichier = { nom: f.name, type: f.type, donnees: await lireFichier(f) };
+      } catch { return faute('reseau'); }
+    }
+
+    bouton.disabled = true;
+    bouton.textContent = ${JSON.stringify(k.envoi)};
+    try {
+      var r = await fetch('/.netlify/functions/contact', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(charge)
+      });
+      var d = await r.json().catch(function(){ return {}; });
+      if (!r.ok || !d.ok){ faute(d.erreur || 'reseau'); if (window.turnstile) turnstile.reset(); }
+      else { form.hidden = true; $('c-fini').hidden = false; }
+    } catch { faute('reseau'); }
+    bouton.disabled = false;
+    bouton.textContent = ${JSON.stringify(k.envoyer)};
+  });
+
+  $('c-encore').onclick = function(){
+    form.reset(); form.hidden = false; $('c-fini').hidden = true;
+    if (window.turnstile) turnstile.reset();
+  };
+})();
+</script>
 </body>
 </html>
 `;
@@ -647,6 +898,10 @@ for (const lang of LANGUES){
     urls.push({ loc: urlDe(lang, cle), cle, prio: '0.8' });
     n++;
   }
+  const dc = path.join(RACINE, lang.prefixe.replace(/^\//, ''), lang.ui.contact.slug);
+  fs.mkdirSync(dc, { recursive: true });
+  fs.writeFileSync(path.join(dc, 'index.html'), pageContact(lang), 'utf8');
+  urls.push({ loc: `${SITE}${lang.prefixe}/${lang.ui.contact.slug}/`, cle: null, prio: '0.5' });
 }
 
 /* Sitemap réduit à l'os : <loc> et <lastmod>, rien d'autre.

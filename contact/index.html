@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Contact — VoilàPDF</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Signaler un défaut, proposer un outil ou poser une question sur VoilàPDF. Une réponse sous quelques jours, par une personne.">
+<meta name="google-site-verification" content="vbmtfEKob3NfEM7iX_1giermuIPpd27wY6HxTupUOTY">
+<link rel="canonical" href="https://voilapdf.com/contact/">
+<link rel="alternate" hreflang="fr" href="https://voilapdf.com/contact/">
+<link rel="alternate" hreflang="en" href="https://voilapdf.com/en/contact/">
+<link rel="alternate" hreflang="x-default" href="https://voilapdf.com/contact/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VoilàPDF">
+<meta property="og:title" content="Contact — VoilàPDF">
+<meta property="og:description" content="Signaler un défaut, proposer un outil ou poser une question sur VoilàPDF. Une réponse sous quelques jours, par une personne.">
+<meta property="og:url" content="https://voilapdf.com/contact/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231762e0'/%3E%3Cpath d='M9 10h14M9 16h10M9 22h7' stroke='%23fff' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/style-outil.css">
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://voilapdf.com/#editeur","name":"VoilàPDF","url":"https://voilapdf.com/","sameAs":["https://github.com/dilmseo/editeur-pdf"]},{"@type":"ContactPage","@id":"https://voilapdf.com/contact/#page","url":"https://voilapdf.com/contact/","name":"Contact — VoilàPDF","description":"Signaler un défaut, proposer un outil ou poser une question sur VoilàPDF. Une réponse sous quelques jours, par une personne.","inLanguage":"fr","isPartOf":{"@id":"https://voilapdf.com/#site"},"dateModified":"2026-10-12","mainEntity":{"@id":"https://voilapdf.com/#editeur"}}]}</script>
+</head>
+<body>
+
+<div class="hnav"><div class="in">
+  <a class="brand" href="/"><i><svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h10M5 18h7"/></svg></i>VoilàPDF</a>
+  <nav>
+    <a href="/#outils">Outils</a>
+    <a href="/#confiance">Confidentialité</a>
+    <a href="/#questions">Questions</a>
+    <span class="langues"><b>FR</b><a href="/en/contact/" hreflang="en">EN</a></span>
+    <a class="cta-nav" href="/">Modifier un PDF</a>
+  </nav>
+</div></div>
+
+<header class="tete"><div class="sec">
+  <p class="fil"><a href="/">Accueil</a> › Nous écrire</p>
+  <h1>Nous écrire</h1>
+  <p class="chapo">Un outil qui se comporte mal, un PDF qu'il refuse, une idée d'outil manquant : écrivez. C'est la seule page du site qui envoie quelque chose sur un serveur, et elle le dit.</p>
+
+  <form name="contact" data-netlify="true" netlify-honeypot="site"
+    enctype="multipart/form-data" hidden aria-hidden="true">
+    <input type="text" name="nom"><input type="email" name="email">
+    <input type="text" name="sujet"><textarea name="message"></textarea>
+    <input type="file" name="fichier"><input type="text" name="site">
+  </form>
+
+  <form class="ecrire" id="ecrire" novalidate>
+    <div class="reglage">
+      <label for="c-nom">Votre nom</label>
+      <input id="c-nom" name="nom" type="text" autocomplete="name" required
+             placeholder="Prénom et nom" maxlength="120">
+    </div>
+    <div class="reglage">
+      <label for="c-email">Votre adresse e-mail</label>
+      <input id="c-email" name="email" type="email" autocomplete="email" required
+             placeholder="pour recevoir la réponse" maxlength="200">
+    </div>
+    <div class="reglage">
+      <label for="c-sujet">Sujet</label>
+      <select id="c-sujet" name="sujet">
+        <option value="bug">Un défaut à signaler</option>
+        <option value="outil">Une idée d'outil</option>
+        <option value="question">Une question</option>
+        <option value="autre">Autre chose</option>
+      </select>
+    </div>
+    <div class="reglage">
+      <label for="c-message">Votre message</label>
+      <textarea id="c-message" name="message" rows="7" required
+                placeholder="Décrivez ce que vous avez fait, ce que vous attendiez, et ce qui s'est passé à la place." maxlength="8000"></textarea>
+    </div>
+    <div class="reglage">
+      <label for="c-fichier">Joindre un fichier</label>
+      <input id="c-fichier" name="fichier" type="file"
+             accept="application/pdf,image/png,image/jpeg,image/webp,text/plain">
+      <p class="aide">Facultatif, 3 Mo maximum (PDF, image ou texte). Attention : ce fichier-là, contrairement à ceux que vous traitez avec les outils, est bien envoyé sur un serveur. N'y mettez rien de confidentiel.</p>
+    </div>
+
+    <input type="text" name="site" id="c-site" tabindex="-1" autocomplete="off"
+           aria-hidden="true" style="position:absolute;left:-9999px;opacity:0">
+
+    <div class="cf-turnstile" data-sitekey="0x4AAAAAAFU9P7fPGn42gSV-"
+         data-language="fr" data-theme="light"></div>
+
+    <button class="go" id="c-envoyer" type="submit">Envoyer le message</button>
+    <div class="err" id="c-err" hidden></div>
+  </form>
+
+  <div class="fini" id="c-fini" hidden>
+    <div class="ok"><svg viewBox="0 0 24 24"><path d="m4 12.5 5.5 5.5L20 7"/></svg></div>
+    <b>Message envoyé</b>
+    <div class="nom">Merci. Nous lisons tout et répondons sous quelques jours, à l'adresse que vous avez indiquée.</div>
+    <button class="encore" id="c-encore" type="button">Écrire un autre message</button>
+  </div>
+</div></header>
+
+<main class="sec corps">
+  <h2>Ce que devient votre message</h2>
+  <div class="confiance"><p style="margin:0">Les messages arrivent dans une boîte hébergée par Netlify et ne servent qu'à vous répondre : ni liste de diffusion, ni revente, ni statistiques. Cloudflare Turnstile protège le formulaire des robots ; il ne pose pas de cookie publicitaire et ne vous suit pas d'un site à l'autre. Le reste de VoilàPDF continue de fonctionner sans rien envoyer : ouvrez n'importe quel outil, coupez votre connexion, il marche toujours.</p></div>
+</main>
+
+<footer class="pied">
+  <div class="rappel">
+    <p class="mot">Un PDF à corriger ?<br><span>Il ne quittera pas votre ordinateur.</span></p>
+    <a class="bouton" href="/">Ouvrir l'éditeur</a>
+  </div>
+  <div class="cols">
+    <div>
+      <span class="marque"><span class="glyphe"><svg viewBox="0 0 24 24"><path d="M6 6h12M6 12h8M6 18h5"/></svg></span>VoilàPDF</span>
+      <p class="pitch">Modifier, convertir et assembler des PDF sans rien téléverser. Vingt-six outils, pas de compte, pas de file d'attente, pas de fichier qui traîne sur un serveur.</p>
+      <div class="sceau">
+        <svg viewBox="0 0 24 24"><path d="M12 3 5 6v6c0 4.2 2.9 7.9 7 9 4.1-1.1 7-4.8 7-9V6z"/><path d="m9 12 2 2 4-4"/></svg>
+        <span><b>Rien n'est téléversé</b>Tout le traitement a lieu dans votre navigateur, y compris la reconnaissance des documents scannés.</span>
+      </div>
+      <a class="etoiles" href="https://g.page/r/CfBfIXTvKKmwEAE/review" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg><svg viewBox="0 0 24 24"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg><svg viewBox="0 0 24 24"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg><svg viewBox="0 0 24 24"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg><svg viewBox="0 0 24 24"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg><em>Donner mon avis</em></a>
+    </div>
+    <div><h4>Convertir un PDF</h4><ul><li><a href="/pdf-en-word/">PDF → Word</a></li><li><a href="/pdf-en-excel/">PDF → Excel</a></li><li><a href="/pdf-en-powerpoint/">PDF → PowerPoint</a></li><li><a href="/pdf-en-jpg/">PDF → JPG</a></li><li><a href="/pdf-en-png/">PDF → PNG</a></li><li><a href="/ocr-pdf/">PDF scanné en texte</a></li></ul></div>
+    <div><h4>Créer un PDF</h4><ul><li><a href="/word-en-pdf/">Word → PDF</a></li><li><a href="/excel-en-pdf/">Excel → PDF</a></li><li><a href="/powerpoint-en-pdf/">PowerPoint → PDF</a></li><li><a href="/jpg-en-pdf/">JPG → PDF</a></li><li><a href="/png-en-pdf/">PNG → PDF</a></li><li><a href="/fusionner-pdf/">Fusionner des PDF</a></li></ul></div>
+    <div class="double"><h4>Travailler le PDF</h4><ul><li><a href="/compresser-pdf/">Compresser un PDF</a></li><li><a href="/diviser-pdf/">Diviser un PDF</a></li><li><a href="/extraire-pages-pdf/">Extraire des pages</a></li><li><a href="/supprimer-pages-pdf/">Supprimer des pages</a></li><li><a href="/organiser-pdf/">Organiser les pages</a></li><li><a href="/pivoter-pdf/">Pivoter un PDF</a></li><li><a href="/rogner-pdf/">Rogner un PDF</a></li><li><a href="/numeroter-pdf/">Numéroter les pages</a></li><li><a href="/filigrane-pdf/">Ajouter un filigrane</a></li><li><a href="/signer-pdf/">Signer un PDF</a></li><li><a href="/deverrouiller-pdf/">Déverrouiller un PDF</a></li><li><a href="/supprimer-metadonnees-pdf/">Nettoyer les métadonnées</a></li></ul></div>
+    <div><h4>Comprendre un PDF</h4><ul><li><a href="/resumer-pdf/">Résumer un PDF</a></li><li><a href="/traduire-pdf/">Traduire un PDF</a></li></ul></div>
+    <div><h4>Le projet</h4><ul>
+      <li><a href="/">L'éditeur</a></li>
+      <li><a href="/#confiance">Confidentialité</a></li>
+      <li><a href="/#questions">Questions fréquentes</a></li>
+      <li><span aria-current="page">Nous écrire</span></li>
+      <li><a href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">Code source</a></li>
+    </ul></div>
+  </div>
+  <div class="bas">
+    <span>Construit avec pdf.js, pdf-lib, tesseract.js et fflate — vos fichiers restent dans votre navigateur.</span>
+    <a href="/contact/">Nous écrire</a>
+    <a href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">Code source</a>
+    <span class="fin">
+      <svg viewBox="0 0 24 24"><path d="M12 3 5 6v6c0 4.2 2.9 7.9 7 9 4.1-1.1 7-4.8 7-9V6z"/></svg>
+      Aucun suivi, aucun cookie, aucun compte.
+    </span>
+  </div>
+</footer>
+
+<a class="badge-fr" href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">
+  <span class="drapeau" aria-hidden="true"><i></i><i></i><i></i></span>
+  <span>Outil open source, fait avec <b>&#9829;</b> en France</span>
+</a>
+
+<script>
+(function(){
+  var $ = function(i){ return document.getElementById(i); };
+  var MSG = {"champs":"Le nom et le message sont obligatoires.","email":"Cette adresse e-mail ne semble pas valide.","jeton":"Veuillez patienter : la vérification anti-robot n'est pas terminée.","refus":"La vérification anti-robot a échoué. Rechargez la page et réessayez.","taille":"Le fichier dépasse 3 Mo.","type":"Ce type de fichier n'est pas accepté.","reseau":"L'envoi a échoué. Vérifiez votre connexion et réessayez.","config":"Le formulaire est momentanément indisponible."};
+  var MAX = 3 * 1024 * 1024;
+  var form = $('ecrire'), err = $('c-err'), bouton = $('c-envoyer');
+
+  function faute(cle){
+    err.textContent = MSG[cle] || MSG.reseau;
+    err.hidden = false;
+    err.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  var lireFichier = function(f){
+    return new Promise(function(ok, non){
+      var r = new FileReader();
+      r.onload = function(){ ok(String(r.result).split(',')[1]); };
+      r.onerror = non;
+      r.readAsDataURL(f);
+    });
+  };
+
+  form.addEventListener('submit', async function(e){
+    e.preventDefault();
+    err.hidden = true;
+
+    var nom = $('c-nom').value.trim(), email = $('c-email').value.trim();
+    var message = $('c-message').value.trim();
+    if (!nom || !message) return faute('champs');
+    if (!/^[^@\s]+@[^@\s.]+\.[^@\s]+$/.test(email)) return faute('email');
+
+    // Le jeton est depose par Turnstile dans un champ cache qu'il cree lui-meme.
+    var champ = form.querySelector('[name="cf-turnstile-response"]');
+    var jeton = champ ? champ.value : '';
+    if (!jeton) return faute('jeton');
+
+    var charge = { nom: nom, email: email, sujet: $('c-sujet').value,
+                   message: message, jeton: jeton, site: $('c-site').value };
+
+    var f = $('c-fichier').files[0];
+    if (f){
+      if (f.size > MAX) return faute('taille');
+      try {
+        charge.fichier = { nom: f.name, type: f.type, donnees: await lireFichier(f) };
+      } catch { return faute('reseau'); }
+    }
+
+    bouton.disabled = true;
+    bouton.textContent = "Envoi…";
+    try {
+      var r = await fetch('/.netlify/functions/contact', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(charge)
+      });
+      var d = await r.json().catch(function(){ return {}; });
+      if (!r.ok || !d.ok){ faute(d.erreur || 'reseau'); if (window.turnstile) turnstile.reset(); }
+      else { form.hidden = true; $('c-fini').hidden = false; }
+    } catch { faute('reseau'); }
+    bouton.disabled = false;
+    bouton.textContent = "Envoyer le message";
+  });
+
+  $('c-encore').onclick = function(){
+    form.reset(); form.hidden = false; $('c-fini').hidden = true;
+    if (window.turnstile) turnstile.reset();
+  };
+})();
+</script>
+</body>
+</html>

@@ -299,3 +299,22 @@ details p{margin:0 0 22px;font-size:15.5px;max-width:62ch}
 .badge-fr .drapeau i:nth-child(2){background:#fff}
 .badge-fr .drapeau i:nth-child(3){background:#E1162C}
 @media (max-width:760px){.badge-fr{display:none}}
+
+/* ---- formulaire de contact ----
+   Seule page du site qui demande quelque chose au visiteur ; les champs
+   reprennent donc exactement l'allure des reglages d'outil, pour qu'elle ne
+   ressemble pas a une piece rapportee. */
+.ecrire{margin-top:26px;display:grid;gap:18px}
+.ecrire textarea{width:100%;background:#fff;border:1px solid var(--trait);border-radius:10px;
+  padding:12px 13px;font:inherit;color:var(--encre);outline:0;resize:vertical;min-height:150px;
+  line-height:1.6}
+.ecrire textarea:focus{border-color:var(--bleu);box-shadow:0 0 0 3px rgba(27,74,203,.12)}
+.ecrire input[type=file]{width:100%;background:#fff;border:1px dashed #C6BFAF;border-radius:10px;
+  padding:11px 13px;font:inherit;font-size:14.5px;color:var(--encre2);cursor:pointer}
+.ecrire input[type=file]:hover{border-color:var(--bleu)}
+.ecrire input[type=file]::file-selector-button{margin-right:12px;background:var(--papier2);
+  border:1px solid var(--trait);border-radius:8px;padding:7px 13px;font:inherit;font-size:13.5px;
+  color:var(--encre);cursor:pointer}
+.ecrire input[type=file]:hover::file-selector-button{border-color:var(--bleu);color:var(--bleu)}
+.ecrire .go{margin-top:4px}
+.cf-turnstile{min-height:65px}
