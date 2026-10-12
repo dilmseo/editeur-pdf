@@ -120,7 +120,10 @@
      L'accueil est clair et l'éditeur reste sombre : la page vend, l'éditeur est
      un plan de travail où le document doit être la seule chose lumineuse. */
   body:not(.loaded) > header, body:not(.loaded) > main{display:none}
-  body.loaded #home{display:none}
+  body.loaded #home, body.conv #home{display:none}
+  #conv{display:none}
+  body.conv #conv{display:block}
+  body.loaded #conv{display:none}
 
   #home{flex:1;overflow:hidden auto;background:#fff;color:#15202f;scroll-behavior:smooth;
         font:16px/1.62 "Segoe UI",system-ui,-apple-system,sans-serif}
@@ -229,6 +232,68 @@
   .faq details[open] summary::before{content:'−'}
   .faq p{margin:0 0 17px 28px;color:#525f70;font-size:15px}
 
+  /* grille des outils */
+  .outils{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .outil{display:flex;gap:13px;align-items:flex-start;text-align:left;width:100%;
+    border:1px solid #e6eaf1;border-radius:14px;padding:16px;background:#fff;cursor:pointer;
+    font:inherit;color:inherit;transition:box-shadow .16s,transform .16s,border-color .16s}
+  .outil:hover{box-shadow:0 12px 30px rgba(18,42,84,.11);transform:translateY(-2px);border-color:#cfdcef}
+  .outil .ico{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;flex:0 0 auto}
+  .outil .ico svg{width:19px;height:19px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .outil b{display:block;font-size:15px;color:#0d1826}
+  .outil span{display:block;font-size:13px;color:#6b7788;margin-top:3px;line-height:1.45}
+  .outil.phare{border-color:#9ec0f5;background:linear-gradient(180deg,#f4f8ff,#fff);
+    grid-column:span 2;box-shadow:0 10px 26px rgba(23,98,224,.10)}
+  .groupe-titre{grid-column:1/-1;margin:14px 0 2px;font-size:12.5px;font-weight:700;
+    letter-spacing:.09em;text-transform:uppercase;color:#8b97a8}
+  .groupe-titre:first-child{margin-top:0}
+
+  /* écran de conversion */
+  #conv{flex:1;overflow:hidden auto;background:#f7f9fd;color:#15202f;
+        font:16px/1.6 "Segoe UI",system-ui,sans-serif}
+  #conv .in{max-width:680px;margin:0 auto;padding:40px 24px 70px}
+  #conv .retour{display:inline-flex;align-items:center;gap:7px;background:none;border:0;color:#4a5668;
+    font:inherit;cursor:pointer;padding:6px 0;margin-bottom:18px}
+  #conv .retour:hover{color:#0d1826}
+  #conv .retour svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  #conv h1{margin:0 0 8px;font-size:clamp(1.7rem,3.6vw,2.3rem);letter-spacing:-.02em;color:#0b1624}
+  #conv .note{margin:0 0 26px;color:#5b6778;font-size:15px}
+  #conv .zone{display:block;border:2px dashed #c3d0e4;border-radius:18px;background:#fff;
+    padding:34px 24px;text-align:center;cursor:pointer;transition:border-color .16s,background .16s}
+  #conv .zone:hover,#conv .zone.over{border-color:#1762e0;background:#f6faff}
+  #conv .zone .gros{font-size:18px;font-weight:700;color:#0d1826}
+  #conv .zone .pet{font-size:14px;color:#6b7788;margin-top:5px}
+  #conv .liste{margin:18px 0 0;padding:0;list-style:none;display:grid;gap:8px}
+  #conv .liste li{display:flex;gap:10px;align-items:center;background:#fff;border:1px solid #e6eaf1;
+    border-radius:11px;padding:11px 14px;font-size:14.5px}
+  #conv .liste .taille{margin-left:auto;color:#8b97a8;font-size:13px}
+  #conv .liste button{background:none;border:0;color:#b6414a;cursor:pointer;font:inherit;padding:2px 4px}
+  #conv .go{display:block;width:100%;margin-top:20px;background:#1762e0;color:#fff;border:0;
+    border-radius:12px;padding:15px;font-size:16.5px;font-weight:700;cursor:pointer;
+    box-shadow:0 10px 26px rgba(23,98,224,.3)}
+  #conv .go:hover:not(:disabled){background:#1356c7}
+  #conv .go:disabled{background:#c6d2e4;box-shadow:none;cursor:default}
+  #conv .barre{height:7px;border-radius:5px;background:#dfe6f2;overflow:hidden;margin-top:18px}
+  #conv .barre i{display:block;height:100%;width:0;background:#1762e0;transition:width .2s}
+  #conv .etat{margin-top:10px;font-size:14px;color:#5b6778;text-align:center}
+  #conv .fini{margin-top:22px;background:#fff;border:1px solid #bfe8d4;border-radius:16px;
+    padding:24px;text-align:center;box-shadow:0 12px 32px rgba(18,42,84,.08)}
+  #conv .fini .ok{width:52px;height:52px;margin:0 auto 12px;border-radius:50%;display:grid;place-items:center;
+    background:#e3f8ee}
+  #conv .fini .ok svg{width:26px;height:26px;stroke:#12935e;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+  #conv .fini b{display:block;font-size:17px;color:#0d1826}
+  #conv .fini .nom{font-size:13.5px;color:#6b7788;margin-top:4px;word-break:break-all}
+  #conv .fini a.dl{display:inline-block;margin-top:16px;background:#12935e;color:#fff;border-radius:11px;
+    padding:13px 28px;font-weight:700;text-decoration:none}
+  #conv .fini a.dl:hover{background:#0f7f51}
+  #conv .fini .encore{display:block;margin-top:13px;background:none;border:0;color:#1762e0;
+    cursor:pointer;font:inherit;width:100%}
+  #conv .fini .avis{display:block;margin-top:18px;padding-top:16px;border-top:1px solid #eceff4;
+    font-size:14px;color:#6b7788;text-decoration:none}
+  #conv .fini .avis b{color:#1762e0;font-size:14.5px;margin-top:4px}
+  #conv .err{margin-top:18px;background:#fdecea;border:1px solid #f3c3bd;border-radius:12px;
+    padding:14px 16px;color:#8c2f26;font-size:14.5px}
+
   #home .foot{border-top:1px solid #e8ecf3;background:#fafbfd}
   #home .foot .in{max-width:1080px;margin:0 auto;padding:28px 24px;display:flex;gap:18px;
     flex-wrap:wrap;align-items:center;font-size:14px;color:#6b7788}
@@ -252,8 +317,8 @@
     <div class="in">
       <span class="brand"><i><svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h10M5 18h7"/></svg></i>Éditeur PDF</span>
       <nav>
+        <a href="#outils">Outils</a>
         <a href="#fonctions">Fonctions</a>
-        <a href="#etapes">Comment ça marche</a>
         <a href="#confiance">Confidentialité</a>
         <a href="#questions">Questions</a>
       </nav>
@@ -322,6 +387,13 @@
           navigateur. Incluse, là où elle est presque toujours facturée.</p>
       </div>
     </div>
+  </section>
+
+  <section class="sec" id="outils" style="padding-top:0">
+    <h2 class="center">Tous les outils</h2>
+    <p class="sub">Convertissez dans les deux sens. Comme le reste, tout se fait sur votre
+      machine — aucun fichier n'est téléversé.</p>
+    <div class="outils" id="grille-outils"></div>
   </section>
 
   <section class="sec" id="etapes" style="padding-top:0">
@@ -440,6 +512,37 @@
   </div>
 </div>
 
+<div id="conv">
+  <div class="in">
+    <button class="retour" id="conv-retour">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>Tous les outils</button>
+    <h1 id="conv-titre"></h1>
+    <p class="note" id="conv-note"></p>
+
+    <label class="zone" id="conv-zone" for="conv-file">
+      <div class="gros" id="conv-zone-t">Déposez votre fichier ici</div>
+      <div class="pet" id="conv-zone-s">ou cliquez pour le choisir</div>
+    </label>
+    <input id="conv-file" type="file" hidden>
+    <ul class="liste" id="conv-liste"></ul>
+    <button class="go" id="conv-go" disabled>Convertir</button>
+
+    <div class="barre" id="conv-barre" hidden><i></i></div>
+    <div class="etat" id="conv-etat" hidden></div>
+    <div class="err" id="conv-err" hidden></div>
+
+    <div class="fini" id="conv-fini" hidden>
+      <div class="ok"><svg viewBox="0 0 24 24"><path d="m4 12.5 5.5 5.5L20 7"/></svg></div>
+      <b>Conversion terminée</b>
+      <div class="nom" id="conv-fini-nom"></div>
+      <a class="dl" id="conv-dl" download>Télécharger</a>
+      <button class="encore" id="conv-encore">Convertir un autre fichier</button>
+      <a class="avis" href="https://g.page/r/CfBfIXTvKKmwEAE/review" target="_blank" rel="noopener">
+        Ça vous a rendu service ?<br><b>Donner mon avis</b></a>
+    </div>
+  </div>
+</div>
+
 <header>
   <button id="accueil" class="ghost" title="Revenir à l'accueil et ouvrir un autre fichier">
     <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>Accueil</button>
@@ -547,6 +650,8 @@
 <script src="vendor/pdf.min.js"></script>
 <script src="vendor/pdf-lib.min.js"></script>
 <script src="vendor/tesseract.min.js"></script>
+<script src="vendor/fflate.min.js"></script>
+<script src="convert.js"></script>
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'vendor/pdf.worker.min.js';
 const { PDFDocument, StandardFonts, rgb, degrees } = PDFLib;
@@ -603,20 +708,226 @@ function widthOf(txt, fam, sty, size){
   catch { return f.widthOfTextAtSize(encFor(f, txt), size); }
 }
 
+/* ---------------- catalogue des outils ----------------
+   La note de chaque outil dit ce qui est réellement conservé. Convertir dans le
+   navigateur impose des limites ; les annoncer vaut mieux que de les découvrir. */
+const DOC = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+const XLS = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+const PPT = 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
+
+const ICO = {
+  mot:   '<path d="M14 3v5h5M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M8 13l1.5 4 1.5-4 1.5 4L14 13"/>',
+  image: '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m5 17 4.5-4.5L13 16l2.5-2.5L19 17"/>',
+  diapo: '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v4M8 20h8"/>',
+  table: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 10v10"/>',
+  pdf:   '<path d="M14 3v5h5M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/>',
+  crayon:'<path d="M4 20h16M5 15.5 15.5 5a2.1 2.1 0 0 1 3 3L8 18.5l-4 1z"/>',
+  fusion:'<path d="M7 3v6a3 3 0 0 0 3 3h4a3 3 0 0 1 3 3v6M7 21v-6a3 3 0 0 1 3-3h4a3 3 0 0 0 3-3V3"/>'
+};
+
+const OUTILS = {
+  'pdf-word': { titre: 'PDF en Word', carte: 'PDF → Word', ico: ICO.mot, couleur: 'i-bleu',
+    resume: 'Un .docx dont le texte se remodifie', accept: 'application/pdf',
+    note: "Le texte, ses tailles et les titres sont conservés, chaque page du PDF devenant une page du document. La mise en page est simplifiée : ni colonnes, ni encadrés, ni images.",
+    fn: (f, p) => Conv.pdfVersDocx(f[0], p) },
+  'pdf-jpg': { titre: 'PDF en JPG', carte: 'PDF → JPG', ico: ICO.image, couleur: 'i-ambre',
+    resume: 'Une image par page', accept: 'application/pdf',
+    note: "Rendu fidèle, au double de la taille écran. À partir de deux pages, vous recevez une archive ZIP contenant toutes les images.",
+    fn: (f, p) => Conv.pdfVersJpg(f[0], p) },
+  'pdf-png': { titre: 'PDF en PNG', carte: 'PDF → PNG', ico: ICO.image, couleur: 'i-ambre',
+    resume: 'Une image par page, sans perte', accept: 'application/pdf',
+    note: "Rendu fidèle et sans compression destructrice. À partir de deux pages, vous recevez une archive ZIP.",
+    fn: (f, p) => Conv.pdfVersPng(f[0], p) },
+  'pdf-ppt': { titre: 'PDF en PowerPoint', carte: 'PDF → PowerPoint', ico: ICO.diapo, couleur: 'i-violet',
+    resume: 'Une diapositive par page', accept: 'application/pdf',
+    note: "Chaque page devient une diapositive au format exact de la page, remplie par son image. Le rendu est fidèle, mais le texte n'y est pas rééditable.",
+    fn: (f, p) => Conv.pdfVersPptx(f[0], p) },
+  'pdf-excel': { titre: 'PDF en Excel', carte: 'PDF → Excel', ico: ICO.table, couleur: 'i-vert',
+    resume: 'Les tableaux en feuille de calcul', accept: 'application/pdf',
+    note: "Les colonnes sont déduites de l'alignement du texte, une feuille par page. Excellent sur un vrai tableau, approximatif sur du texte libre.",
+    fn: (f, p) => Conv.pdfVersXlsx(f[0], p) },
+
+  'word-pdf': { titre: 'Word en PDF', carte: 'Word → PDF', ico: ICO.mot, couleur: 'i-bleu',
+    resume: 'Depuis un .docx', accept: DOC + ',.docx',
+    note: "Texte, gras, italique, tailles, alignements, tableaux simples et images sont repris. Les styles avancés, en-têtes et colonnes ne le sont pas.",
+    fn: (f, p) => Conv.docxVersPdf(f[0], p) },
+  'jpg-pdf': { titre: 'JPG en PDF', carte: 'JPG → PDF', ico: ICO.image, couleur: 'i-ambre',
+    resume: 'Une page par image', accept: 'image/jpeg,.jpg,.jpeg', multi: true,
+    note: "Chaque image devient une page à sa taille exacte, sans recompression. Vous pouvez en déposer plusieurs : elles se suivent dans l'ordre choisi.",
+    fn: (f, p) => Conv.imagesVersPdf(f, p) },
+  'png-pdf': { titre: 'PNG en PDF', carte: 'PNG → PDF', ico: ICO.image, couleur: 'i-ambre',
+    resume: 'Une page par image', accept: 'image/png,.png', multi: true,
+    note: "Chaque image devient une page à sa taille exacte, sans aucune perte. Vous pouvez en déposer plusieurs d'un coup.",
+    fn: (f, p) => Conv.imagesVersPdf(f, p) },
+  'ppt-pdf': { titre: 'PowerPoint en PDF', carte: 'PowerPoint → PDF', ico: ICO.diapo, couleur: 'i-violet',
+    resume: 'Depuis un .pptx', accept: PPT + ',.pptx',
+    note: "Les textes sont replacés à leur position dans la diapositive, avec leur taille, et les images sont reprises. Animations, dégradés et formes décoratives ne le sont pas.",
+    fn: (f, p) => Conv.pptxVersPdf(f[0], p) },
+  'excel-pdf': { titre: 'Excel en PDF', carte: 'Excel → PDF', ico: ICO.table, couleur: 'i-vert',
+    resume: 'Depuis un .xlsx', accept: XLS + ',.xlsx',
+    note: "Une grille lisible par feuille, en A4 paysage, jusqu'à douze colonnes par page. Formules évaluées telles qu'enregistrées, sans mise en forme conditionnelle.",
+    fn: (f, p) => Conv.xlsxVersPdf(f[0], p) },
+
+  'fusion': { titre: 'Fusionner des PDF', carte: 'Fusionner des PDF', ico: ICO.fusion, couleur: 'i-bleu',
+    resume: 'Plusieurs fichiers en un seul', accept: 'application/pdf', multi: true,
+    note: "Les documents sont mis bout à bout dans l'ordre où vous les ajoutez. Rien n'est recompressé : les pages gardent leur qualité d'origine.",
+    fn: (f, p) => Conv.fusionnerPdf(f, p) }
+};
+
+function construireGrille(){
+  const g = $('grille-outils');
+  const bloc = (titre, cles) => {
+    g.insertAdjacentHTML('beforeend', `<div class="groupe-titre">${titre}</div>`);
+    for (const c of cles){
+      const o = OUTILS[c];
+      const b = document.createElement('button');
+      b.className = 'outil';
+      b.innerHTML = `<span class="ico ${o.couleur}"><svg viewBox="0 0 24 24">${o.ico}</svg></span>`
+                  + `<span><b>${o.carte}</b><span>${o.resume}</span></span>`;
+      b.onclick = () => ouvrirOutil(c);
+      g.append(b);
+    }
+  };
+  g.insertAdjacentHTML('beforeend',
+    '<button class="outil phare" id="outil-editeur">'
+    + `<span class="ico i-bleu"><svg viewBox="0 0 24 24">${ICO.crayon}</svg></span>`
+    + '<span><b>Modifier le texte d\'un PDF</b><span>Corrigez une ligne déjà écrite, même sur un scan. C\'est la fonction que les autres facturent.</span></span></button>');
+  g.insertAdjacentHTML('beforeend',
+    '<button class="outil phare">'
+    + `<span class="ico i-vert"><svg viewBox="0 0 24 24">${ICO.fusion}</svg></span>`
+    + '<span><b>Fusionner des PDF</b><span>Plusieurs documents mis bout à bout, sans perte de qualité.</span></span></button>');
+  g.lastElementChild.onclick = () => ouvrirOutil('fusion');
+  $('outil-editeur').onclick = () => $('file').click();
+  bloc('Convertir un PDF', ['pdf-word', 'pdf-excel', 'pdf-ppt', 'pdf-jpg', 'pdf-png']);
+  bloc('Créer un PDF',     ['word-pdf', 'excel-pdf', 'ppt-pdf', 'jpg-pdf', 'png-pdf']);
+}
+construireGrille();
+
+/* ---------------- écran de conversion ---------------- */
+let outilCourant = null, fichiersConv = [];
+
+function ouvrirOutil(cle){
+  const o = OUTILS[cle];
+  if (!o) return;
+  outilCourant = o; fichiersConv = [];
+  $('conv-titre').textContent = o.titre;
+  $('conv-note').textContent = o.note;
+  $('conv-file').accept = o.accept;
+  $('conv-file').multiple = !!o.multi;
+  $('conv-file').value = '';
+  $('conv-zone-t').textContent = o.multi ? 'Déposez vos fichiers ici' : 'Déposez votre fichier ici';
+  $('conv-zone-s').textContent = o.multi ? 'ou cliquez pour les choisir' : 'ou cliquez pour le choisir';
+  cacherResultat();
+  majListe();
+  document.body.classList.add('conv');
+  if (location.hash !== '#outil=' + cle) history.replaceState(null, '', '#outil=' + cle);
+  $('conv').scrollTop = 0;
+}
+
+function fermerOutil(){
+  document.body.classList.remove('conv');
+  outilCourant = null; fichiersConv = [];
+  history.replaceState(null, '', location.pathname + '#outils');
+}
+$('conv-retour').onclick = fermerOutil;
+
+function cacherResultat(){
+  $('conv-fini').hidden = true; $('conv-err').hidden = true;
+  $('conv-barre').hidden = true; $('conv-etat').hidden = true;
+  $('conv-barre').firstElementChild.style.width = '0%';
+  if ($('conv-dl').href.startsWith('blob:')) URL.revokeObjectURL($('conv-dl').href);
+}
+
+const poids = n => n < 1024 ? n + ' o' : n < 1048576 ? (n / 1024).toFixed(0) + ' Ko'
+                                                     : (n / 1048576).toFixed(1) + ' Mo';
+
+function majListe(){
+  const ul = $('conv-liste');
+  ul.innerHTML = '';
+  fichiersConv.forEach((f, i) => {
+    const li = document.createElement('li');
+    li.innerHTML = `<span>${f.name.replace(/[<>&]/g, '')}</span>`
+                 + `<span class="taille">${poids(f.size)}</span>`;
+    const b = document.createElement('button');
+    b.textContent = 'Retirer'; b.title = 'Retirer ce fichier';
+    b.onclick = () => { fichiersConv.splice(i, 1); majListe(); };
+    li.append(b); ul.append(li);
+  });
+  $('conv-go').disabled = !fichiersConv.length;
+  $('conv-go').textContent = fichiersConv.length > 1
+    ? `Convertir les ${fichiersConv.length} fichiers` : 'Convertir';
+}
+
+function ajouterFichiers(liste){
+  const fs = [...liste];
+  if (!fs.length) return;
+  fichiersConv = outilCourant?.multi ? fichiersConv.concat(fs) : [fs[0]];
+  cacherResultat();
+  majListe();
+}
+$('conv-file').onchange = e => ajouterFichiers(e.target.files);
+
+$('conv-encore').onclick = () => {
+  fichiersConv = []; $('conv-file').value = '';
+  cacherResultat(); majListe();
+};
+
+$('conv-go').onclick = async () => {
+  if (!outilCourant || !fichiersConv.length) return;
+  cacherResultat();
+  $('conv-go').disabled = true;
+  $('conv-barre').hidden = false; $('conv-etat').hidden = false;
+  $('conv-etat').textContent = 'Lecture du fichier…';
+  const avance = p => {
+    $('conv-barre').firstElementChild.style.width = Math.round(p * 100) + '%';
+    $('conv-etat').textContent = 'Conversion… ' + Math.round(p * 100) + ' %';
+  };
+  try {
+    const r = await outilCourant.fn(fichiersConv, avance);
+    avance(1);
+    $('conv-barre').hidden = true; $('conv-etat').hidden = true;
+    $('conv-fini-nom').textContent = r.nom + ' — ' + poids(r.blob.size);
+    $('conv-dl').href = URL.createObjectURL(r.blob);
+    $('conv-dl').download = r.nom;
+    $('conv-fini').hidden = false;
+  } catch (e) {
+    console.error(e);
+    $('conv-barre').hidden = true; $('conv-etat').hidden = true;
+    $('conv-err').textContent = 'Conversion impossible : ' + (e.message || e);
+    $('conv-err').hidden = false;
+  }
+  $('conv-go').disabled = false;
+};
+
+// Une adresse du type …/#outil=pdf-word ouvre directement le bon outil.
+function routerHash(){
+  const m = /^#outil=([a-z-]+)$/.exec(location.hash);
+  if (m && OUTILS[m[1]]) ouvrirOutil(m[1]);
+  else if (document.body.classList.contains('conv')) fermerOutil();
+}
+addEventListener('hashchange', routerHash);
+routerHash();
+
 /* ---------------- ouverture ---------------- */
 $('file').onchange = e => { if (e.target.files[0]) open(e.target.files[0]); };
 ['dragover','drop'].forEach(ev => document.addEventListener(ev, e => e.preventDefault()));
 document.addEventListener('drop', e => {
   $('dropcard').classList.remove('over');
-  const f = [...(e.dataTransfer?.files || [])].find(f => /\.pdf$/i.test(f.name));
+  $('conv-zone').classList.remove('over');
+  const fs = [...(e.dataTransfer?.files || [])];
+  if (!fs.length) return;
+  // Sur l'écran d'un outil, le fichier déposé alimente cet outil, pas l'éditeur.
+  if (document.body.classList.contains('conv')){ ajouterFichiers(fs); return; }
+  const f = fs.find(f => /\.pdf$/i.test(f.name));
   if (f) open(f);
-  else if (e.dataTransfer?.files?.length) toast('Ce fichier n\'est pas un PDF.');
+  else toast('Ce fichier n\'est pas un PDF. Choisissez l\'outil correspondant à son format.', 4000);
 });
 document.addEventListener('dragover', () => {
-  if (!document.body.classList.contains('loaded')) $('dropcard').classList.add('over');
+  if (document.body.classList.contains('conv')) $('conv-zone').classList.add('over');
+  else if (!document.body.classList.contains('loaded')) $('dropcard').classList.add('over');
 });
 document.addEventListener('dragleave', e => {
-  if (!e.relatedTarget) $('dropcard').classList.remove('over');
+  if (!e.relatedTarget){ $('dropcard').classList.remove('over'); $('conv-zone').classList.remove('over'); }
 });
 
 /* Nombre de modifications au moment du dernier enregistrement : sans ça, revenir

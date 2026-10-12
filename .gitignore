@@ -1,3 +1,7 @@
-*.pdf
+﻿*.pdf
+*.docx
+*.xlsx
+*.pptx
 .DS_Store
 Thumbs.db
+
