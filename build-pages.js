@@ -82,6 +82,98 @@ const UI_FR = {
   ],
   etapesNoms: ['Ouvrir le fichier', 'Lancer le traitement', 'Télécharger le résultat'],
   plan: { autres: 'Autres outils', editeur: "Modifier le texte d'un PDF", fusion: 'Fusionner des PDF' },
+
+  /* Pages juridiques. Tout ce qui y est écrit a été relevé dans le code : aucune
+     formule de style, aucune promesse que le site ne tiendrait pas. */
+  pages: {
+    confidentialite: {
+      slug: 'confidentialite', lien: 'Confidentialité',
+      titreSeo: 'Confidentialité — VoilàPDF',
+      meta: "Ce que VoilàPDF collecte, et ce qu'il ne collecte pas. Aucun cookie, aucune mesure d'audience, et vos documents ne quittent jamais votre ordinateur.",
+      h1: 'Confidentialité',
+      chapo: "Cette page décrit exactement ce qui se passe quand vous utilisez le site. Elle a été écrite en relisant le code, pas en recopiant un modèle.",
+      maj: 'Dernière mise à jour :',
+      sections: [
+        { t: 'En deux phrases',
+          note: "Vos documents sont lus et modifiés par votre navigateur ; ils ne sont envoyés nulle part et nous ne pouvons pas les voir. Les seules données que nous recevons sont celles que vous nous écrivez volontairement dans le formulaire de contact." },
+        { t: "Ce que le site ne fait pas",
+          p: ["Ces points ne sont pas des engagements de principe : ils sont vérifiables dans le code source, qui est public."],
+          l: ["<strong>Aucun cookie.</strong> Le site n'en dépose aucun, ni technique, ni publicitaire. C'est pourquoi vous ne voyez pas de bandeau de consentement : il n'y a rien à consentir.",
+              "<strong>Aucune mesure d'audience.</strong> Ni Google Analytics, ni équivalent. Nous ne savons pas combien de personnes visitent le site, ni ce qu'elles y font.",
+              "<strong>Aucun stockage sur votre appareil.</strong> Ni <code>localStorage</code>, ni base de données locale. Fermez l'onglet, il ne reste rien.",
+              "<strong>Aucun compte.</strong> Rien à créer, donc aucun identifiant, aucun mot de passe, aucune adresse e-mail à fournir pour utiliser les outils.",
+              "<strong>Aucune police distante.</strong> Les polices sont servies depuis notre propre domaine ; aucun appel n'est fait à Google Fonts ou à un service équivalent."] },
+        { t: 'Vos documents',
+          p: ["Les vingt-six outils s'exécutent entièrement dans votre navigateur, en JavaScript et WebAssembly. Le fichier que vous déposez est lu depuis votre disque par la page elle-même, transformé en mémoire, puis réenregistré chez vous. À aucun moment il ne transite par un serveur.",
+              "Ce n'est pas une politique interne que nous pourrions changer discrètement : le site est un ensemble de fichiers statiques, il ne comporte aucun code capable de recevoir un document. La vérification est à votre portée — ouvrez un outil, coupez votre connexion, il continue de fonctionner."],
+          note: "Une limite à connaître, qui concerne votre confidentialité et non la nôtre : lorsque vous modifiez ou masquez du texte dans un PDF, l'ancien texte reste présent dans le fichier, recouvert visuellement. Ce n'est pas un caviardage. Ne vous en servez pas pour dissimuler une donnée sensible avant de transmettre un document." },
+        { t: 'Les trois exceptions, en clair',
+          p: ["Trois fonctions, et elles seules, provoquent un échange avec l'extérieur. Chacune est signalée sur la page concernée."],
+          defs: [
+            ['Hébergement',
+             "Le site est hébergé par Netlify, qui enregistre comme tout hébergeur des journaux techniques : adresse IP, date, page demandée, navigateur utilisé. Ces journaux servent à faire fonctionner et sécuriser le service. Nous ne les consultons pas et n'en tirons aucune statistique."],
+            ['Résumer et traduire un PDF',
+             "Ces deux outils utilisent un modèle de langue qui s'exécute sur votre machine. Au premier usage, le modèle lui-même est téléchargé depuis Hugging Face, qui voit alors votre adresse IP — comme n'importe quel site que vous visitez. Le sens de l'échange compte : le modèle descend vers vous, votre document ne monte jamais. Les traitements suivants n'appellent plus rien, le navigateur gardant le modèle en cache."],
+            ['Formulaire de contact',
+             "Si vous nous écrivez, votre nom, votre adresse e-mail, votre message et la pièce jointe éventuelle sont transmis et conservés chez Netlify. Cette page utilise aussi Cloudflare Turnstile pour écarter les robots : Cloudflare reçoit votre adresse IP et des signaux techniques sur votre navigateur, le temps de la vérification. Turnstile n'est pas un outil publicitaire et ne vous suit pas d'un site à l'autre."]
+          ] },
+        { t: 'Transferts hors de l\'Union européenne',
+          p: ["Netlify, Cloudflare et Hugging Face sont des sociétés établies aux États-Unis. Les données techniques décrites ci-dessus, ainsi que les messages envoyés par le formulaire, peuvent donc être traitées hors de l'Union européenne, dans le cadre des clauses contractuelles types et du cadre de protection des données UE–États-Unis.",
+              "C'est précisément pour éviter ce transfert que le traitement des documents, lui, reste chez vous."] },
+        { t: 'Durée de conservation',
+          p: ["Les messages reçus par le formulaire sont conservés le temps de traiter votre demande, puis trois ans au plus, délai au terme duquel ils sont supprimés. Vous pouvez demander leur effacement à tout moment.",
+              "Les journaux techniques de l'hébergeur suivent la politique de rétention de Netlify et nous échappent."] },
+        { t: 'Vos droits',
+          p: ["Le règlement général sur la protection des données vous ouvre un droit d'accès, de rectification, d'effacement, de limitation, d'opposition et de portabilité sur les données vous concernant. En pratique, cela ne porte ici que sur les messages que vous nous auriez envoyés : c'est la seule chose que nous détenions.",
+              "Pour exercer ces droits, écrivez à <a href=\"mailto:aubryetienne@icloud.com\">aubryetienne@icloud.com</a> ou passez par la page <a href=\"/contact/\">Nous écrire</a>. Si la réponse ne vous satisfait pas, vous pouvez saisir la CNIL, 3 place de Fontenoy, 75007 Paris, ou déposer une plainte sur <a href=\"https://www.cnil.fr\" target=\"_blank\" rel=\"noopener\">cnil.fr</a>."] },
+        { t: 'Responsable du traitement',
+          p: ["Fix72, entreprise individuelle, 6 impasse Élisabeth Vigée Lebrun, 72000 Le Mans — SIRET 512 645 045 00042. Les détails figurent dans les <a href=\"/mentions-legales/\">mentions légales</a>."] }
+      ]
+    },
+
+    mentions: {
+      slug: 'mentions-legales', lien: 'Mentions légales',
+      titreSeo: 'Mentions légales — VoilàPDF',
+      meta: "Éditeur, directeur de la publication, hébergeur et licence de VoilàPDF.",
+      h1: 'Mentions légales',
+      chapo: "Informations publiées en application de l'article 6-III de la loi pour la confiance dans l'économie numérique.",
+      maj: 'Dernière mise à jour :',
+      sections: [
+        { t: 'Éditeur du site',
+          defs: [
+            ['Dénomination', 'Fix72'],
+            ['Forme juridique', 'Entreprise individuelle'],
+            ['Siège', '6 impasse Élisabeth Vigée Lebrun, 72000 Le Mans, France'],
+            ['SIREN', '512 645 045'],
+            ['SIRET', '512 645 045 00042'],
+            ['Téléphone', '<a href="tel:+33751133769">07 51 13 37 69</a>'],
+            ['Courriel', '<a href="mailto:aubryetienne@icloud.com">aubryetienne@icloud.com</a>'],
+            ['Contact', '<a href="/contact/">Formulaire de contact</a>']
+          ] },
+        { t: 'Directeur de la publication',
+          p: ['Étienne Aubry, en qualité de responsable de l\'entreprise individuelle Fix72.'] },
+        { t: 'Hébergeur',
+          defs: [
+            ['Société', 'Netlify, Inc.'],
+            ['Adresse', '101 2nd Street, San Francisco, CA 94105-2239, États-Unis'],
+            ['Site', '<a href="https://www.netlify.com" target="_blank" rel="noopener">netlify.com</a>']
+          ],
+          p: ["Netlify ne publie pas de numéro de téléphone destiné au public ; ses coordonnées de contact figurent sur son site."] },
+        { t: 'Licence et code source',
+          p: ["VoilàPDF est un logiciel libre publié sous licence <a href=\"https://github.com/dilmseo/editeur-pdf/blob/main/LICENSE\" target=\"_blank\" rel=\"noopener\">GNU AGPL version 3</a>. Le code source complet est consultable sur <a href=\"https://github.com/dilmseo/editeur-pdf\" target=\"_blank\" rel=\"noopener\">GitHub</a>.",
+              "Vous pouvez l'utiliser, l'étudier, le modifier et le redistribuer, y compris à des fins commerciales. La contrepartie tient à l'article 13 de cette licence : si vous exploitez une version modifiée accessible par un réseau, vous devez en proposer le code source à ses utilisateurs.",
+              "Les bibliothèques tierces embarquées restent sous leurs propres licences : pdf.js et tesseract.js sous Apache 2.0, pdf-lib et fflate sous licence MIT, transformers.js sous Apache 2.0. Le détail figure dans le fichier <a href=\"https://github.com/dilmseo/editeur-pdf#readme\" target=\"_blank\" rel=\"noopener\">README</a> du dépôt."] },
+        { t: 'Limites du service',
+          p: ["Les outils sont fournis gratuitement et sans garantie, conformément aux termes de la licence. Chaque page d'outil indique précisément ce que la conversion conserve et ce qu'elle perd ; ces limites sont réelles et documentées, nous vous invitons à les lire avant de traiter un document important.",
+              "Deux points méritent d'être rappelés ici. La modification de texte recouvre l'ancien contenu sans le supprimer du fichier : ce n'est pas un caviardage. La signature manuscrite proposée est l'équivalent numérique d'un paraphe, non une signature électronique qualifiée au sens du règlement eIDAS.",
+              "Conservez toujours une copie de vos documents d'origine."] },
+        { t: 'Données personnelles',
+          p: ["Le traitement des données est décrit dans la page <a href=\"/confidentialite/\">Confidentialité</a>. En résumé : aucun cookie, aucune mesure d'audience, et vos documents ne quittent pas votre ordinateur."] },
+        { t: 'Liens et signalement',
+          p: ["Le site renvoie vers des ressources extérieures dont nous ne maîtrisons pas le contenu. Pour signaler un contenu illicite, une erreur ou un dysfonctionnement, utilisez la page <a href=\"/contact/\">Nous écrire</a>."] }
+      ]
+    }
+  },
   contact: {
     slug: 'contact', lien: 'Nous écrire',
     titreSeo: 'Contact — VoilàPDF',
@@ -206,6 +298,8 @@ function pied(lang, cle, estContact){
   </div>
   <div class="bas">
     <span>${esc(ui.piedPhrase)}</span>
+    <a href="${lang.prefixe}/${ui.pages.mentions.slug}/">${esc(ui.pages.mentions.lien)}</a>
+    <a href="${lang.prefixe}/${ui.pages.confidentialite.slug}/">${esc(ui.pages.confidentialite.lien)}</a>
     <a href="${contact}">${esc(ui.contact.lien)}</a>
     <a href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">${esc(ui.codeSource)}</a>
     <span class="fin">
@@ -410,6 +504,88 @@ window.OUTIL_COURANT = ${jsonEsc(cle)};
 window.LANGUE = ${jsonEsc(lang.code)};
 </script>
 <script src="/outil.js"></script>
+</body>
+</html>
+`;
+}
+
+/* ---------------- pages de texte (confidentialité, mentions légales) ----------
+   Un rendu unique pour les pages purement redactionnelles : sections titrees,
+   paragraphes, listes et encadres. Le contenu vit dans les textes de langue,
+   jamais ici — une page juridique se relit, elle ne se cherche pas dans du code. */
+function pageTexte(lang, cle){
+  const ui = lang.ui;
+  const k = ui.pages[cle];
+  const url = `${SITE}${lang.prefixe}/${k.slug}/`;
+  const alts = LANGUES.map(l =>
+      `<link rel="alternate" hreflang="${l.ui.htmlLang}" href="${SITE}${l.prefixe}/${l.ui.pages[cle].slug}/">`).join('\n')
+    + `\n<link rel="alternate" hreflang="x-default" href="${SITE}${LANGUES[0].prefixe}/${LANGUES[0].ui.pages[cle].slug}/">`;
+
+  const bloc = s =>
+      `<h2>${esc(s.t)}</h2>\n`
+    + (s.p || []).map(t => `  <p>${t}</p>`).join('\n')
+    + ((s.l || []).length ? `\n  <ul class="renvois">${s.l.map(t => `<li>${t}</li>`).join('')}</ul>` : '')
+    + (s.note ? `\n  <div class="confiance"><p style="margin:0">${s.note}</p></div>` : '')
+    + ((s.defs || []).length
+        ? `\n  <dl class="metas">${s.defs.map(([a, b]) => `<dt>${esc(a)}</dt><dd>${b}</dd>`).join('')}</dl>`
+        : '');
+
+  const jsonld = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      { '@type': 'WebPage', '@id': url + '#page', url, name: k.titreSeo, description: k.meta,
+        inLanguage: ui.htmlLang, isPartOf: { '@id': SITE + '/#site' }, dateModified: JOUR,
+        publisher: { '@id': SITE + '/#editeur' } }
+    ]
+  };
+
+  return `<!doctype html>
+<html lang="${ui.htmlLang}">
+<head>
+<meta charset="utf-8">
+<title>${esc(k.titreSeo)}</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="${esc(k.meta)}">
+${GSC}
+<link rel="canonical" href="${url}">
+${alts}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VoilàPDF">
+<meta property="og:title" content="${esc(k.titreSeo)}">
+<meta property="og:description" content="${esc(k.meta)}">
+<meta property="og:url" content="${url}">
+<link rel="icon" href="${FAVICON}">
+<link rel="stylesheet" href="/style-outil.css">
+<script type="application/ld+json">${JSON.stringify(jsonld)}</script>
+</head>
+<body>
+
+<div class="hnav"><div class="in">
+  <a class="brand" href="${lang.prefixe}/"><i>${LOGO}</i>VoilàPDF</a>
+  <nav>
+    <a href="${lang.prefixe}/#outils">${esc(ui.navOutils)}</a>
+    <a href="${lang.prefixe}/#confiance">${esc(ui.navConfiance)}</a>
+    <a href="${lang.prefixe}/#questions">${esc(ui.navQuestions)}</a>
+    ${LANGUES.map(l => l.code === lang.code
+        ? `<b>${l.code.toUpperCase()}</b>`
+        : `<a href="${SITE}${l.prefixe}/${l.ui.pages[cle].slug}/" hreflang="${l.ui.htmlLang}">${l.code.toUpperCase()}</a>`)
+      .join('').replace(/^/, '<span class="langues">') + '</span>'}
+    <a class="cta-nav" href="${lang.prefixe}/">${esc(ui.navEditer)}</a>
+  </nav>
+</div></div>
+
+<header class="tete"><div class="sec">
+  <p class="fil"><a href="${lang.prefixe}/">${esc(ui.filAccueil)}</a> › ${esc(k.lien)}</p>
+  <h1>${esc(k.h1)}</h1>
+  <p class="chapo">${esc(k.chapo)}</p>
+  <p class="fil" style="margin-top:18px">${esc(k.maj)} ${JOUR.split('-').reverse().join('/')}</p>
+</div></header>
+
+<main class="sec corps">
+  ${k.sections.map(bloc).join('\n\n  ')}
+</main>
+
+${pied(lang, null)}
 </body>
 </html>
 `;
@@ -906,6 +1082,13 @@ for (const lang of LANGUES){
   fs.mkdirSync(dc, { recursive: true });
   fs.writeFileSync(path.join(dc, 'index.html'), pageContact(lang), 'utf8');
   urls.push({ loc: `${SITE}${lang.prefixe}/${lang.ui.contact.slug}/`, cle: null, prio: '0.5' });
+
+  for (const cle of Object.keys(lang.ui.pages)){
+    const d = path.join(RACINE, lang.prefixe.replace(/^\//, ''), lang.ui.pages[cle].slug);
+    fs.mkdirSync(d, { recursive: true });
+    fs.writeFileSync(path.join(d, 'index.html'), pageTexte(lang, cle), 'utf8');
+    urls.push({ loc: `${SITE}${lang.prefixe}/${lang.ui.pages[cle].slug}/`, cle: null, prio: '0.3' });
+  }
 }
 
 /* Sitemap réduit à l'os : <loc> et <lastmod>, rien d'autre.

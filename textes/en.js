@@ -32,6 +32,97 @@ const UI = {
   autresTitre: 'Other tools',
   inverseTexte: (lien) => `Need the other direction? ${lien} does exactly the opposite, with the same guarantees.`,
   editeurRenvoi: 'Fix a line that is already written, even on a scanned document. This is the feature other services charge for, and the natural starting point when you need to retouch before converting.',
+  /* Pages juridiques. L'editeur reste francais : son identite, son adresse et son
+     SIRET ne se traduisent pas, et la CNIL reste l'autorite competente. */
+  pages: {
+    confidentialite: {
+      slug: 'privacy', lien: 'Privacy',
+      titreSeo: 'Privacy — VoilàPDF',
+      meta: 'What VoilàPDF collects, and what it does not. No cookies, no analytics, and your documents never leave your computer.',
+      h1: 'Privacy',
+      chapo: 'This page describes exactly what happens when you use the site. It was written by rereading the code, not by copying a template.',
+      maj: 'Last updated:',
+      sections: [
+        { t: 'In two sentences',
+          note: 'Your documents are read and edited by your browser; they are sent nowhere and we cannot see them. The only data we receive is what you deliberately write to us in the contact form.' },
+        { t: 'What the site does not do',
+          p: ['These are not statements of intent: they can be checked in the source code, which is public.'],
+          l: ['<strong>No cookies.</strong> The site sets none, neither technical nor advertising. That is why you see no consent banner: there is nothing to consent to.',
+              '<strong>No analytics.</strong> No Google Analytics, no equivalent. We do not know how many people visit the site, nor what they do on it.',
+              '<strong>No storage on your device.</strong> No <code>localStorage</code>, no local database. Close the tab and nothing remains.',
+              '<strong>No account.</strong> Nothing to create, so no username, no password, no email address needed to use the tools.',
+              '<strong>No remote fonts.</strong> Fonts are served from our own domain; no call is made to Google Fonts or any equivalent.'] },
+        { t: 'Your documents',
+          p: ['All twenty-six tools run entirely in your browser, in JavaScript and WebAssembly. The file you drop is read from your disk by the page itself, transformed in memory, then saved back to you. At no point does it pass through a server.',
+              'This is not an internal policy we could quietly change: the site is a set of static files, with no code capable of receiving a document. You can check it yourself — open a tool, cut your connection, it keeps working.'],
+          note: 'One limit worth knowing, which concerns your privacy rather than ours: when you edit or hide text in a PDF, the old text remains inside the file, visually covered. This is not redaction. Do not use it to conceal sensitive data before sending a document on.' },
+        { t: 'The three exceptions, stated plainly',
+          p: ['Three features, and only those, cause an exchange with the outside world. Each is flagged on the page concerned.'],
+          defs: [
+            ['Hosting',
+             'The site is hosted by Netlify, which, like any host, records technical logs: IP address, date, page requested, browser used. These logs serve to run and secure the service. We do not read them and draw no statistics from them.'],
+            ['Summarise and translate a PDF',
+             'These two tools use a language model that runs on your machine. On first use the model itself is downloaded from Hugging Face, which then sees your IP address — as any site you visit does. The direction matters: the model comes down to you, your document never goes up. Later runs call nothing, as the browser keeps the model in cache.'],
+            ['Contact form',
+             'If you write to us, your name, email address, message and any attachment are sent to and stored at Netlify. That page also uses Cloudflare Turnstile to keep bots away: Cloudflare receives your IP address and technical signals about your browser for the duration of the check. Turnstile is not an advertising tool and does not follow you from site to site.']
+          ] },
+        { t: 'Transfers outside the European Union',
+          p: ['Netlify, Cloudflare and Hugging Face are companies established in the United States. The technical data described above, along with messages sent through the form, may therefore be processed outside the European Union, under standard contractual clauses and the EU–US Data Privacy Framework.',
+              'Avoiding exactly that transfer is why document processing stays on your machine.'] },
+        { t: 'Retention',
+          p: ['Messages received through the form are kept for as long as it takes to handle your request, and at most three years, after which they are deleted. You may ask for their erasure at any time.',
+              'The host’s technical logs follow Netlify’s own retention policy and are outside our control.'] },
+        { t: 'Your rights',
+          p: ['The General Data Protection Regulation gives you rights of access, rectification, erasure, restriction, objection and portability over data concerning you. In practice this covers only the messages you may have sent us: that is the only thing we hold.',
+              'To exercise these rights, write to <a href="mailto:aubryetienne@icloud.com">aubryetienne@icloud.com</a> or use the <a href="/en/contact/">contact page</a>. If our answer does not satisfy you, you may refer the matter to the French data protection authority, CNIL, 3 place de Fontenoy, 75007 Paris, or file a complaint at <a href="https://www.cnil.fr" target="_blank" rel="noopener">cnil.fr</a>.'] },
+        { t: 'Data controller',
+          p: ['Fix72, sole trader, 6 impasse Élisabeth Vigée Lebrun, 72000 Le Mans, France — SIRET 512 645 045 00042. Full details are in the <a href="/en/legal-notice/">legal notice</a>.'] }
+      ]
+    },
+    mentions: {
+      slug: 'legal-notice', lien: 'Legal notice',
+      titreSeo: 'Legal notice — VoilàPDF',
+      meta: 'Publisher, publication director, host and licence of VoilàPDF.',
+      h1: 'Legal notice',
+      chapo: 'Information published under article 6-III of the French law on confidence in the digital economy.',
+      maj: 'Last updated:',
+      sections: [
+        { t: 'Site publisher',
+          defs: [
+            ['Name', 'Fix72'],
+            ['Legal form', 'Sole trader (entreprise individuelle, France)'],
+            ['Registered office', '6 impasse Élisabeth Vigée Lebrun, 72000 Le Mans, France'],
+            ['SIREN', '512 645 045'],
+            ['SIRET', '512 645 045 00042'],
+            ['Telephone', '<a href="tel:+33751133769">+33 7 51 13 37 69</a>'],
+            ['Email', '<a href="mailto:aubryetienne@icloud.com">aubryetienne@icloud.com</a>'],
+            ['Contact', '<a href="/en/contact/">Contact form</a>']
+          ] },
+        { t: 'Publication director',
+          p: ['Étienne Aubry, as the person responsible for the sole trader Fix72.'] },
+        { t: 'Host',
+          defs: [
+            ['Company', 'Netlify, Inc.'],
+            ['Address', '101 2nd Street, San Francisco, CA 94105-2239, United States'],
+            ['Website', '<a href="https://www.netlify.com" target="_blank" rel="noopener">netlify.com</a>']
+          ],
+          p: ['Netlify publishes no public telephone number; its contact details are on its own site.'] },
+        { t: 'Licence and source code',
+          p: ['VoilàPDF is free software released under the <a href="https://github.com/dilmseo/editeur-pdf/blob/main/LICENSE" target="_blank" rel="noopener">GNU AGPL version 3</a>. The complete source code is on <a href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">GitHub</a>.',
+              'You may use, study, modify and redistribute it, including commercially. The condition is article 13 of that licence: if you run a modified version reachable over a network, you must offer its source code to that version’s users.',
+              'Bundled third-party libraries keep their own licences: pdf.js and tesseract.js under Apache 2.0, pdf-lib and fflate under MIT, transformers.js under Apache 2.0. Details are in the repository <a href="https://github.com/dilmseo/editeur-pdf#readme" target="_blank" rel="noopener">README</a>.'] },
+        { t: 'Limits of the service',
+          p: ['The tools are provided free of charge and without warranty, in line with the licence. Every tool page states precisely what the conversion keeps and what it loses; those limits are real and documented, and worth reading before you process an important document.',
+              'Two points bear repeating here. Editing text covers the old content without removing it from the file: that is not redaction. The handwritten signature offered is the digital equivalent of initialling a page, not a qualified electronic signature under the eIDAS regulation.',
+              'Always keep a copy of your original documents.'] },
+        { t: 'Personal data',
+          p: ['Data processing is described on the <a href="/en/privacy/">Privacy</a> page. In short: no cookies, no analytics, and your documents do not leave your computer.'] },
+        { t: 'Links and reporting',
+          p: ['The site links to outside resources whose content we do not control. To report unlawful content, an error or a malfunction, use the <a href="/en/contact/">contact page</a>.'] }
+      ]
+    }
+  },
+
   contact: {
     slug: 'contact', lien: 'Write to us',
     titreSeo: 'Contact — VoilàPDF',
