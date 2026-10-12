@@ -96,9 +96,10 @@ function page(cle){
 <div class="hnav"><div class="in">
   <a class="brand" href="/"><i>${LOGO}</i>Éditeur PDF</a>
   <nav>
-    <a href="/">Modifier un PDF</a>
-    <a href="/#outils">Tous les outils</a>
+    <a href="/#outils">Outils</a>
     <a href="/#confiance">Confidentialité</a>
+    <a href="/#questions">Questions</a>
+    <a class="cta-nav" href="/">Modifier un PDF</a>
   </nav>
 </div></div>
 
