@@ -355,7 +355,9 @@ async function resumerPdf(fichiers, opts = {}, avance){
   if (!sortie.length) throw new Error(m.rienResume);
   const mots = sortie.join(' ').split(/\s+/).filter(Boolean).length;
   const total = paras.join(' ').split(/\s+/).filter(Boolean).length;
-  const r = rendre(f, sortie, opts.sortie, SUF().resume, m.titreResume + ' — ' + f.name);
+  /* rendre() est asynchrone pour le PDF : sans await, les champs posés ensuite
+     atterriraient sur la promesse et le résumé ne s'afficherait pas à l'écran. */
+  const r = await rendre(f, sortie, opts.sortie, SUF().resume, m.titreResume + ' — ' + f.name);
   r.texte = sortie.join('\n\n');
   r.note = m.compte(mots, total, Math.max(1, Math.round(100 - mots / total * 100)));
   return r;
