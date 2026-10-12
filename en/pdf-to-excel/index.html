@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PDF to Excel, free and with nothing uploaded</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Pull the tables out of a PDF into an Excel .xlsx workbook, right in your browser. Free, no account, no size limit, no upload.">
+<link rel="canonical" href="https://editeur-pdf.netlify.app/en/pdf-to-excel/">
+<link rel="alternate" hreflang="fr" href="https://editeur-pdf.netlify.app/pdf-en-excel/">
+<link rel="alternate" hreflang="en" href="https://editeur-pdf.netlify.app/en/pdf-to-excel/">
+<link rel="alternate" hreflang="x-default" href="https://editeur-pdf.netlify.app/pdf-en-excel/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_GB">
+<meta property="og:site_name" content="Éditeur PDF">
+<meta property="og:title" content="PDF to Excel, free and with nothing uploaded">
+<meta property="og:description" content="Pull the tables out of a PDF into an Excel .xlsx workbook, right in your browser. Free, no account, no size limit, no upload.">
+<meta property="og:url" content="https://editeur-pdf.netlify.app/en/pdf-to-excel/">
+<meta property="og:image" content="https://editeur-pdf.netlify.app/apercu-editeur.png">
+<meta property="og:image:width" content="1360">
+<meta property="og:image:height" content="850">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://editeur-pdf.netlify.app/apercu-editeur.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231762e0'/%3E%3Cpath d='M9 10h14M9 16h10M9 22h7' stroke='%23fff' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/style-outil.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://editeur-pdf.netlify.app/#editeur","name":"Éditeur PDF","url":"https://editeur-pdf.netlify.app/","logo":{"@type":"ImageObject","url":"https://editeur-pdf.netlify.app/apercu-editeur.png"},"sameAs":["https://github.com/dilmseo/editeur-pdf"]},{"@type":"WebSite","@id":"https://editeur-pdf.netlify.app/#site","url":"https://editeur-pdf.netlify.app/","name":"Éditeur PDF","inLanguage":["fr","en"],"publisher":{"@id":"https://editeur-pdf.netlify.app/#editeur"}},{"@type":"ImageObject","@id":"https://editeur-pdf.netlify.app/en/pdf-to-excel/#image","url":"https://editeur-pdf.netlify.app/apercu-editeur.png","width":1360,"height":850},{"@type":"WebPage","@id":"https://editeur-pdf.netlify.app/en/pdf-to-excel/#page","url":"https://editeur-pdf.netlify.app/en/pdf-to-excel/","name":"PDF to Excel, free and with nothing uploaded","description":"Pull the tables out of a PDF into an Excel .xlsx workbook, right in your browser. Free, no account, no size limit, no upload.","inLanguage":"en","isPartOf":{"@id":"https://editeur-pdf.netlify.app/#site"},"primaryImageOfPage":{"@id":"https://editeur-pdf.netlify.app/en/pdf-to-excel/#image"},"breadcrumb":{"@id":"https://editeur-pdf.netlify.app/en/pdf-to-excel/#fil"},"dateModified":"2026-10-12"},{"@type":"BreadcrumbList","@id":"https://editeur-pdf.netlify.app/en/pdf-to-excel/#fil","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://editeur-pdf.netlify.app/en/"},{"@type":"ListItem","position":2,"name":"PDF → Excel","item":"https://editeur-pdf.netlify.app/en/pdf-to-excel/"}]},{"@type":"SoftwareApplication","@id":"https://editeur-pdf.netlify.app/en/pdf-to-excel/#outil","name":"PDF to Excel","url":"https://editeur-pdf.netlify.app/en/pdf-to-excel/","description":"Pull the tables out of a PDF into an Excel .xlsx workbook, right in your browser. Free, no account, no size limit, no upload.","applicationCategory":"UtilitiesApplication","operatingSystem":"Windows, macOS, Linux, Android, iOS","browserRequirements":"Navigateur récent avec JavaScript","isAccessibleForFree":true,"inLanguage":"en","featureList":["Each page becomes a sheet of the workbook","Columns, inferred from where the text starts","Rows, grouped by shared baseline","Values exactly as written, accents included"],"publisher":{"@id":"https://editeur-pdf.netlify.app/#editeur"},"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR","availability":"https://schema.org/InStock"}},{"@type":"HowTo","@id":"https://editeur-pdf.netlify.app/en/pdf-to-excel/#mode-emploi","name":"Convert a PDF to Excel","description":"Recover a table locked inside a PDF as a spreadsheet, ready to sort and recalculate. Columns are found from the way the text lines up on the page.","inLanguage":"en","totalTime":"PT1M","estimatedCost":{"@type":"MonetaryAmount","currency":"EUR","value":"0"},"step":[{"@type":"HowToStep","position":1,"name":"Open the file","text":"Drop your file on the page, or click to pick it from your folders.","url":"https://editeur-pdf.netlify.app/en/pdf-to-excel/#etape-1"},{"@type":"HowToStep","position":2,"name":"Run the job","text":"Start the job. It runs inside your browser: nothing is sent to a server.","url":"https://editeur-pdf.netlify.app/en/pdf-to-excel/#etape-2"},{"@type":"HowToStep","position":3,"name":"Download the result","text":"Download the result. No account, no watermark, no queue.","url":"https://editeur-pdf.netlify.app/en/pdf-to-excel/#etape-3"}]},{"@type":"FAQPage","@id":"https://editeur-pdf.netlify.app/en/pdf-to-excel/#questions","inLanguage":"en","mainEntityOfPage":{"@id":"https://editeur-pdf.netlify.app/en/pdf-to-excel/#page"},"mainEntity":[{"@type":"Question","name":"My table comes out shifted, what can I do?","acceptedAnswer":{"@type":"Answer","text":"Column detection relies on horizontal alignment. If the PDF aligns its columns loosely, or mixes a table with paragraphs, the result drifts. Convert just the page concerned and reassemble the columns by hand in Excel."}},{"@type":"Question","name":"Are the numbers real numbers?","acceptedAnswer":{"@type":"Answer","text":"They are written exactly as they appear in the PDF, text and all: thousand separators, currency symbols, percentages. Excel's paste-special or text-to-columns then turns them into values you can compute with."}},{"@type":"Question","name":"How many pages can I convert?","acceptedAnswer":{"@type":"Answer","text":"As many as your computer can handle: no limit is imposed, since nothing is sent to a server. Each page becomes its own sheet."}}]}]}</script>
+</head>
+<body>
+
+<div class="hnav"><div class="in">
+  <a class="brand" href="/en/"><i><svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h10M5 18h7"/></svg></i>Éditeur PDF</a>
+  <nav>
+    <a href="/en/#outils">Tools</a>
+    <a href="/en/#confiance">Privacy</a>
+    <a href="/en/#questions">FAQ</a>
+    <span class="langues"><a href="https://editeur-pdf.netlify.app/pdf-en-excel/" hreflang="fr">FR</a><b>EN</b></span>
+    <a class="cta-nav" href="/en/">Edit a PDF</a>
+  </nav>
+</div></div>
+
+<header class="tete"><div class="sec">
+  <p class="fil"><a href="/en/">Home</a> › PDF → Excel</p>
+  <h1>Convert a PDF to Excel</h1>
+  <p class="chapo">Recover a table locked inside a PDF as a spreadsheet, ready to sort and recalculate. Columns are found from the way the text lines up on the page.</p>
+  <p style="margin-top:18px"><span class="pastille"><b></b>Free · no account · nothing uploaded</span></p>
+
+  <label class="zone" id="zone" for="fichier">
+    <div class="gros">Drop your file here</div>
+    <div class="pet">or click to choose it</div>
+  </label>
+  <input id="fichier" type="file" hidden>
+  <ul class="liste" id="liste"></ul>
+  <div class="panneau" id="panneau" hidden></div>
+  <div class="reglages" id="reglages" hidden></div>
+  <button class="go" id="go" disabled>Convert</button>
+
+  <div class="barre" id="barre" hidden><i></i></div>
+  <div class="etat" id="etat" hidden></div>
+  <div class="err" id="err" hidden></div>
+
+  <div class="fini" id="fini" hidden>
+    <div class="ok"><svg viewBox="0 0 24 24"><path d="m4 12.5 5.5 5.5L20 7"/></svg></div>
+    <b>All done</b>
+    <div class="nom" id="fini-nom"></div>
+    <div class="note-fini" id="fini-note" hidden></div>
+    <a class="dl" id="dl" download>Download</a>
+    <button class="encore" id="encore">Process another file</button>
+    <a class="avis" href="https://g.page/r/CfBfIXTvKKmwEAE/review" target="_blank" rel="noopener">
+      Did this help?<br><b>Leave a review</b></a>
+  </div>
+</div></header>
+
+<main class="sec corps">
+
+  <p class="intro">Numbers often end up trapped in a PDF: a bank statement, a supplier invoice, an export from a business tool. Retyping them is slow and error-prone; getting them back in columns means sorting, summing and comparing straight away.</p>
+
+  <h2>How it works</h2>
+  <div class="etapes">
+    <div class="etape"><p>Drop your file on the page, or click to pick it from your folders.</p></div>
+    <div class="etape"><p>Start the job. It runs inside your browser: nothing is sent to a server.</p></div>
+    <div class="etape"><p>Download the result. No account, no watermark, no queue.</p></div>
+  </div>
+
+  <h2>When this really helps</h2>
+  <div class="usages">
+    <div class="usage"><h3>Use a statement or an invoice</h3><p>Recover the lines and amounts to reconcile them with your accounts.</p></div>
+    <div class="usage"><h3>Reopen an export that only offers PDF</h3><p>Many business tools export nothing else: this tool reopens the door they closed.</p></div>
+    <div class="usage"><h3>Compare two tables</h3><p>Once both documents are spreadsheets, a simple sort exposes the differences.</p></div>
+  </div>
+
+  <h2>What the conversion keeps, and what it loses</h2>
+  <p>Working inside a browser comes with limits a hosted service does not have. Here they are in plain words, so you know what to expect before you start.</p>
+  <div class="deux">
+    <div class="bloc oui">
+      <h3>What is kept</h3>
+      <ul><li><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg><span>Each page becomes a sheet of the workbook</span></li><li><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg><span>Columns, inferred from where the text starts</span></li><li><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg><span>Rows, grouped by shared baseline</span></li><li><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg><span>Values exactly as written, accents included</span></li></ul>
+    </div>
+    <div class="bloc non">
+      <h3>What is not carried over</h3>
+      <ul><li><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg><span>Formulas: a PDF only holds results</span></li><li><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg><span>Merged cells and borders</span></li><li><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg><span>Colours and conditional formatting</span></li><li><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg><span>Badly aligned columns, which may end up shifted</span></li></ul>
+    </div>
+  </div>
+  <p class="apres">Need the other direction? <a href="/en/excel-to-pdf/">Excel → PDF</a> does exactly the opposite, with the same guarantees.</p>
+
+  <h2>Worth knowing about the format</h2>
+  <p>The .xlsx has been Excel's format since 2007, also an archive of XML files. The workbook produced here holds plain text with no styling: that is deliberate, values matter more than decoration when the point is to recalculate.</p>
+
+  <h2>Not the right tool?</h2>
+  <ul class="renvois">
+    <li><a href="/en/pdf-to-word/">PDF → Word</a> — Si votre PDF est surtout du texte suivi, la conversion en document Word sera plus lisible.</li>
+    <li><a href="/en/excel-to-pdf/">Excel → PDF</a> — Pour refaire le chemin inverse et diffuser votre tableau sans qu'il soit modifié.</li>
+    <li><a href="/en/pdf-to-png/">PDF → PNG</a> — Pour conserver l'apparence exacte du tableau plutôt que ses valeurs.</li>
+  </ul>
+
+  <h2>Why it's free</h2>
+  <div class="confiance">
+    <p style="margin:0">Online converters receive your file on their servers, process it, then promise to delete it. Every document costs them computing time: that is why they charge, and why they cap file sizes.</p>
+    <p style="margin:12px 0 0"><b>Here, the work happens on your own computer.</b> The page contains no server code: your document cannot be received, because it is never sent. So there is nothing to bill, nothing to cap, and nothing to delete afterwards. Cut your connection once the page has loaded — everything keeps working.</p>
+  </div>
+
+  <h2>Frequently asked questions</h2>
+  <details open>
+    <summary>My table comes out shifted, what can I do?</summary>
+    <p>Column detection relies on horizontal alignment. If the PDF aligns its columns loosely, or mixes a table with paragraphs, the result drifts. Convert just the page concerned and reassemble the columns by hand in Excel.</p>
+  </details>
+  <details>
+    <summary>Are the numbers real numbers?</summary>
+    <p>They are written exactly as they appear in the PDF, text and all: thousand separators, currency symbols, percentages. Excel's paste-special or text-to-columns then turns them into values you can compute with.</p>
+  </details>
+  <details>
+    <summary>How many pages can I convert?</summary>
+    <p>As many as your computer can handle: no limit is imposed, since nothing is sent to a server. Each page becomes its own sheet.</p>
+  </details>
+
+  <h2>Other tools</h2>
+  <div class="autres">
+    <a href="/en/pdf-to-word/"><span class="ico i-bleu"><svg viewBox="0 0 24 24"><path d="M14 3v5h5M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M8 13l1.5 4 1.5-4 1.5 4L14 13"/></svg></span>PDF → Word</a>
+    <a href="/en/excel-to-pdf/"><span class="ico i-vert"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 10v10"/></svg></span>Excel → PDF</a>
+    <a href="/en/pdf-to-png/"><span class="ico i-ambre"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m5 17 4.5-4.5L13 16l2.5-2.5L19 17"/></svg></span>PDF → PNG</a>
+  </div>
+  <p class="apres"><a href="/en/"><strong>Edit the text in a PDF</strong></a> —
+     Fix a line that is already written, even on a scanned document. This is the feature other services charge for, and the natural starting point when you need to retouch before converting.</p>
+</main>
+
+<nav class="plan" aria-label="Other tools"><div class="in">
+  <div><strong>Convert a PDF</strong><ul><li><a href="/en/pdf-to-word/">PDF → Word</a></li><li><span aria-current="page">PDF → Excel</span></li><li><a href="/en/pdf-to-powerpoint/">PDF → PowerPoint</a></li><li><a href="/en/pdf-to-jpg/">PDF → JPG</a></li><li><a href="/en/pdf-to-png/">PDF → PNG</a></li><li><a href="/en/ocr-pdf/">Scanned PDF to text</a></li></ul></div>
+    <div><strong>Create a PDF</strong><ul><li><a href="/en/word-to-pdf/">Word → PDF</a></li><li><a href="/en/excel-to-pdf/">Excel → PDF</a></li><li><a href="/en/powerpoint-to-pdf/">PowerPoint → PDF</a></li><li><a href="/en/jpg-to-pdf/">JPG → PDF</a></li><li><a href="/en/png-to-pdf/">PNG → PDF</a></li></ul></div>
+    <div><strong>Work on the PDF</strong><ul><li><a href="/en/compress-pdf/">Compress a PDF</a></li><li><a href="/en/split-pdf/">Split a PDF</a></li><li><a href="/en/extract-pdf-pages/">Extract pages</a></li><li><a href="/en/delete-pdf-pages/">Delete pages</a></li><li><a href="/en/organize-pdf/">Organise pages</a></li><li><a href="/en/rotate-pdf/">Rotate a PDF</a></li><li><a href="/en/crop-pdf/">Crop a PDF</a></li><li><a href="/en/add-page-numbers/">Add page numbers</a></li><li><a href="/en/watermark-pdf/">Add a watermark</a></li><li><a href="/en/sign-pdf/">Sign a PDF</a></li><li><a href="/en/unlock-pdf/">Unlock a PDF</a></li><li><a href="/en/remove-pdf-metadata/">Clean the metadata</a></li></ul></div>
+    <div><strong>More tools</strong><ul><li><a href="/en/">Edit the text in a PDF</a></li><li><a href="/en/merge-pdf/">Merge PDFs</a></li></ul></div>
+</div></nav>
+
+<div class="pied"><div class="in">
+  <span>Built with pdf.js, pdf-lib and fflate — everything is bundled, no network calls.</span>
+  <a href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">Source code</a>
+</div></div>
+
+<script src="/vendor/pdf.min.js"></script>
+<script src="/vendor/pdf-lib.min.js"></script>
+<script src="/vendor/fflate.min.js"></script>
+<script src="/outils-data.js"></script>
+<script src="/textes/en.js"></script>
+<script src="/convert.js"></script>
+<script src="/pdf-outils.js"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = '/vendor/pdf.worker.min.js';
+window.OUTIL_COURANT = "pdf-excel";
+window.LANGUE = "en";
+</script>
+<script src="/outil.js"></script>
+</body>
+</html>

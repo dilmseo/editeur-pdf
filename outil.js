@@ -9,6 +9,40 @@ const cle = window.OUTIL_COURANT;
 const O = OUTILS_DATA.OUTILS[cle];
 if (!O) return;
 
+/* Les mots de l'interface. Le français est le repli : si une traduction oublie une
+   clé, la page reste utilisable au lieu d'afficher un trou. */
+const TR = (window.LANGUE && window.LANGUE !== 'fr' && window.TEXTES) ? window.TEXTES : null;
+const P = Object.assign({
+  lecture: 'Lecture du document…',
+  apercuIndispo: n => `Aperçu indisponible : ${n} — l'outil fonctionne quand même.`,
+  toutSelectionner: 'Tout sélectionner', toutDeselectionner: 'Tout désélectionner',
+  pivoterGauche: '↺ Tout pivoter à gauche', pivoterDroite: '↻ Tout pivoter à droite',
+  inverser: "⇅ Inverser l'ordre",
+  compteSelection: (n, t) => `${n} page(s) sélectionnée(s) sur ${t}`,
+  comptePages: t => `${t} page(s)`,
+  page: 'Page', avancer: 'Avancer', reculer: 'Reculer', pivoterCette: 'Pivoter cette page',
+  rognerAide: "Faites glisser les bords sur l'aperçu. Le rognage s'applique à toutes les pages.",
+  signatureAide: 'Dessinez votre signature dans le cadre, à la souris ou au doigt.',
+  effacer: 'Effacer',
+  metaAide: "Voici ce que votre fichier révèle aujourd'hui :",
+  metaVide: "Ce document ne porte déjà aucune métadonnée identifiante.",
+  metaIllisible: 'Métadonnées illisibles.', metaChamps: null,
+  inchange: "Ce fichier était déjà au plus juste : le compresser l'aurait alourdi, nous vous rendons l'original.",
+  reduction: (a, b, p) => `${a} → ${b}, soit ${p} % de moins`,
+  octets: ['o', 'Ko', 'Mo'],
+  retirer: 'Retirer', lecture2: 'Lecture du fichier…', traitement: 'Traitement… '
+}, (TR && TR.PANNEAUX) || {});
+if (TR && TR.UI){
+  P.retirer = TR.UI.retirer || P.retirer;
+  P.lecture2 = TR.UI.lecture || P.lecture2;
+  P.traitement = TR.UI.traitement ? TR.UI.traitement + ' ' : P.traitement;
+  P.octets = ['B', 'KB', 'MB'];
+}
+const libelleOption = (idOutil, idOpt) => (TR && TR.OPTIONS && TR.OPTIONS[idOutil] && TR.OPTIONS[idOutil][idOpt]) || null;
+/* Le libellé du bouton vient du catalogue français : sans cette reprise, une page
+   traduite afficherait « Compresser » sous un titre anglais. */
+const traduitOutil = (TR && TR.OUTILS && TR.OUTILS[cle]) || null;
+
 /* Tout outil reçoit (fichiers, réglages, avancement) et rend {nom, blob}. */
 const APPELS = {
   pdfVersDocx:   (f, o, p) => Conv.pdfVersDocx(f[0], p),
@@ -32,9 +66,9 @@ const entree = $('fichier');
 entree.accept = O.accept;
 entree.multiple = !!O.multiple;
 
-const poids = n => n < 1024 ? n + ' o'
-                 : n < 1048576 ? (n / 1024).toFixed(0) + ' Ko'
-                 : (n / 1048576).toFixed(1) + ' Mo';
+const poids = n => n < 1024 ? n + ' ' + P.octets[0]
+                 : n < 1048576 ? (n / 1024).toFixed(0) + ' ' + P.octets[1]
+                 : (n / 1048576).toFixed(1) + ' ' + P.octets[2];
 
 /* ------------------------------- réglages ------------------------------- */
 
@@ -44,19 +78,21 @@ const reglages = {};
   if (!hote || !O.options?.length) return;
   for (const o of O.options){
     reglages[o.id] = o.defaut ?? '';
+    const tr = libelleOption(cle, o.id) || {};
     const bloc = document.createElement('div');
     bloc.className = 'reglage';
     const lab = document.createElement('label');
-    lab.textContent = o.label; lab.htmlFor = 'opt-' + o.id;
+    lab.textContent = tr.label || o.label; lab.htmlFor = 'opt-' + o.id;
     bloc.append(lab);
 
     if (o.type === 'choix'){
       const seg = document.createElement('div');
       seg.className = 'segments';
       o.valeurs.forEach(([v, t, aide]) => {
+        const vt = (tr.valeurs && tr.valeurs[v]) || null;
         const b = document.createElement('button');
         b.type = 'button'; b.dataset.v = v;
-        b.innerHTML = `<b>${t}</b>` + (aide ? `<span>${aide}</span>` : '');
+        b.innerHTML = `<b>${vt ? vt[0] : t}</b>` + ((vt ? vt[1] : aide) ? `<span>${vt ? vt[1] : aide}</span>` : '');
         if (v === reglages[o.id]) b.classList.add('on');
         b.onclick = () => {
           reglages[o.id] = v;
@@ -69,7 +105,7 @@ const reglages = {};
     } else if (o.type === 'liste'){
       const s = document.createElement('select');
       s.id = 'opt-' + o.id;
-      o.valeurs.forEach(([v, t]) => s.add(new Option(t, v)));
+      o.valeurs.forEach(([v, t]) => s.add(new Option((tr.valeurs && tr.valeurs[v] && tr.valeurs[v][0]) || t, v)));
       s.value = reglages[o.id];
       s.onchange = () => { reglages[o.id] = s.value; majApercu(); };
       bloc.append(s);
@@ -79,12 +115,13 @@ const reglages = {};
       i.type = o.type === 'nombre' ? 'number' : o.type === 'motdepasse' ? 'password' : 'text';
       if (o.min != null) i.min = o.min;
       if (o.max != null) i.max = o.max;
-      i.placeholder = o.exemple || '';
+      i.placeholder = tr.exemple || o.exemple || '';
       i.value = reglages[o.id];
       i.oninput = () => { reglages[o.id] = i.value; majApercu(); };
       bloc.append(i);
     }
-    if (o.aide){ const p = document.createElement('p'); p.className = 'aide'; p.textContent = o.aide; bloc.append(p); }
+    const aide = tr.aide || o.aide;
+    if (aide){ const p = document.createElement('p'); p.className = 'aide'; p.textContent = aide; bloc.append(p); }
     hote.append(bloc);
   }
 })();
@@ -108,8 +145,8 @@ async function construirePages(){
   const info = document.createElement('span');
   const maj = () => {
     info.textContent = peut('selection')
-      ? `${choisies.size} page(s) sélectionnée(s) sur ${doc.numPages}`
-      : `${doc.numPages} page(s)`;
+      ? P.compteSelection(choisies.size, doc.numPages)
+      : P.comptePages(doc.numPages);
     reglages.pages = [...choisies].sort((a, b) => a - b);
     reglages.ordre = etat.ordre.slice();
     reglages.rotations = { ...etat.rotations };
@@ -117,15 +154,15 @@ async function construirePages(){
   };
   if (peut('selection')){
     const tout = document.createElement('button');
-    tout.type = 'button'; tout.className = 'mini'; tout.textContent = 'Tout sélectionner';
+    tout.type = 'button'; tout.className = 'mini'; tout.textContent = P.toutSelectionner;
     tout.onclick = () => { etat.pages.forEach(i => choisies.add(i)); dessiner(); };
     const rien = document.createElement('button');
-    rien.type = 'button'; rien.className = 'mini'; rien.textContent = 'Tout désélectionner';
+    rien.type = 'button'; rien.className = 'mini'; rien.textContent = P.toutDeselectionner;
     rien.onclick = () => { choisies.clear(); dessiner(); };
     barre.append(tout, rien);
   }
   if (peut('rotation')){
-    for (const [t, a] of [['↺ Tout pivoter à gauche', -90], ['↻ Tout pivoter à droite', 90]]){
+    for (const [t, a] of [[P.pivoterGauche, -90], [P.pivoterDroite, 90]]){
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'mini'; b.textContent = t;
       b.onclick = () => { etat.pages.forEach(i => etat.rotations[i] = ((etat.rotations[i] || 0) + a + 360) % 360); dessiner(); };
@@ -134,7 +171,7 @@ async function construirePages(){
   }
   if (peut('ordre')){
     const inv = document.createElement('button');
-    inv.type = 'button'; inv.className = 'mini'; inv.textContent = '⇅ Inverser l\'ordre';
+    inv.type = 'button'; inv.className = 'mini'; inv.textContent = P.inverser;
     inv.onclick = () => { etat.ordre.reverse(); dessiner(); };
     barre.append(inv);
   }
@@ -166,12 +203,12 @@ async function construirePages(){
       const d = document.createElement('div');
       d.className = 'vignette' + (choisies.has(i) ? ' prise' : '');
       const img = document.createElement('img');
-      img.alt = 'Page ' + (i + 1);
+      img.alt = P.page + ' ' + (i + 1);
       img.style.transform = `rotate(${etat.rotations[i] || 0}deg)`;
       vignette(i).then(src => img.src = src);
       const n = document.createElement('span');
       n.className = 'num';
-      n.textContent = peut('ordre') ? `${rang + 1} (p. ${i + 1})` : `Page ${i + 1}`;
+      n.textContent = peut('ordre') ? `${rang + 1} (p. ${i + 1})` : P.page + ' ' + (i + 1);
       d.append(img, n);
 
       if (peut('selection')) d.onclick = () => {
@@ -182,16 +219,16 @@ async function construirePages(){
       cmd.className = 'cmd';
       if (peut('rotation')){
         const r = document.createElement('button');
-        r.type = 'button'; r.title = 'Pivoter cette page'; r.textContent = '↻';
+        r.type = 'button'; r.title = P.pivoterCette; r.textContent = '↻';
         r.onclick = e => { e.stopPropagation(); etat.rotations[i] = ((etat.rotations[i] || 0) + 90) % 360; dessiner(); };
         cmd.append(r);
       }
       if (peut('ordre')){
         const g = document.createElement('button');
-        g.type = 'button'; g.title = 'Avancer'; g.textContent = '‹'; g.disabled = rang === 0;
+        g.type = 'button'; g.title = P.avancer; g.textContent = '‹'; g.disabled = rang === 0;
         g.onclick = e => { e.stopPropagation(); [etat.ordre[rang-1], etat.ordre[rang]] = [etat.ordre[rang], etat.ordre[rang-1]]; dessiner(); };
         const dr = document.createElement('button');
-        dr.type = 'button'; dr.title = 'Reculer'; dr.textContent = '›'; dr.disabled = rang === etat.ordre.length - 1;
+        dr.type = 'button'; dr.title = P.reculer; dr.textContent = '›'; dr.disabled = rang === etat.ordre.length - 1;
         dr.onclick = e => { e.stopPropagation(); [etat.ordre[rang+1], etat.ordre[rang]] = [etat.ordre[rang], etat.ordre[rang+1]]; dessiner(); };
         cmd.prepend(g); cmd.append(dr);
       }
@@ -207,7 +244,10 @@ async function construirePages(){
 
 async function construireRognage(){
   const hote = $('panneau');
-  hote.innerHTML = '<p class="aide">Faites glisser les bords sur l\'aperçu. Le rognage s\'applique à toutes les pages.</p>';
+  hote.innerHTML = '';
+  const aideRogne = document.createElement('p');
+  aideRogne.className = 'aide'; aideRogne.textContent = P.rognerAide;
+  hote.append(aideRogne);
   const bytes = new Uint8Array(await fichiers[0].arrayBuffer());
   doc = await pdfjsLib.getDocument({ data: bytes }).promise;
   const pg = await doc.getPage(1);
@@ -263,7 +303,7 @@ function construireSignature(){
   hote.innerHTML = '';
   const aide = document.createElement('p');
   aide.className = 'aide';
-  aide.textContent = 'Dessinez votre signature dans le cadre, à la souris ou au doigt.';
+  aide.textContent = P.signatureAide;
   const c = document.createElement('canvas');
   c.className = 'planche-signature'; c.width = 760; c.height = 240;
   const ctx = c.getContext('2d');
@@ -283,7 +323,7 @@ function construireSignature(){
   c.addEventListener('touchmove', suite, { passive: false });
   c.addEventListener('touchend', fin);
   const effacer = document.createElement('button');
-  effacer.type = 'button'; effacer.className = 'mini'; effacer.textContent = 'Effacer';
+  effacer.type = 'button'; effacer.className = 'mini'; effacer.textContent = P.effacer;
   effacer.onclick = () => { ctx.clearRect(0, 0, c.width, c.height); vide = true; reglages.signature = null; };
   hote.append(aide, c, effacer);
 }
@@ -292,7 +332,10 @@ function construireSignature(){
 
 async function construireMetadonnees(){
   const hote = $('panneau');
-  hote.innerHTML = '<p class="aide">Voici ce que votre fichier révèle aujourd\'hui :</p>';
+  hote.innerHTML = '';
+  const aideMeta = document.createElement('p');
+  aideMeta.className = 'aide'; aideMeta.textContent = P.metaAide;
+  hote.append(aideMeta);
   const t = document.createElement('dl');
   t.className = 'metas';
   try {
@@ -301,7 +344,7 @@ async function construireMetadonnees(){
     for (const k in m){
       if (m[k] == null || m[k] === '') continue;
       if (k !== 'Pages') vide = false;
-      const dt = document.createElement('dt'); dt.textContent = k;
+      const dt = document.createElement('dt'); dt.textContent = (P.metaChamps && P.metaChamps[k]) || k;
       const dd = document.createElement('dd'); dd.textContent = m[k];
       t.append(dt, dd);
     }
@@ -309,10 +352,10 @@ async function construireMetadonnees(){
     if (vide){
       const p = document.createElement('p');
       p.className = 'aide';
-      p.textContent = "Ce document ne porte déjà aucune métadonnée identifiante.";
+      p.textContent = P.metaVide;
       hote.append(p);
     }
-  } catch { hote.append(document.createTextNode('Métadonnées illisibles.')); }
+  } catch { hote.append(document.createTextNode(P.metaIllisible)); }
 }
 
 async function majApercu(){ /* les réglages seuls n'exigent aucun redessin */ }
@@ -321,7 +364,10 @@ async function construirePanneau(){
   const hote = $('panneau');
   if (!hote || !O.panneau || !fichiers.length) return;
   hote.hidden = false;
-  hote.innerHTML = '<p class="aide">Lecture du document…</p>';
+  hote.innerHTML = '';
+  const attente = document.createElement('p');
+  attente.className = 'aide'; attente.textContent = P.lecture;
+  hote.append(attente);
   try {
     if (O.panneau === 'pages') await construirePages();
     else if (O.panneau === 'rogner') await construireRognage();
@@ -331,7 +377,7 @@ async function construirePanneau(){
     hote.innerHTML = '';
     const p = document.createElement('p');
     p.className = 'aide';
-    p.textContent = 'Aperçu indisponible : ' + (e.message || e) + " — l'outil fonctionne quand même.";
+    p.textContent = P.apercuIndispo(e.message || e);
     hote.append(p);
   }
 }
@@ -353,12 +399,15 @@ function majListe(){
     const li = document.createElement('li');
     const n = document.createElement('span'); n.textContent = f.name;
     const t = document.createElement('span'); t.className = 'taille'; t.textContent = poids(f.size);
-    const b = document.createElement('button'); b.type = 'button'; b.textContent = 'Retirer';
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = P.retirer;
     b.onclick = () => { fichiers.splice(i, 1); apresChangement(); };
     li.append(n, t, b); ul.append(li);
   });
   $('go').disabled = !fichiers.length;
-  $('go').textContent = O.actionTexte || (fichiers.length > 1 ? `Traiter les ${fichiers.length} fichiers` : 'Convertir');
+  const action = (traduitOutil && traduitOutil.actionTexte) || O.actionTexte;
+  $('go').textContent = action || (fichiers.length > 1
+    ? (TR && TR.UI.traiterPluriel ? TR.UI.traiterPluriel(fichiers.length) : `Traiter les ${fichiers.length} fichiers`)
+    : ((TR && TR.UI.convertir) || 'Convertir'));
 }
 
 function apresChangement(){
@@ -390,10 +439,10 @@ $('go').onclick = async () => {
   cacher();
   $('go').disabled = true;
   $('barre').hidden = false; $('etat').hidden = false;
-  $('etat').textContent = 'Lecture du fichier…';
+  $('etat').textContent = P.lecture2;
   const avance = p => {
     $('barre').firstElementChild.style.width = Math.round(p * 100) + '%';
-    $('etat').textContent = 'Traitement… ' + Math.round(p * 100) + ' %';
+    $('etat').textContent = P.traitement + Math.round(p * 100) + ' %';
   };
   try {
     reglages.onOcr = avance;
@@ -402,11 +451,10 @@ $('go').onclick = async () => {
     $('barre').hidden = true; $('etat').hidden = true;
     let detail = r.nom + ' — ' + poids(r.blob.size);
     if (r.avant && r.apres && !r.inchange)
-      detail += ` · ${poids(r.avant)} → ${poids(r.apres)}, soit ${Math.round((1 - r.apres / r.avant) * 100)} % de moins`;
+      detail += ' · ' + P.reduction(poids(r.avant), poids(r.apres),
+                                    Math.round((1 - r.apres / r.avant) * 100));
     $('fini-nom').textContent = detail;
-    $('fini-note').textContent = r.inchange
-      ? "Ce fichier était déjà au plus juste : le compresser l'aurait alourdi, nous vous rendons l'original."
-      : '';
+    $('fini-note').textContent = r.inchange ? P.inchange : '';
     $('fini-note').hidden = !r.inchange;
     $('dl').href = URL.createObjectURL(r.blob);
     $('dl').download = r.nom;

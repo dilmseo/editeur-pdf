@@ -8,6 +8,14 @@
 const lire = f => f.arrayBuffer().then(b => new Uint8Array(b));
 const blobPdf = o => new Blob([o], { type: 'application/pdf' });
 const base = f => f.name.replace(/\.[^.]+$/, '');
+/* Suffixes des fichiers produits, traduisibles : un anglophone ne doit pas
+   recevoir un « -compresse.pdf ». */
+const SUF = Object.assign({
+  compresse: '-compresse', decoupe: '-decoupe', pages: '-pages', extrait: '-extrait',
+  allege: '-allege', reorganise: '-reorganise', pivote: '-pivote', rogne: '-rogne',
+  numerote: '-numerote', filigrane: '-filigrane', anonymise: '-anonymise',
+  deverrouille: '-deverrouille', signe: '-signe'
+}, (typeof window !== 'undefined' && window.TEXTES && window.TEXTES.SUFFIXES) || {});
 const { PDFDocument, rgb, degrees, StandardFonts } = PDFLib;
 
 const charger = (bytes) => PDFDocument.load(bytes, { ignoreEncryption: true });
@@ -67,7 +75,7 @@ async function compresserPdf(fichiers, opts = {}, avance){
     return { nom: f.name, blob: blobPdf(src), inchange: true,
              avant: src.length, apres: src.length };
   }
-  return { nom: base(f) + '-compresse.pdf', blob: blobPdf(out),
+  return { nom: base(f) + SUF.compresse + '.pdf', blob: blobPdf(out),
            avant: src.length, apres: out.length };
 }
 
@@ -92,7 +100,7 @@ async function diviserPdf(fichiers, opts = {}, avance){
     const noms = Object.keys(sorties);
     if (!noms.length) throw new Error("Aucune plage valide. Exemple attendu : 1-3, 5, 8-10");
     if (noms.length === 1) return { nom: noms[0], blob: blobPdf(sorties[noms[0]]) };
-    return { nom: nom + '-decoupe.zip', blob: new Blob([fflate.zipSync(sorties)], { type: 'application/zip' }) };
+    return { nom: nom + SUF.decoupe + '.zip', blob: new Blob([fflate.zipSync(sorties)], { type: 'application/zip' }) };
   }
 
   if (n === 1) throw new Error("Ce document n'a qu'une page : il n'y a rien à découper.");
@@ -102,7 +110,7 @@ async function diviserPdf(fichiers, opts = {}, avance){
     sorties[`${nom}-page-${String(i + 1).padStart(2, '0')}.pdf`] = new Uint8Array(await out.save());
     avance?.((i + 1) / n);
   }
-  return { nom: nom + '-pages.zip', blob: new Blob([fflate.zipSync(sorties)], { type: 'application/zip' }) };
+  return { nom: nom + SUF.pages + '.zip', blob: new Blob([fflate.zipSync(sorties)], { type: 'application/zip' }) };
 }
 
 /* ------------------- pages : extraire, supprimer, ordonner ---------------- */
@@ -114,7 +122,7 @@ async function extrairePages(fichiers, opts = {}, avance){
   if (!idx.length) throw new Error('Sélectionnez au moins une page à extraire.');
   const out = await copierVers(src, idx);
   avance?.(1);
-  return { nom: base(f) + '-extrait.pdf', blob: blobPdf(await out.save()) };
+  return { nom: base(f) + SUF.extrait + '.pdf', blob: blobPdf(await out.save()) };
 }
 
 async function supprimerPages(fichiers, opts = {}, avance){
@@ -127,7 +135,7 @@ async function supprimerPages(fichiers, opts = {}, avance){
   if (!garder.length) throw new Error('Vous ne pouvez pas supprimer toutes les pages.');
   const out = await copierVers(src, garder);
   avance?.(1);
-  return { nom: base(f) + '-allege.pdf', blob: blobPdf(await out.save()) };
+  return { nom: base(f) + SUF.allege + '.pdf', blob: blobPdf(await out.save()) };
 }
 
 async function organiserPages(fichiers, opts = {}, avance){
@@ -143,7 +151,7 @@ async function organiserPages(fichiers, opts = {}, avance){
     if (r) p.setRotation(degrees(((p.getRotation().angle || 0) + r) % 360));
   });
   avance?.(1);
-  return { nom: base(f) + '-reorganise.pdf', blob: blobPdf(await out.save()) };
+  return { nom: base(f) + SUF.reorganise + '.pdf', blob: blobPdf(await out.save()) };
 }
 
 async function pivoterPdf(fichiers, opts = {}, avance){
@@ -155,7 +163,7 @@ async function pivoterPdf(fichiers, opts = {}, avance){
     if (r) p.setRotation(degrees((((p.getRotation().angle || 0) + r) % 360 + 360) % 360));
   });
   avance?.(1);
-  return { nom: base(f) + '-pivote.pdf', blob: blobPdf(await doc.save()) };
+  return { nom: base(f) + SUF.pivote + '.pdf', blob: blobPdf(await doc.save()) };
 }
 
 /* --------------------------------- rogner -------------------------------- */
@@ -174,7 +182,7 @@ async function rognerPdf(fichiers, opts = {}, avance){
     }
   });
   avance?.(1);
-  return { nom: base(f) + '-rogne.pdf', blob: blobPdf(await doc.save()) };
+  return { nom: base(f) + SUF.rogne + '.pdf', blob: blobPdf(await doc.save()) };
 }
 
 /* ------------------------- numéroter et filigraner ------------------------ */
@@ -207,7 +215,7 @@ async function numeroterPdf(fichiers, opts = {}, avance){
     p.drawText(txt, { x, y, size: taille, font: police, color: rgb(0.25, 0.28, 0.33) });
   });
   avance?.(1);
-  return { nom: base(f) + '-numerote.pdf', blob: blobPdf(await doc.save()) };
+  return { nom: base(f) + SUF.numerote + '.pdf', blob: blobPdf(await doc.save()) };
 }
 
 async function filigranePdf(fichiers, opts = {}, avance){
@@ -232,7 +240,7 @@ async function filigranePdf(fichiers, opts = {}, avance){
     });
   });
   avance?.(1);
-  return { nom: base(f) + '-filigrane.pdf', blob: blobPdf(await doc.save()) };
+  return { nom: base(f) + SUF.filigrane + '.pdf', blob: blobPdf(await doc.save()) };
 }
 
 /* ------------------------------ métadonnées ------------------------------ */
@@ -244,7 +252,7 @@ async function nettoyerMetadonnees(fichiers, opts = {}, avance){
   doc.setProducer(''); doc.setCreator('');
   try { doc.setCreationDate(new Date(0)); doc.setModificationDate(new Date(0)); } catch {}
   avance?.(1);
-  return { nom: base(f) + '-anonymise.pdf', blob: blobPdf(await doc.save()) };
+  return { nom: base(f) + SUF.anonymise + '.pdf', blob: blobPdf(await doc.save()) };
 }
 
 async function lireMetadonnees(fichier){
@@ -290,7 +298,7 @@ async function deverrouillerPdf(fichiers, opts = {}, avance){
     page.drawImage(img, { x: 0, y: 0, width: nat.width, height: nat.height });
     avance?.(i / pdf.numPages);
   }
-  return { nom: base(f) + '-deverrouille.pdf', blob: blobPdf(await doc.save()) };
+  return { nom: base(f) + SUF.deverrouille + '.pdf', blob: blobPdf(await doc.save()) };
 }
 
 /* -------------------------------- signature ------------------------------- */
@@ -310,7 +318,7 @@ async function signerPdf(fichiers, opts = {}, avance){
   const x = width * (opts.x ?? 0.62), y = height * (opts.y ?? 0.1);
   p.drawImage(img, { x, y, width: w, height: h });
   avance?.(1);
-  return { nom: base(f) + '-signe.pdf', blob: blobPdf(await doc.save()) };
+  return { nom: base(f) + SUF.signe + '.pdf', blob: blobPdf(await doc.save()) };
 }
 
 /* ------------------------- reconnaissance de texte ------------------------ */

@@ -214,3 +214,11 @@ details p{margin:0 0 22px;font-size:15.5px;max-width:62ch}
 @media (max-width:760px){
   .etapes,.deux,.autres,.usages,.plan .in{grid-template-columns:1fr}
 }
+
+/* sélecteur de langue */
+.langues{display:inline-flex;align-items:center;gap:2px;border:1px solid var(--trait);
+  border-radius:9px;padding:3px;background:#fff}
+.langues a,.langues b{display:inline-block;padding:4px 9px;border-radius:6px;font-size:12.5px;
+  font-weight:700;letter-spacing:.03em;color:#8A8577;text-decoration:none}
+.langues b{background:var(--encre);color:var(--papier)}
+.langues a:hover{background:var(--papier2);color:var(--encre)}
