@@ -1,3 +1,4 @@
+/* VoilaPDF - https://voilapdf.com - GNU AGPL v3, voir LICENSE */
 /* Résumé et traduction, exécutés sur la machine de l'utilisateur.
    Deux moteurs très différents cohabitent ici, et c'est délibéré :
 

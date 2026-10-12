@@ -1,3 +1,4 @@
+/* VoilaPDF - https://voilapdf.com - GNU AGPL v3, voir LICENSE */
 /* Génère une page par outil et par langue, plus le sitemap et robots.txt.
        node build-pages.js
    Chaque langue a son préfixe d'URL et ses propres slugs ; les pages d'une même

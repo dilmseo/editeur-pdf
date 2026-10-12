@@ -1,3 +1,4 @@
+/* VoilaPDF - https://voilapdf.com - GNU AGPL v3, voir LICENSE */
 /* Catalogue des outils : une seule source, lue par l'accueil (navigateur) et par
    le générateur de pages (Node). Chaque entrée porte à la fois ce qu'il faut pour
    faire tourner l'outil et ce qu'il faut pour que sa page existe aux yeux d'un

@@ -1,3 +1,4 @@
+/* VoilaPDF - https://voilapdf.com - GNU AGPL v3, voir LICENSE */
 /* Pilote d'une page d'outil. La page déclare window.OUTIL_COURANT ; le reste —
    réglages, aperçu des pages, planche à signer, rognage — est monté ici d'après
    la fiche de l'outil, pour que chaque page n'embarque que ce dont elle a besoin. */

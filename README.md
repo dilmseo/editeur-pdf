@@ -62,6 +62,27 @@ même ligne de base.
 | [pdf-lib](https://github.com/Hopding/pdf-lib) 1.17 | réécriture du PDF | MIT |
 | [tesseract.js](https://github.com/naptha/tesseract.js) 5.1 | OCR | Apache-2.0 |
 | [tessdata](https://github.com/tesseract-ocr/tessdata) `fra` 4.0 | données de langue | Apache-2.0 |
+| [transformers.js](https://github.com/xenova/transformers.js) 2.17 | résumé rédigé, traduction | Apache-2.0 |
+| [fflate](https://github.com/101arrowz/fflate) | lecture et écriture des ZIP Office | MIT |
 
 Seuls `tesseract-core-simd-lstm.wasm.js` (SIMD) et son repli `-lstm` sont
 embarqués : ce sont les seuls que tesseract.js demande avec `oem: 1`.
+
+Les **poids** des modèles de langue ne sont pas embarqués : ils sont récupérés
+depuis Hugging Face au premier clic sur « Traduire » ou sur le résumé rédigé,
+puis conservés par le cache du navigateur. C'est le seul échange réseau du site,
+et il va dans ce sens-là : le modèle descend, le document ne monte jamais.
+
+## Licence
+
+[GNU AGPL v3](LICENSE).
+
+Vous pouvez utiliser, modifier et redistribuer ce code, y compris
+commercialement. La seule contrepartie est celle de l'article 13 : **si vous en
+exploitez une version modifiée sur un réseau, vous devez en proposer le code
+source à ses utilisateurs.** C'est délibéré — l'intérêt de cet outil est que
+quiconque puisse vérifier que le document ne part nulle part, et cette
+vérification doit rester possible sur les versions dérivées.
+
+Les bibliothèques de `vendor/` restent sous leurs licences respectives,
+indiquées ci-dessus.

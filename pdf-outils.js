@@ -1,3 +1,4 @@
+/* VoilaPDF - https://voilapdf.com - GNU AGPL v3, voir LICENSE */
 /* Opérations sur les PDF eux-mêmes : compresser, découper, réorganiser, annoter.
    pdf-lib recopie les pages sans les réencoder, donc la plupart de ces outils ne
    perdent rien. Les deux exceptions — compresser et déverrouiller — passent par un

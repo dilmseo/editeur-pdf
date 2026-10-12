@@ -1,3 +1,4 @@
+/* VoilaPDF - https://voilapdf.com - GNU AGPL v3, voir LICENSE */
 /* Petit serveur local pour l'éditeur PDF.
    Il n'existe que pour l'OCR : depuis un file://, Chrome refuse de construire un
    Worker et de lire les données de langue, donc Tesseract ne peut pas démarrer.

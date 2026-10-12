@@ -1,3 +1,4 @@
+/* VoilaPDF - https://voilapdf.com - GNU AGPL v3, voir LICENSE */
 /* Moteur de conversion, entièrement côté navigateur.
    Les formats Office sont des archives ZIP de fichiers XML : fflate les ouvre et
    les referme, DOMParser lit le XML, pdf.js lit les PDF et pdf-lib les écrit.
