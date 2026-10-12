@@ -15,7 +15,9 @@ const SUF = Object.assign({
   compresse: '-compresse', decoupe: '-decoupe', pages: '-pages', extrait: '-extrait',
   allege: '-allege', reorganise: '-reorganise', pivote: '-pivote', rogne: '-rogne',
   numerote: '-numerote', filigrane: '-filigrane', anonymise: '-anonymise',
-  deverrouille: '-deverrouille', signe: '-signe'
+  deverrouille: '-deverrouille', signe: '-signe',
+  repare: '-repare', sansBlanches: '-sans-pages-blanches', aplati: '-aplati',
+  assaini: '-assaini', metadonnees: '-metadonnees', comparaison: '-comparaison'
 }, (typeof window !== 'undefined' && window.TEXTES && window.TEXTES.SUFFIXES) || {});
 const { PDFDocument, rgb, degrees, StandardFonts } = PDFLib;
 
@@ -355,9 +357,354 @@ async function ocrVersTexte(fichiers, opts = {}, avance){
   return { nom: base(f) + '.txt', blob: new Blob([txt], { type: 'text/plain;charset=utf-8' }) };
 }
 
+/* ===================== PDF → texte, sans reconnaissance ===================== */
+
+/* Distinct de l'OCR : ici le texte est deja dans le fichier, on le releve. C'est
+   instantane et exact, la ou la reconnaissance approxime. L'outil bascule de
+   lui-meme vers un avertissement si la page est une image. */
+async function pdfVersTexte(fichiers, opts = {}, avance){
+  const f = fichiers[0];
+  const src = await lire(f);
+  const pdf = await pdfjsLib.getDocument({ data: src.slice(0) }).promise;
+  const pages = [];
+  for (let i = 1; i <= pdf.numPages; i++){
+    const pg = await pdf.getPage(i);
+    const tc = await pg.getTextContent();
+    /* On regroupe par ligne de base pour ne pas obtenir un mot par ligne : les
+       fragments d'une meme ligne partagent leur ordonnee a peu de chose pres. */
+    const lignes = [];
+    let cur = null;
+    for (const it of tc.items){
+      if (!it.str) continue;
+      const y = it.transform[5];
+      if (cur && Math.abs(cur.y - y) < 2.5) cur.t += it.str;
+      else { cur = { y, t: it.str }; lignes.push(cur); }
+    }
+    pages.push(lignes.map(l => l.t.replace(/\s+/g, ' ').trim()).filter(Boolean).join('\n'));
+    avance?.(i / pdf.numPages);
+  }
+  const vide = pages.join('').replace(/\s/g, '').length < 20;
+  if (vide) throw new Error(MSG.scanne);
+
+  const txt = pages.map((t, i) => (pdf.numPages > 1 ? `--- Page ${i + 1} ---\n` : '') + t).join('\n\n');
+  if (opts.sortie === 'docx' && window.Conv?.texteVersDocx)
+    return window.Conv.texteVersDocx(base(f) + '.docx', pages);
+  return { nom: base(f) + '.txt', blob: new Blob([txt], { type: 'text/plain;charset=utf-8' }),
+           texte: txt.slice(0, 4000) };
+}
+
+/* ============================ reparer un PDF ============================ */
+
+/* pdf.js est beaucoup plus tolerant que la plupart des lecteurs : il accepte des
+   tables de references cassees, des objets mal fermes, des longueurs fausses. On
+   s'en sert comme d'un filtre — ce qu'il parvient a lire, pdf-lib le reecrit
+   proprement. Ca ne ressuscite pas un fichier tronque, mais ca rattrape la
+   majorite des « impossible d'ouvrir ce document ». */
+async function reparerPdf(fichiers, opts = {}, avance){
+  const f = fichiers[0];
+  const src = await lire(f);
+  let pagesLues = 0, parRendu = false;
+  let doc;
+
+  try {
+    // Chemin rapide : si pdf-lib accepte le fichier, une simple reecriture suffit.
+    const brut = await charger(src);
+    doc = await PDFDocument.create();
+    const copiees = await doc.copyPages(brut, brut.getPageIndices());
+    copiees.forEach(p => doc.addPage(p));
+    pagesLues = copiees.length;
+    avance?.(0.8);
+  } catch {
+    doc = null;
+  }
+
+  if (!doc || !pagesLues){
+    /* Chemin de secours : pdf.js lit, on redessine chaque page. Le texte devient
+       une image — c'est le prix a payer quand la structure est irrecuperable, et
+       la page de l'outil le dit. */
+    parRendu = true;
+    const pdf = await pdfjsLib.getDocument({ data: src.slice(0) }).promise;
+    doc = await PDFDocument.create();
+    for (let i = 1; i <= pdf.numPages; i++){
+      const pg = await pdf.getPage(i);
+      const nat = pg.getViewport({ scale: 1 });
+      const vp = pg.getViewport({ scale: 2 });
+      const c = document.createElement('canvas');
+      c.width = Math.round(vp.width); c.height = Math.round(vp.height);
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+      await pg.render({ canvasContext: ctx, viewport: vp }).promise;
+      const b = await new Promise(r => c.toBlob(r, 'image/jpeg', 0.9));
+      const img = await doc.embedJpg(new Uint8Array(await b.arrayBuffer()));
+      doc.addPage([nat.width, nat.height])
+         .drawImage(img, { x: 0, y: 0, width: nat.width, height: nat.height });
+      pagesLues++;
+      avance?.(i / pdf.numPages);
+    }
+  }
+
+  if (!pagesLues) throw new Error(MSG.irreparable);
+  const out = await doc.save();
+  return { nom: base(f) + SUF.repare + '.pdf', blob: blobPdf(out),
+           note: parRendu ? MSG.repareParRendu : MSG.repareStructure };
+}
+
+/* ======================= supprimer les pages blanches ====================== */
+
+/* Une page « blanche » n'est presque jamais parfaitement blanche : un scan laisse
+   du grain, une poussiere, un liseré de bord. On rend donc la page en petit, on
+   ignore une marge, et on compte la proportion de pixels nettement plus sombres
+   que le fond. Le seuil est reglable parce qu'un scan sale demande plus de
+   tolerance qu'un PDF natif. */
+async function supprimerPagesBlanches(fichiers, opts = {}, avance){
+  const f = fichiers[0];
+  const SEUILS = { stricte: 0.0004, normale: 0.0015, tolerante: 0.006 };
+  const seuil = SEUILS[opts.sensibilite] ?? SEUILS.normale;
+
+  const src = await lire(f);
+  const pdf = await pdfjsLib.getDocument({ data: src.slice(0) }).promise;
+  const garder = [], retirees = [];
+
+  for (let i = 1; i <= pdf.numPages; i++){
+    const pg = await pdf.getPage(i);
+    const vp = pg.getViewport({ scale: 0.5 });
+    const c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round(vp.width)); c.height = Math.max(1, Math.round(vp.height));
+    const ctx = c.getContext('2d', { willReadFrequently: true });
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+    await pg.render({ canvasContext: ctx, viewport: vp }).promise;
+
+    // on ignore 3 % de marge : les bords de scan sont souvent gris
+    const m = Math.round(Math.min(c.width, c.height) * 0.03);
+    const d = ctx.getImageData(m, m, Math.max(1, c.width - 2 * m), Math.max(1, c.height - 2 * m)).data;
+    let sombres = 0;
+    for (let p = 0; p < d.length; p += 4){
+      if (d[p] < 215 || d[p + 1] < 215 || d[p + 2] < 215) sombres++;
+    }
+    const part = sombres / (d.length / 4);
+    (part > seuil ? garder : retirees).push(i - 1);
+    avance?.(i / pdf.numPages * 0.9);
+  }
+
+  if (!garder.length) throw new Error(MSG.toutesBlanches);
+  if (!retirees.length) return { nom: f.name, blob: f, inchange: true, note: MSG.aucuneBlanche };
+
+  const brut = await charger(src);
+  const out = await copierVers(brut, garder);
+  avance?.(1);
+  return { nom: base(f) + SUF.sansBlanches + '.pdf', blob: blobPdf(await out.save()),
+           note: MSG.blanchesRetirees(retirees.length, retirees.map(i => i + 1).join(', ')) };
+}
+
+/* ============================= aplatir un PDF ============================= */
+
+/* Aplatir, c'est figer ce qui etait encore interactif : champs de formulaire
+   remplis, cases cochees, listes. Le contenu reste visible et imprimable, mais
+   plus personne ne peut le rouvrir et le changer. */
+async function aplatirPdf(fichiers, opts = {}, avance){
+  const f = fichiers[0];
+  const doc = await charger(await lire(f));
+  avance?.(0.4);
+
+  let champs = 0;
+  try {
+    const form = doc.getForm();
+    champs = form.getFields().length;
+    if (champs) form.flatten();
+  } catch (e) {
+    /* Certains formulaires portent des apparences que pdf-lib ne sait pas
+       regenerer. Plutot que d'echouer, on retire le formulaire : les valeurs
+       deja dessinees restent a l'ecran, les champs ne sont plus modifiables. */
+    try { doc.catalog.delete(PDFLib.PDFName.of('AcroForm')); } catch {}
+  }
+  avance?.(0.9);
+
+  const out = await doc.save();
+  return { nom: base(f) + SUF.aplati + '.pdf', blob: blobPdf(out),
+           note: champs ? MSG.aplatiChamps(champs) : MSG.aplatiSansChamp };
+}
+
+/* ============================= assainir un PDF ============================ */
+
+/* Un PDF peut embarquer du JavaScript, des fichiers joints et une action lancee
+   a l'ouverture. Ce sont les vecteurs utilises par les pieces jointes piegees.
+   On les retire sans toucher au contenu visible. */
+async function assainirPdf(fichiers, opts = {}, avance){
+  const f = fichiers[0];
+  const doc = await charger(await lire(f));
+  const { PDFName, PDFDict } = PDFLib;
+  const retires = [];
+  const cat = doc.catalog;
+
+  const oter = (dict, nom, libelle) => {
+    try {
+      if (dict && dict.get && dict.get(PDFName.of(nom)) !== undefined){
+        dict.delete(PDFName.of(nom));
+        retires.push(libelle);
+      }
+    } catch {}
+  };
+
+  oter(cat, 'OpenAction', MSG.actionOuverture);
+  oter(cat, 'AA', MSG.actionsAuto);
+
+  try {
+    const noms = cat.get(PDFName.of('Names'));
+    if (noms instanceof PDFDict){
+      oter(noms, 'JavaScript', MSG.javascript);
+      oter(noms, 'EmbeddedFiles', MSG.fichiersJoints);
+    }
+  } catch {}
+
+  // actions automatiques posees au niveau des pages
+  let pagesNettoyees = 0;
+  for (const p of doc.getPages()){
+    try {
+      if (p.node.get(PDFName.of('AA')) !== undefined){
+        p.node.delete(PDFName.of('AA'));
+        pagesNettoyees++;
+      }
+    } catch {}
+  }
+  if (pagesNettoyees) retires.push(MSG.actionsPages(pagesNettoyees));
+  avance?.(0.9);
+
+  const out = await doc.save();
+  return { nom: base(f) + SUF.assaini + '.pdf', blob: blobPdf(out),
+           note: retires.length ? MSG.assaini(retires.join(' · ')) : MSG.rienAAssainir };
+}
+
+/* ========================= modifier les metadonnees ======================= */
+
+async function ecrireMetadonnees(fichiers, opts = {}, avance){
+  const f = fichiers[0];
+  const doc = await charger(await lire(f));
+  avance?.(0.5);
+
+  const pose = [];
+  const mettre = (cle, methode, libelle) => {
+    const v = String(opts[cle] ?? '').trim();
+    if (!v) return;
+    try { doc[methode](cle === 'motsCles' ? v.split(/[,;]\s*/).filter(Boolean) : v); pose.push(libelle); }
+    catch {}
+  };
+  mettre('titre',    'setTitle',    'Titre');
+  mettre('auteur',   'setAuthor',   'Auteur');
+  mettre('sujet',    'setSubject',  'Sujet');
+  mettre('motsCles', 'setKeywords', 'Mots-clés');
+
+  /* Le producteur devient le notre : laisser « pdf-lib » renseignerait la
+     bibliotheque plutot que l'outil, et pretendre qu'un autre logiciel a ecrit le
+     fichier serait un faux. Chaque appel est isole : si un lecteur refuse l'un
+     d'eux, les autres doivent quand meme passer. */
+  for (const [m, v] of [['setProducer', 'VoilàPDF'], ['setCreator', 'VoilàPDF'],
+                        ['setModificationDate', new Date()]]){
+    try { doc[m](v); } catch {}
+  }
+  avance?.(0.95);
+
+  if (!pose.length) throw new Error(MSG.aucunChamp);
+  const out = await doc.save();
+  return { nom: base(f) + SUF.metadonnees + '.pdf', blob: blobPdf(out),
+           note: MSG.metaPosees(pose.join(', ')) };
+}
+
+/* =========================== comparer deux PDF =========================== */
+
+/* Comparaison du texte, ligne a ligne, page par page. On ne compare pas les
+   pixels : deux rendus identiques peuvent differer d'un antialiasing, et deux
+   pages visuellement proches peuvent dire le contraire l'une de l'autre. C'est
+   le texte qui porte le sens. */
+async function comparerPdf(fichiers, opts = {}, avance){
+  if (fichiers.length < 2) throw new Error(MSG.deuxFichiers);
+  const [a, b] = fichiers;
+
+  const lignesDe = async (f, part) => {
+    const pdf = await pdfjsLib.getDocument({ data: (await lire(f)).slice(0) }).promise;
+    const pages = [];
+    for (let i = 1; i <= pdf.numPages; i++){
+      const tc = await (await pdf.getPage(i)).getTextContent();
+      const lig = [];
+      let cur = null;
+      for (const it of tc.items){
+        if (!it.str) continue;
+        const y = it.transform[5];
+        if (cur && Math.abs(cur.y - y) < 2.5) cur.t += it.str;
+        else { cur = { y, t: it.str }; lig.push(cur); }
+      }
+      pages.push(lig.map(l => l.t.replace(/\s+/g, ' ').trim()).filter(Boolean));
+      avance?.(part * (i / pdf.numPages));
+    }
+    return pages;
+  };
+
+  const pa = await lignesDe(a, 0.4);
+  const pb = await lignesDe(b, 0.8);
+
+  const rapport = [];
+  rapport.push(MSG.compEntete(a.name, b.name));
+  if (pa.length !== pb.length) rapport.push(MSG.compPages(pa.length, pb.length));
+
+  let differentes = 0;
+  const n = Math.max(pa.length, pb.length);
+  for (let i = 0; i < n; i++){
+    const la = pa[i] || [], lb = pb[i] || [];
+    const seulA = la.filter(x => !lb.includes(x));
+    const seulB = lb.filter(x => !la.includes(x));
+    if (!seulA.length && !seulB.length) continue;
+    differentes++;
+    rapport.push('');
+    rapport.push(MSG.compPage(i + 1));
+    seulA.forEach(x => rapport.push('  - ' + x));
+    seulB.forEach(x => rapport.push('  + ' + x));
+  }
+  avance?.(1);
+
+  if (!differentes && pa.length === pb.length)
+    rapport.push('', MSG.compIdentiques);
+  else
+    rapport.splice(1, 0, MSG.compResume(differentes, n));
+
+  const texte = rapport.join('\n');
+  const nom = base(a) + SUF.comparaison;
+  if (opts.sortie === 'pdf' && window.Conv?.proseVersPdf)
+    return Object.assign(await window.Conv.proseVersPdf(nom + '.pdf', rapport.filter(l => l !== ''),
+                                                        MSG.compTitre), { texte });
+  return { nom: nom + '.txt', blob: new Blob([texte], { type: 'text/plain;charset=utf-8' }), texte };
+}
+
+/* --- mots des messages, traduisibles --- */
+const MSG = Object.assign({
+  scanne: "Ce PDF ne contient pas de texte à relever : c'est un document scanné. Passez-le par la reconnaissance de caractères.",
+  irreparable: "Ce fichier est trop endommagé : aucune page n'a pu être lue.",
+  repareStructure: "Structure réécrite proprement. Le texte reste sélectionnable.",
+  repareParRendu: "La structure était irrécupérable : les pages ont été redessinées depuis leur rendu. Le document s'ouvre à nouveau, mais son texte est devenu une image.",
+  toutesBlanches: 'Toutes les pages ont été jugées blanches : baissez la sensibilité.',
+  aucuneBlanche: "Aucune page blanche détectée : le document vous est rendu tel quel.",
+  blanchesRetirees: (n, l) => `${n} page(s) blanche(s) retirée(s) : ${l}.`,
+  aplatiChamps: n => `${n} champ(s) de formulaire figé(s).`,
+  aplatiSansChamp: "Ce document ne contenait aucun champ de formulaire ; il a simplement été réenregistré.",
+  actionOuverture: "action à l'ouverture", actionsAuto: 'actions automatiques',
+  javascript: 'JavaScript embarqué', fichiersJoints: 'fichiers joints',
+  actionsPages: n => `actions sur ${n} page(s)`,
+  assaini: l => `Retiré : ${l}.`,
+  rienAAssainir: "Ce document ne contenait ni JavaScript, ni fichier joint, ni action automatique.",
+  aucunChamp: 'Renseignez au moins un champ à écrire.',
+  metaPosees: l => `Écrit : ${l}.`,
+  deuxFichiers: 'Déposez deux PDF à comparer.',
+  compTitre: 'Comparaison',
+  compEntete: (a, b) => `Comparaison de « ${a} » (-) et « ${b} » (+)`,
+  compResume: (d, n) => `${d} page(s) différente(s) sur ${n}.`,
+  compPages: (a, b) => `Nombre de pages : ${a} contre ${b}.`,
+  compPage: n => `Page ${n}`,
+  compIdentiques: 'Les deux documents contiennent exactement le même texte.'
+}, (typeof window !== 'undefined' && window.TEXTES && window.TEXTES.MSG_OUTILS) || {});
+
 window.Outils = {
   compresserPdf, diviserPdf, extrairePages, supprimerPages, organiserPages,
   pivoterPdf, rognerPdf, numeroterPdf, filigranePdf, nettoyerMetadonnees,
-  lireMetadonnees, deverrouillerPdf, signerPdf, ocrVersTexte, analyserPlages
+  lireMetadonnees, deverrouillerPdf, signerPdf, ocrVersTexte, analyserPlages,
+  pdfVersTexte, reparerPdf, supprimerPagesBlanches, aplatirPdf, assainirPdf,
+  ecrireMetadonnees, comparerPdf
 };
 })();

@@ -8,6 +8,9 @@
 *.pdf
 
 # pages d'outil et pages de texte, par langue
+/aplatir-pdf/
+/assainir-pdf/
+/comparer-pdf/
 /compresser-pdf/
 /confidentialite/
 /contact/
@@ -20,6 +23,7 @@
 /fusionner-pdf/
 /jpg-en-pdf/
 /mentions-legales/
+/modifier-metadonnees-pdf/
 /numeroter-pdf/
 /ocr-pdf/
 /organiser-pdf/
@@ -27,14 +31,17 @@
 /pdf-en-jpg/
 /pdf-en-png/
 /pdf-en-powerpoint/
+/pdf-en-texte/
 /pdf-en-word/
 /pivoter-pdf/
 /png-en-pdf/
 /powerpoint-en-pdf/
+/reparer-pdf/
 /resumer-pdf/
 /rogner-pdf/
 /signer-pdf/
 /supprimer-metadonnees-pdf/
+/supprimer-pages-blanches-pdf/
 /supprimer-pages-pdf/
 /traduire-pdf/
 /word-en-pdf/

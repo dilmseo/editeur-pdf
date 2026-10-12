@@ -238,7 +238,7 @@ const UI = {
     introOutils: 'Convert both ways, assemble, extract. Every tool has its own page, with what it keeps and what it drops stated before you begin.',
     phare1t: 'Edit the text in a PDF', phare1d: 'Fix a line that is already written, even on a scanned document. This is the feature others charge for.',
     phare2t: 'Merge PDFs', phare2d: 'Several documents end to end, in the order you choose, with no loss of quality.',
-    groupes: ['Convert a PDF', 'Create a PDF', 'Work on the PDF', 'Understand a PDF'],
+    groupes: ['Convert a PDF', 'Create a PDF', 'Work on the PDF', 'Repair and secure', 'Understand a PDF'],
     badgeA: 'Open source, made with ', badgeB: ' in France',
     outilsCompte: 'tools',
     surtitreConfiance: 'What really changes', titreConfiance: 'The paywall is editing the text',
@@ -940,6 +940,206 @@ const OUTILS = {
   ]
 },
 
+'pdf-texte': {
+  slug: 'pdf-to-text', carte: 'PDF → text', resume: 'Plain text, no recognition needed',
+  titre: 'PDF to text', h1: 'Extract the text from a PDF', actionTexte: 'Extract the text',
+  titreSeo: 'Extract the text from a PDF for free, with no upload',
+  meta: 'Get the text of a PDF as .txt or Word, instantly and inside your browser. Free, no account, and the file is sent to no server.',
+  chapo: 'When a PDF already holds text — which is the case for anything a computer produced — there is nothing to recognise: the text is read out exactly, in a second.',
+  note: 'The text appears on screen as soon as it is ready. If the document is a scan, the tool says so instead of handing you an empty file.',
+  garde: ['The exact text, character for character', 'Reading order and line breaks',
+          'The separation between pages', 'All accents and punctuation'],
+  perdu: ['Layout, columns and tables', 'Images and logos',
+          'Fonts, sizes and colours', 'Hyperlinks'],
+  contexte: 'The confusion is common: people look for an "OCR" when the text is already there. Character recognition is for scanned documents and stays approximate; on a native PDF it would degrade text that was already perfect.',
+  usages: [
+    { t: 'Quote a passage', d: 'Copy an exact sentence without retyping it.' },
+    { t: 'Analyse a document', d: 'Feed the text to a spreadsheet, a script or a proofreader.' },
+    { t: 'Archive in plain text', d: 'Keep a searchable, lightweight version of a file.' }
+  ],
+  format: 'Extraction relies on pdf.js, which reports the position of every fragment. Fragments sharing a baseline are grouped, which avoids getting one word per line. For a scanned document, use the character recognition tool instead.',
+  faq: [
+    { q: 'How is this different from OCR?',
+      r: 'Here the text already exists inside the file: it is read out, exactly and instantly. Recognition guesses letters from an image — useful on a scan, pointless and degrading on a native PDF.' },
+    { q: 'Why is my result empty?',
+      r: 'Because your PDF is an image. The tool says so explicitly and points you to character recognition.' },
+    { q: 'Is the layout preserved?',
+      r: 'No, this is plain text. Columns end up one after the other. To keep the structure, convert to Word instead.' }
+  ]
+},
+
+'reparer': {
+  slug: 'repair-pdf', carte: 'Repair a PDF', resume: 'Reopen a damaged file',
+  titre: 'PDF repair', h1: 'Repair a damaged PDF', actionTexte: 'Repair the document',
+  titreSeo: 'Repair a corrupt PDF for free, with no upload',
+  meta: 'A PDF that refuses to open? Rebuild it inside your browser. Free, no account, and the damaged file is sent to no server.',
+  chapo: '"Cannot open this document" usually comes from a damaged internal structure, not from lost content. The tool reads whatever is readable and writes a clean file around it.',
+  note: 'Two routes are tried in order: rewriting the structure while keeping the text, and if that is beyond saving, redrawing the pages from their rendering. The tool tells you which one was used.',
+  garde: ['Every readable page', 'Selectable text, when the structure can be recovered',
+          'Page size and orientation', 'Images'],
+  perdu: ['Whatever is physically missing from a truncated file', 'Forms and their fields',
+          'Selectable text, if the rendering route was needed', 'Bookmarks and links'],
+  contexte: 'A PDF gets corrupted in transit, on a failing drive, or because the program that wrote it stopped halfway. The content is often intact: what is broken is the table telling the reader where each object lives.',
+  usages: [
+    { t: 'Recover a document you received', d: 'An attachment your reader refuses to open.' },
+    { t: 'Save an archived file', d: 'An old document pulled off a tired disk.' },
+    { t: 'Unblock printing', d: 'A PDF that displays but crashes on print.' }
+  ],
+  format: 'pdf.js tolerates broken cross-reference tables, unclosed objects and wrong lengths, where most readers give up. It is used here as a filter: whatever it manages to read, pdf-lib writes back cleanly.',
+  faq: [
+    { q: 'Can every PDF be repaired?',
+      r: 'No. A truncated file has lost bytes no tool can invent. An inconsistent structure, which is the common case, can almost always be rebuilt.' },
+    { q: 'Will my text stay selectable?',
+      r: 'Yes if the structure can be recovered, which is the usual outcome. If it cannot, pages are redrawn from their rendering and the text becomes an image — the tool flags it.' },
+    { q: 'What if the document asks for a password?',
+      r: 'Run it through the unlock tool first, entering the password you already know.' }
+  ]
+},
+
+'pages-blanches': {
+  slug: 'remove-blank-pages-pdf', carte: 'Blank pages', resume: 'Find and drop empty pages',
+  titre: 'Blank pages in a PDF', h1: 'Remove the blank pages from a PDF',
+  actionTexte: 'Remove the blank pages',
+  titreSeo: 'Remove blank pages from a PDF, for free',
+  meta: 'Automatically find and drop the empty pages of a scanned PDF, inside your browser. Free, no account, no upload.',
+  chapo: 'A double-sided scan produces an empty page for every unprinted back. The tool spots them by analysing each page’s rendering and hands the document back without them.',
+  note: 'The outer 3 % margin is ignored: the edges of a scan are nearly always grey and would make an empty page look full.',
+  garde: ['Every page carrying content', 'Their order and orientation',
+          'Selectable text', 'The original quality'],
+  perdu: ['Pages judged blank, listed in the report',
+          'A page bearing only a very faint mark, on strict sensitivity',
+          'Deliberately empty pages of a laid-out document'],
+  contexte: 'Scanning a stack double-sided doubles the page count, half of it empty. Removing them by hand on a hundred-page document is tedious and error-prone.',
+  usages: [
+    { t: 'Clean up a double-sided scan', d: 'The commonest case, and the one that saves the most pages.' },
+    { t: 'Lighten an archive', d: 'Fewer pages means a smaller file to send.' },
+    { t: 'Prepare a print run', d: 'Avoid wasting paper on empty sheets.' }
+  ],
+  format: 'Each page is rendered small, then the share of pixels distinctly darker than the background is measured. Above the threshold, the page is kept. The threshold is what the sensitivity setting changes.',
+  faq: [
+    { q: 'What if a useful page gets removed?',
+      r: 'Pick strict sensitivity: only near-immaculate pages are dropped. The report always lists the page numbers removed, so you can check.' },
+    { q: 'Why are my empty pages not detected?',
+      r: 'Your scanner probably leaves grain or an edge shadow. Switch to tolerant sensitivity.' },
+    { q: 'Is the document changed in any other way?',
+      r: 'No. Kept pages are copied as they are, with no re-encoding and no loss.' }
+  ]
+},
+
+'aplatir': {
+  slug: 'flatten-pdf', carte: 'Flatten a PDF', resume: 'Freeze form fields',
+  titre: 'Flatten a PDF', h1: 'Flatten a PDF', actionTexte: 'Flatten the document',
+  titreSeo: 'Flatten a PDF for free, without uploading the file',
+  meta: 'Freeze the form fields of a PDF so nobody can change them. Free, in your browser, with no upload.',
+  chapo: 'A filled-in form stays editable: the recipient can change your answers. Flattening turns those fields into fixed content — visible and printable, but frozen.',
+  note: 'The values you typed stay exactly where they were; only changing them becomes impossible.',
+  garde: ['The values you entered, in place', 'Layout and fonts',
+          'The document text, selectable', 'Images and drawn signatures'],
+  perdu: ['The editability of the fields — that is the point', 'Dropdowns and checkboxes, now drawings',
+          'The form’s automatic calculations', 'Certificate-based electronic signatures, which become invalid'],
+  contexte: 'Returning a filled PDF form without flattening it means sending a document the recipient can edit before filing it. For a signed quote or an administrative request, that is a weakness.',
+  usages: [
+    { t: 'Return a form', d: 'Your answers can no longer be altered afterwards.' },
+    { t: 'Archive a file', d: 'The document freezes in the state it was approved in.' },
+    { t: 'Make printing reliable', d: 'Some readers do not print form fields; flattened, the problem disappears.' }
+  ],
+  format: 'Flattening relies on pdf-lib: field appearances are drawn into the page content, then the form is removed. If an appearance cannot be regenerated, the form is simply deleted — what is already displayed stays visible.',
+  faq: [
+    { q: 'Do my answers stay readable?',
+      r: 'Yes, and in exactly the same place. They simply stop being editable fields and become page content.' },
+    { q: 'Can I undo it?',
+      r: 'Not on the produced file. Keep your original — a general rule with these tools.' },
+    { q: 'What if my PDF has no form?',
+      r: 'The tool says so and simply re-saves the document, changing nothing.' }
+  ]
+},
+
+'assainir': {
+  slug: 'sanitize-pdf', carte: 'Sanitize a PDF', resume: 'Strip JavaScript and attachments',
+  titre: 'Sanitize a PDF', h1: 'Sanitize a PDF', actionTexte: 'Sanitize the document',
+  titreSeo: 'Sanitize a PDF: strip JavaScript and embedded files',
+  meta: 'Remove JavaScript, attached files and automatic actions from a PDF you received. Free, in your browser, with no upload.',
+  chapo: 'A PDF is not only a document: it can carry JavaScript, attached files and an action fired on opening. Those are the vectors of booby-trapped attachments. The tool removes them without touching the visible content.',
+  note: 'The report states precisely what was found and removed — and tells you when the document was already clean.',
+  garde: ['All visible content, unchanged', 'Selectable text',
+          'Images and layout', 'Ordinary hyperlinks'],
+  perdu: ['Embedded JavaScript', 'Files attached to the document',
+          'The action fired on opening', 'Automatic actions set on pages'],
+  contexte: 'PDF is one of the most used formats for getting something to execute when an attachment is opened. Most modern readers block these mechanisms, but not all do, and a document that circulates eventually meets a permissive reader.',
+  usages: [
+    { t: 'Clean a document you received', d: 'Before opening it on a sensitive machine or passing it on.' },
+    { t: 'Prepare a distribution', d: 'Do not forward to your recipients what was forwarded to you.' },
+    { t: 'Archive soundly', d: 'A document collection without executable code ages better.' }
+  ],
+  format: 'The tool removes the JavaScript and EmbeddedFiles entries from the catalogue, the open action, and the automatic actions on pages. It makes no claim to analyse content: this is not an antivirus, it is the removal of the execution mechanisms the format provides.',
+  faq: [
+    { q: 'Is this an antivirus?',
+      r: 'No, and it should not be mistaken for one. It removes the execution mechanisms PDF provides — JavaScript, attachments, automatic actions. It does not analyse content and will not detect a malicious image.' },
+    { q: 'Does the document stay identical?',
+      r: 'Visually, entirely. Only what was executable or attached disappears.' },
+    { q: 'How do I know whether my PDF carried anything?',
+      r: 'The report says so, item by item. If it carried nothing, the tool tells you that too rather than implying a clean-up happened.' }
+  ]
+},
+
+'ecrire-metadonnees': {
+  slug: 'edit-pdf-metadata', carte: 'Write metadata', resume: 'Title, author, subject, keywords',
+  titre: 'PDF metadata', h1: 'Edit the metadata of a PDF', actionTexte: 'Write the metadata',
+  titreSeo: 'Edit PDF metadata for free, with no upload',
+  meta: 'Set the title, author, subject and keywords of a PDF. Free, in your browser, no account and no upload.',
+  chapo: 'Metadata is what your reader shows in the title bar and what your system searches on. A document exported from a word processor is often called "Document1": here is where you fix that.',
+  note: 'Leave blank anything you do not want to change. The producer is always reset to VoilàPDF: claiming another program wrote the file would be a forgery.',
+  garde: ['All document content', 'Text, images and layout',
+          'The fields you leave blank', 'The original creation date'],
+  perdu: ['The previous values of the fields you fill in',
+          'The name of the producing software, replaced',
+          'Nothing else: the content is not re-encoded'],
+  contexte: 'A PDF you pass on keeps the name of its author in its metadata, the name of the software, and sometimes the path of the original file. That is often awkward — and conversely, a well-described document turns up in a search.',
+  usages: [
+    { t: 'Name a document properly', d: 'The displayed title stops being "Document1" or "Untitled".' },
+    { t: 'Claim authorship', d: 'State the author or organisation on a distributed document.' },
+    { t: 'Make a collection searchable', d: 'Consistent keywords make an archive usable.' }
+  ],
+  format: 'The fields written are those of the PDF information dictionary: Title, Author, Subject, Keywords. The modification date is updated. Page content is untouched.',
+  faq: [
+    { q: 'How is this different from "Clean the metadata"?',
+      r: 'The other tool erases everything so the file reveals nothing. This one writes chosen values. They complement each other: clean first, then write back what you stand behind.' },
+    { q: 'Is this information visible in the document?',
+      r: 'No, it does not print. It appears in the file properties and in the reader’s title bar.' },
+    { q: 'Can I clear an existing field?',
+      r: 'This tool writes but does not erase. To empty the fields, use "Clean the metadata".' }
+  ]
+},
+
+'comparer': {
+  slug: 'compare-pdf', carte: 'Compare two PDFs', resume: 'See what changed',
+  titre: 'PDF comparison', h1: 'Compare two PDFs', actionTexte: 'Compare the documents',
+  titreSeo: 'Compare two PDFs for free, without uploading the files',
+  meta: 'Spot the text differences between two versions of a PDF, page by page. Free, in your browser, with no upload.',
+  chapo: 'Two versions of a contract, a quote or a report look alike enough that the one sentence that changed slips past. The tool reads the text of both files and lists what differs.',
+  note: 'Drop both files: the first is the reference, the second the compared version. The report also appears on screen.',
+  garde: ['Removed lines, marked with a minus', 'Added lines, marked with a plus',
+          'The page number of every difference', 'The count of differing pages'],
+  perdu: ['Purely visual differences: font, colour, position',
+          'Images and their content', 'Word-level detail inside a line',
+          'Scanned documents, for lack of text to compare'],
+  contexte: 'Reading two versions side by side takes time and lets things through. Services that do it online ask you to upload two documents — often the two versions of a contract, which is exactly what you do not want to hand over.',
+  usages: [
+    { t: 'Check a returned contract', d: 'See what the other party changed before signing.' },
+    { t: 'Follow a revision', d: 'Identify the paragraphs reworked between two versions.' },
+    { t: 'Verify a reissue', d: 'Make sure a republished official document still says the same thing.' }
+  ],
+  format: 'Comparison works on text, line by line and page by page. Pixels are not compared: two identical renderings can differ by antialiasing, and two visually similar pages can say opposite things. Meaning lives in the text.',
+  faq: [
+    { q: 'Can scanned documents be compared?',
+      r: 'Not directly: an image holds no text. Run both files through character recognition, then compare the results.' },
+    { q: 'Are layout differences shown?',
+      r: 'No. The tool compares what is written, not how it is presented. A paragraph moved without being changed will not show as a content difference.' },
+    { q: 'Are my two files sent anywhere?',
+      r: 'Neither of them. Everything is read and compared in your browser — which is precisely what matters when comparing two versions of a contract.' }
+  ]
+},
+
 'resumer': {
   slug: 'summarize-pdf', carte: 'Summarise a PDF', resume: 'The gist of a long document',
   titre: 'PDF summary', h1: 'Summarise a PDF without sending it anywhere',
@@ -1075,6 +1275,8 @@ const SUFFIXES = {
   allege: '-trimmed', reorganise: '-reordered', pivote: '-rotated', rogne: '-cropped',
   numerote: '-numbered', filigrane: '-watermarked', anonymise: '-anonymised',
   deverrouille: '-unlocked', signe: '-signed',
+  repare: '-repaired', sansBlanches: '-no-blank-pages', aplati: '-flattened',
+  assaini: '-sanitized', metadonnees: '-metadata', comparaison: '-comparison',
   traduit: '-translated', resume: '-summary'
 };
 

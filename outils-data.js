@@ -495,6 +495,13 @@ Object.assign(ICO, {
   stylo:      '<path d="M3 20c3 .5 5-1 6.5-3.5M5.5 14.5 15 5a2.1 2.1 0 0 1 3 3l-9.5 9.5-4 1z"/>',
   etiquette:  '<path d="M3 7a2 2 0 0 1 2-2h6l9 9-6 6-9-9z"/><circle cx="8" cy="10" r="1.2"/>',
   loupe:      '<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
+  texte:      '<path d="M5 5h14M9 5v14M4 19h10"/><path d="M15 13h5M17.5 13v7"/>',
+  cle:        '<path d="M14.5 3a6.5 6.5 0 1 0-5.2 10.4L4 19v2h3l1-1h2v-2h2l1.2-1.2A6.5 6.5 0 0 0 14.5 3z"/><circle cx="16" cy="8" r="1.6"/>',
+  blanche:    '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="m9 12 2.5 2.5L16 10"/>',
+  aplatir:    '<path d="M4 7h16M6 11h12M8 15h8M10 19h4"/>',
+  bouclier:   '<path d="M12 3 5 6v6c0 4.2 2.9 7.9 7 9 4.1-1.1 7-4.8 7-9V6z"/><path d="m9.5 12 1.8 1.8L15 10"/>',
+  fiche:      '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>',
+  comparer:   '<path d="M12 3v18"/><path d="M4 8h5M4 8l2.5-3M4 8l2.5 3"/><path d="M20 16h-5M20 16l-2.5-3M20 16l-2.5 3"/>',
   globe:      '<circle cx="12" cy="12" r="9"/><path d="M3.3 9h17.4M3.3 15h17.4"/><path d="M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18"/>',
   condense:   '<path d="M4 5h16M4 10h16M7 15h10M10 20h4"/>'
 });
@@ -1001,6 +1008,278 @@ const OUTILS2 = {
   ]
 },
 
+/* --------------------------- réparer et assainir -------------------------- */
+
+'pdf-texte': {
+  slug: 'pdf-en-texte', carte: 'PDF → texte', ico: ICO.texte, couleur: 'i-bleu',
+  resume: 'Le texte brut, sans reconnaissance', titre: 'PDF en texte',
+  h1: "Extraire le texte d'un PDF", actionTexte: 'Extraire le texte',
+  titreSeo: 'Extraire le texte d\'un PDF gratuitement, sans téléversement',
+  meta: "Récupérez le texte d'un PDF en .txt ou en Word, instantanément et dans votre navigateur. Gratuit, sans compte, et le fichier ne part sur aucun serveur.",
+  chapo: "Quand le PDF contient déjà du texte — ce qui est le cas de tout document produit par un ordinateur — il n'y a rien à reconnaître : le texte se relève tel quel, exactement, et en une seconde.",
+  accept: 'application/pdf', fonction: 'pdfVersTexte',
+  options: [{ id: 'sortie', type: 'choix', label: 'Format de sortie', defaut: 'txt',
+    valeurs: [['txt', 'Texte brut', 'fichier .txt'], ['docx', 'Document Word', 'fichier .docx']] }],
+  note: "Le texte s'affiche à l'écran dès qu'il est prêt. Si le document est un scan, l'outil vous le dit au lieu de rendre un fichier vide.",
+  garde: ['Le texte exact, caractère pour caractère', "L'ordre de lecture et les sauts de ligne",
+          'La séparation entre les pages', 'Tous les accents et la ponctuation'],
+  perdu: ['La mise en page, les colonnes et les tableaux', 'Les images et les logos',
+          'Les polices, tailles et couleurs', 'Les liens hypertextes'],
+  contexte: "La confusion est fréquente : on cherche un « OCR » alors que le texte est déjà là. La reconnaissance de caractères sert aux documents scannés et reste approximative ; sur un PDF natif, elle dégraderait un texte parfait.",
+  usages: [
+    { t: 'Citer un passage', d: "Copier une phrase exacte sans la retaper à la main." },
+    { t: 'Analyser un document', d: "Passer le texte dans un tableur, un script ou un correcteur." },
+    { t: 'Archiver en clair', d: "Garder une version cherchable et légère d'un dossier." }
+  ],
+  format: "Le relevé s'appuie sur pdf.js, qui donne la position de chaque fragment. Les fragments partageant une ligne de base sont regroupés, ce qui évite d'obtenir un mot par ligne. Pour un document scanné, voir l'outil de reconnaissance de caractères.",
+  inverse: null,
+  lies: [
+    { cle: 'ocr', r: "Si le PDF est un scan, c'est la reconnaissance qu'il vous faut." },
+    { cle: 'pdf-word', r: "Pour garder les titres et les tailles plutôt que du texte nu." },
+    { cle: 'resumer', r: "Pour n'en garder que l'essentiel." }
+  ],
+  faq: [
+    { q: 'Quelle différence avec la reconnaissance de caractères ?',
+      r: "Ici le texte existe déjà dans le fichier : on le relève, c'est exact et immédiat. La reconnaissance, elle, devine des lettres à partir d'une image — utile sur un scan, inutile et dégradante sur un PDF natif." },
+    { q: 'Pourquoi mon résultat est-il vide ?',
+      r: "Parce que votre PDF est une image. L'outil vous le signale explicitement et vous renvoie vers la reconnaissance de caractères." },
+    { q: 'La mise en page est-elle conservée ?',
+      r: "Non, c'est du texte brut. Les colonnes se retrouvent mises bout à bout. Pour conserver la structure, convertissez plutôt en Word." }
+  ]
+},
+
+'reparer': {
+  slug: 'reparer-pdf', carte: 'Réparer un PDF', ico: ICO.cle, couleur: 'i-ambre',
+  resume: 'Rouvrir un fichier endommagé', titre: 'Réparation de PDF',
+  h1: 'Réparer un PDF endommagé', actionTexte: 'Réparer le document',
+  titreSeo: 'Réparer un PDF corrompu gratuitement, sans téléversement',
+  meta: "Un PDF refuse de s'ouvrir ? Reconstruisez-le dans votre navigateur. Gratuit, sans compte, et le fichier endommagé ne part sur aucun serveur.",
+  chapo: "« Impossible d'ouvrir ce document » vient le plus souvent d'une structure interne abîmée, pas d'un contenu perdu. L'outil relit ce qui est lisible et réécrit un fichier propre autour.",
+  accept: 'application/pdf', fonction: 'reparerPdf',
+  note: "Deux chemins sont tentés dans l'ordre : réécrire la structure en gardant le texte, et si elle est irrécupérable, redessiner les pages depuis leur rendu. L'outil vous dit lequel a servi.",
+  garde: ['Toutes les pages lisibles', 'Le texte sélectionnable, quand la structure est récupérable',
+          'La taille et l\'orientation des pages', 'Les images'],
+  perdu: ['Ce qui est physiquement absent d\'un fichier tronqué', 'Les formulaires et leurs champs',
+          'Le texte sélectionnable, si le passage par le rendu a été nécessaire', 'Les signets et liens'],
+  contexte: "Un PDF se corrompt à l'envoi, sur une clé défaillante, ou parce que le logiciel qui l'a écrit s'est arrêté en route. Le contenu est souvent intact : c'est la table qui indique où trouver chaque objet qui ne l'est plus.",
+  usages: [
+    { t: 'Récupérer un document reçu', d: "Une pièce jointe que votre lecteur refuse d'ouvrir." },
+    { t: "Sauver un fichier d'archive", d: "Un document ancien tiré d'un disque fatigué." },
+    { t: 'Débloquer une impression', d: "Un PDF qui s'affiche mais plante à l'impression." }
+  ],
+  format: "pdf.js tolère des tables de références cassées, des objets mal fermés et des longueurs fausses, là où la plupart des lecteurs abandonnent. Il sert ici de filtre : ce qu'il parvient à lire, pdf-lib le réécrit proprement.",
+  inverse: null,
+  lies: [
+    { cle: 'compresser', r: "Si le fichier réparé est devenu lourd." },
+    { cle: 'pdf-texte', r: "Pour au moins récupérer le texte d'un document irrécupérable." },
+    { cle: 'organiser', r: "Pour vérifier page à page ce qui a été sauvé." }
+  ],
+  faq: [
+    { q: 'Tous les PDF sont-ils réparables ?',
+      r: "Non. Un fichier tronqué a perdu des octets qu'aucun outil ne peut inventer. En revanche une structure incohérente, qui est le cas le plus fréquent, se reconstruit presque toujours." },
+    { q: 'Mon texte restera-t-il sélectionnable ?',
+      r: "Oui si la structure est récupérable, ce qui est le cas général. Si elle ne l'est pas, les pages sont redessinées depuis leur rendu et le texte devient une image — l'outil vous le signale." },
+    { q: 'Et si le document demande un mot de passe ?',
+      r: "Passez-le d'abord par l'outil de déverrouillage, en saisissant le mot de passe que vous connaissez." }
+  ]
+},
+
+'pages-blanches': {
+  slug: 'supprimer-pages-blanches-pdf', carte: 'Pages blanches', ico: ICO.blanche, couleur: 'i-vert',
+  resume: 'Détecter et retirer les pages vides', titre: 'Pages blanches d\'un PDF',
+  h1: 'Supprimer les pages blanches d\'un PDF', actionTexte: 'Retirer les pages blanches',
+  titreSeo: 'Supprimer les pages blanches d\'un PDF, gratuitement',
+  meta: "Détectez et retirez automatiquement les pages vides d'un PDF scanné, dans votre navigateur. Gratuit, sans compte, sans téléversement.",
+  chapo: "Un scan recto-verso produit une page vide à chaque dos non imprimé. L'outil les repère en analysant le rendu de chaque page et vous rend le document sans elles.",
+  accept: 'application/pdf', fonction: 'supprimerPagesBlanches',
+  options: [{ id: 'sensibilite', type: 'choix', label: 'Sensibilité', defaut: 'normale',
+    valeurs: [['stricte', 'Stricte', 'seulement les pages vraiment vides'],
+              ['normale', 'Normale', 'recommandé'],
+              ['tolerante', 'Tolérante', 'scans sales et grainés']] }],
+  note: "Les 3 % de marge sont ignorés : les bords d'un scan sont presque toujours gris et feraient passer une page vide pour une page pleine.",
+  garde: ['Toutes les pages porteuses de contenu', 'Leur ordre et leur orientation',
+          'Le texte sélectionnable', 'La qualité d\'origine'],
+  perdu: ['Les pages jugées blanches, listées dans le compte rendu',
+          'Une page ne portant qu\'une marque très pâle, en sensibilité stricte',
+          'Les pages intentionnellement vides d\'un document mis en page'],
+  contexte: "Numériser une liasse en recto-verso double le nombre de pages, dont la moitié sont vides. Les retirer à la main sur un document de cent pages est fastidieux et source d'erreurs.",
+  usages: [
+    { t: 'Nettoyer un scan recto-verso', d: "Le cas le plus fréquent, et celui qui fait gagner le plus de pages." },
+    { t: 'Alléger une archive', d: "Moins de pages, donc un fichier plus léger à transmettre." },
+    { t: 'Préparer une impression', d: "Éviter de gâcher du papier sur des pages vides." }
+  ],
+  format: "Chaque page est rendue en petit format, puis la proportion de pixels nettement plus sombres que le fond est mesurée. Au-dessus du seuil, la page est conservée. Le seuil est ce que règle la sensibilité.",
+  inverse: null,
+  lies: [
+    { cle: 'supprimer-pages', r: "Pour choisir vous-même les pages à retirer." },
+    { cle: 'compresser', r: "Pour alléger davantage un scan volumineux." },
+    { cle: 'ocr', r: "Pour rendre cherchable le scan une fois nettoyé." }
+  ],
+  faq: [
+    { q: 'Et si une page utile est retirée par erreur ?',
+      r: "Choisissez la sensibilité stricte : seules les pages quasiment immaculées sont alors écartées. Le compte rendu liste toujours les numéros retirés, vous pouvez vérifier." },
+    { q: 'Pourquoi mes pages vides ne sont-elles pas détectées ?',
+      r: "Votre scanner laisse sans doute du grain ou une ombre de bord. Passez en sensibilité tolérante." },
+    { q: 'Le document est-il modifié autrement ?',
+      r: "Non. Les pages conservées sont recopiées telles quelles, sans réencodage ni perte." }
+  ]
+},
+
+'aplatir': {
+  slug: 'aplatir-pdf', carte: 'Aplatir un PDF', ico: ICO.aplatir, couleur: 'i-violet',
+  resume: 'Figer les champs de formulaire', titre: 'Aplatir un PDF',
+  h1: 'Aplatir un PDF', actionTexte: 'Aplatir le document',
+  titreSeo: 'Aplatir un PDF gratuitement, sans téléverser le fichier',
+  meta: "Figez les champs de formulaire d'un PDF pour que personne ne puisse plus les modifier. Gratuit, dans votre navigateur, sans téléversement.",
+  chapo: "Un formulaire rempli reste modifiable : le destinataire peut changer vos réponses. Aplatir le document transforme ces champs en contenu fixe, visible et imprimable, mais figé.",
+  accept: 'application/pdf', fonction: 'aplatirPdf',
+  note: "Les valeurs saisies restent affichées exactement où elles étaient ; seule leur modification devient impossible.",
+  garde: ['Les valeurs saisies, à leur place', 'La mise en page et les polices',
+          'Le texte du document, sélectionnable', 'Les images et les signatures dessinées'],
+  perdu: ['Le caractère modifiable des champs — c\'est le but', 'Les listes déroulantes et cases à cocher, devenues des dessins',
+          'Les calculs automatiques du formulaire', 'Les signatures électroniques à certificat, qui deviennent invalides'],
+  contexte: "Renvoyer un formulaire PDF rempli sans l'aplatir, c'est envoyer un document que le destinataire peut éditer avant de l'archiver. Pour un devis signé ou une demande administrative, c'est une faiblesse.",
+  usages: [
+    { t: 'Retourner un formulaire', d: "Les réponses ne peuvent plus être modifiées après coup." },
+    { t: 'Archiver un dossier', d: "Le document se fige dans l'état où il a été validé." },
+    { t: 'Fiabiliser une impression', d: "Certains lecteurs n'impriment pas les champs ; aplati, le problème disparaît." }
+  ],
+  format: "L'aplatissement s'appuie sur pdf-lib : les apparences des champs sont dessinées dans le contenu de la page, puis le formulaire est retiré. Si une apparence ne peut pas être régénérée, le formulaire est simplement supprimé — ce qui est déjà affiché reste visible.",
+  inverse: null,
+  lies: [
+    { cle: 'signer', r: "Pour apposer une signature avant de figer le tout." },
+    { cle: 'metadonnees', r: "Pour nettoyer ce que le fichier révèle avant de l'envoyer." },
+    { cle: 'assainir', r: "Pour retirer en plus le JavaScript et les pièces embarquées." }
+  ],
+  faq: [
+    { q: 'Mes réponses restent-elles lisibles ?',
+      r: "Oui, et exactement au même endroit. Elles cessent simplement d'être des champs modifiables pour devenir du contenu de page." },
+    { q: 'Puis-je revenir en arrière ?',
+      r: "Non, l'opération est définitive sur le fichier produit. Conservez votre original : c'est une règle générale avec ces outils." },
+    { q: 'Et si mon PDF n\'a aucun formulaire ?',
+      r: "L'outil vous le dit et se contente de réenregistrer le document, sans rien changer." }
+  ]
+},
+
+'assainir': {
+  slug: 'assainir-pdf', carte: 'Assainir un PDF', ico: ICO.bouclier, couleur: 'i-rouge',
+  resume: 'Retirer JavaScript et pièces jointes', titre: 'Assainir un PDF',
+  h1: 'Assainir un PDF', actionTexte: 'Assainir le document',
+  titreSeo: 'Assainir un PDF : retirer JavaScript et fichiers embarqués',
+  meta: "Retirez le JavaScript, les fichiers joints et les actions automatiques d'un PDF reçu. Gratuit, dans votre navigateur, sans téléversement.",
+  chapo: "Un PDF n'est pas qu'un document : il peut contenir du JavaScript, des fichiers joints et une action déclenchée à l'ouverture. Ce sont les vecteurs des pièces jointes piégées. L'outil les retire sans toucher au contenu visible.",
+  accept: 'application/pdf', fonction: 'assainirPdf',
+  note: "Le compte rendu indique précisément ce qui a été trouvé et retiré — et vous dit aussi quand le document était déjà propre.",
+  garde: ['Tout le contenu visible, à l\'identique', 'Le texte sélectionnable',
+          'Les images et la mise en page', 'Les liens hypertextes ordinaires'],
+  perdu: ['Le JavaScript embarqué', 'Les fichiers joints au document',
+          'L\'action déclenchée à l\'ouverture', 'Les actions automatiques posées sur les pages'],
+  contexte: "Le PDF est l'un des formats les plus utilisés pour faire exécuter quelque chose à l'ouverture d'une pièce jointe. La plupart des lecteurs modernes bloquent ces mécanismes, mais tous ne le font pas, et un document qui circule finit par rencontrer un lecteur permissif.",
+  usages: [
+    { t: 'Nettoyer un document reçu', d: "Avant de l'ouvrir sur un poste sensible ou de le faire circuler." },
+    { t: 'Préparer une diffusion', d: "Ne pas transmettre à vos destinataires ce qu'on vous a transmis." },
+    { t: 'Archiver sainement', d: "Un fonds documentaire sans code exécutable vieillit mieux." }
+  ],
+  format: "L'outil retire les entrées JavaScript et EmbeddedFiles du catalogue, l'action d'ouverture et les actions automatiques des pages. Il ne prétend pas analyser le contenu : ce n'est pas un antivirus, c'est le retrait des mécanismes d'exécution prévus par le format.",
+  inverse: null,
+  lies: [
+    { cle: 'metadonnees', r: "Pour retirer aussi ce que le fichier révèle de son auteur." },
+    { cle: 'aplatir', r: "Pour figer en plus les champs de formulaire." },
+    { cle: 'reparer', r: "Si le document refuse de s'ouvrir après coup." }
+  ],
+  faq: [
+    { q: 'Est-ce un antivirus ?',
+      r: "Non, et il ne faut pas le prendre pour tel. Il retire les mécanismes d'exécution que le format PDF prévoit — JavaScript, fichiers joints, actions automatiques. Il n'analyse pas le contenu et ne détecte pas une image malveillante." },
+    { q: 'Le document reste-t-il identique ?',
+      r: "Visuellement, oui, entièrement. Seul ce qui était exécutable ou attaché disparaît." },
+    { q: 'Comment savoir si mon PDF contenait quelque chose ?',
+      r: "Le compte rendu le dit, poste par poste. S'il ne contenait rien, l'outil vous le signale aussi plutôt que de laisser croire à un nettoyage." }
+  ]
+},
+
+'ecrire-metadonnees': {
+  slug: 'modifier-metadonnees-pdf', carte: 'Écrire les métadonnées', ico: ICO.fiche, couleur: 'i-bleu',
+  resume: 'Titre, auteur, sujet, mots-clés', titre: 'Métadonnées d\'un PDF',
+  h1: 'Modifier les métadonnées d\'un PDF', actionTexte: 'Écrire les métadonnées',
+  titreSeo: 'Modifier les métadonnées d\'un PDF gratuitement, sans téléversement',
+  meta: "Renseignez le titre, l'auteur, le sujet et les mots-clés d'un PDF. Gratuit, dans votre navigateur, sans compte et sans téléversement.",
+  chapo: "Les métadonnées sont ce que votre lecteur affiche dans la barre de titre et ce sur quoi votre système cherche. Un document exporté depuis un traitement de texte s'appelle souvent « Document1 » : voici de quoi le corriger.",
+  accept: 'application/pdf', fonction: 'ecrireMetadonnees',
+  options: [
+    { id: 'titre',  type: 'texte', label: 'Titre', exemple: 'Rapport annuel 2026' },
+    { id: 'auteur', type: 'texte', label: 'Auteur', exemple: 'Prénom Nom ou organisation' },
+    { id: 'sujet',  type: 'texte', label: 'Sujet', exemple: 'De quoi parle le document' },
+    { id: 'motsCles', type: 'texte', label: 'Mots-clés', exemple: 'séparés par des virgules',
+      aide: "Utilisés par la recherche de votre système d'exploitation et par certains gestionnaires documentaires." }
+  ],
+  note: "Laissez vide ce que vous ne voulez pas changer. Le producteur est systématiquement remis à VoilàPDF : prétendre qu'un autre logiciel a écrit le fichier serait un faux.",
+  garde: ['Tout le contenu du document', 'Le texte, les images et la mise en page',
+          'Les champs que vous laissez vides', 'La date de création d\'origine'],
+  perdu: ['Les anciennes valeurs des champs que vous renseignez',
+          'Le nom du logiciel producteur, remplacé',
+          'Rien d\'autre : le contenu n\'est pas réencodé'],
+  contexte: "Un PDF transmis garde dans ses métadonnées le nom de son auteur, celui du logiciel et parfois le chemin du fichier d'origine. C'est souvent gênant — et à l'inverse, un document bien renseigné se retrouve dans une recherche.",
+  usages: [
+    { t: 'Nommer correctement un document', d: "Le titre affiché cesse d'être « Document1 » ou « Sans titre »." },
+    { t: 'Attribuer la paternité', d: "Indiquer l'auteur ou l'organisation sur un document diffusé." },
+    { t: 'Rendre un fonds cherchable', d: "Des mots-clés cohérents rendent une archive exploitable." }
+  ],
+  format: "Les champs écrits sont ceux du dictionnaire d'informations du PDF : Title, Author, Subject, Keywords. La date de modification est mise à jour. Le contenu des pages n'est pas touché.",
+  inverse: null,
+  lies: [
+    { cle: 'metadonnees', r: "Pour au contraire tout effacer avant de transmettre." },
+    { cle: 'assainir', r: "Pour retirer aussi le JavaScript et les pièces embarquées." },
+    { cle: 'fusion', r: "Un document fusionné perd ses métadonnées : renseignez-les après." }
+  ],
+  faq: [
+    { q: 'Quelle différence avec « Nettoyer les métadonnées » ?',
+      r: "L'autre outil efface tout pour que le fichier ne révèle plus rien. Celui-ci écrit des valeurs choisies. Les deux se complètent : nettoyer puis réécrire ce que vous assumez." },
+    { q: 'Ces informations sont-elles visibles dans le document ?',
+      r: "Non, elles ne s'impriment pas. Elles apparaissent dans les propriétés du fichier et dans la barre de titre du lecteur." },
+    { q: 'Puis-je effacer un champ existant ?',
+      r: "Cet outil écrit mais n'efface pas. Pour vider les champs, utilisez « Nettoyer les métadonnées »." }
+  ]
+},
+
+'comparer': {
+  slug: 'comparer-pdf', carte: 'Comparer deux PDF', ico: ICO.comparer, couleur: 'i-ambre',
+  resume: 'Repérer ce qui a changé', titre: 'Comparaison de PDF',
+  h1: 'Comparer deux PDF', actionTexte: 'Comparer les documents',
+  titreSeo: 'Comparer deux PDF gratuitement, sans téléverser les fichiers',
+  meta: "Repérez les différences de texte entre deux versions d'un PDF, page par page. Gratuit, dans votre navigateur, sans téléversement.",
+  chapo: "Deux versions d'un contrat, d'un devis ou d'un rapport se ressemblent assez pour qu'on manque la phrase qui a changé. L'outil relève le texte des deux fichiers et liste ce qui diffère.",
+  accept: 'application/pdf', fonction: 'comparerPdf', multiple: true,
+  options: [{ id: 'sortie', type: 'choix', label: 'Format du rapport', defaut: 'txt',
+    valeurs: [['txt', 'Texte brut', 'fichier .txt'], ['pdf', 'PDF', 'fichier .pdf']] }],
+  note: "Déposez les deux fichiers : le premier sert de référence, le second de version comparée. Le rapport s'affiche aussi à l'écran.",
+  garde: ['Les lignes retirées, marquées d\'un tiret', 'Les lignes ajoutées, marquées d\'un plus',
+          'Le numéro de page de chaque différence', 'Le compte des pages différentes'],
+  perdu: ['Les différences purement visuelles : police, couleur, position',
+          'Les images et leur contenu', 'Le détail mot à mot à l\'intérieur d\'une ligne',
+          'Les documents scannés, faute de texte à comparer'],
+  contexte: "Relire deux versions côte à côte prend du temps et laisse passer des choses. Les services qui le font en ligne demandent de téléverser deux documents — souvent les deux versions d'un contrat, donc exactement ce qu'on ne veut pas confier.",
+  usages: [
+    { t: 'Contrôler un contrat renvoyé', d: "Voir ce que l'autre partie a modifié avant de signer." },
+    { t: 'Suivre une révision', d: "Identifier les paragraphes retouchés entre deux versions." },
+    { t: 'Vérifier une republication', d: "S'assurer qu'un document officiel réédité dit bien la même chose." }
+  ],
+  format: "La comparaison porte sur le texte, ligne par ligne et page par page. Les pixels ne sont pas comparés : deux rendus identiques peuvent différer d'un lissage, et deux pages visuellement proches peuvent dire le contraire l'une de l'autre. C'est le texte qui porte le sens.",
+  inverse: null,
+  lies: [
+    { cle: 'pdf-texte', r: "Pour extraire le texte complet plutôt que les différences." },
+    { cle: 'ocr', r: "Deux scans doivent être reconnus avant d'être comparables." },
+    { cle: 'fusion', r: "Pour réunir les deux versions dans un même dossier." }
+  ],
+  faq: [
+    { q: 'Les documents scannés sont-ils comparables ?',
+      r: "Pas directement : une image ne contient pas de texte. Passez les deux fichiers par la reconnaissance de caractères, puis comparez les résultats." },
+    { q: 'Voit-on les différences dans la mise en page ?',
+      r: "Non. L'outil compare ce qui est écrit, pas la façon dont c'est présenté. Un paragraphe déplacé sans être modifié n'apparaîtra pas comme une différence de contenu." },
+    { q: 'Mes deux fichiers sont-ils envoyés quelque part ?',
+      r: "Non, aucun des deux. Tout est lu et comparé dans votre navigateur — c'est précisément ce qui compte quand on compare deux versions d'un contrat." }
+  ]
+},
+
 /* ------------------------- comprendre un document ------------------------ */
 
 'resumer': {
@@ -1111,7 +1390,12 @@ const GROUPES = [
   { titre: 'Travailler le PDF', cles: ['compresser', 'diviser', 'extraire-pages', 'supprimer-pages',
                                        'organiser', 'pivoter', 'rogner', 'numeroter', 'filigrane',
                                        'signer', 'deverrouiller', 'metadonnees'] },
-  { titre: 'Comprendre un PDF', cles: ['resumer', 'traduire'] }
+  /* Réparer, assainir, aplatir : ce groupe traite le fichier lui-même plutôt que
+     son contenu. Il répond aux ennuis — un PDF qui ne s'ouvre pas, un formulaire
+     encore modifiable, un document reçu dont on se méfie. */
+  { titre: 'Réparer et sécuriser', cles: ['reparer', 'pages-blanches', 'aplatir', 'assainir',
+                                          'ecrire-metadonnees', 'comparer'] },
+  { titre: 'Comprendre un PDF', cles: ['pdf-texte', 'resumer', 'traduire'] }
 ];
 
 const DATA = { OUTILS, GROUPES, ICO, ETAPES_UN, SITE: 'https://voilapdf.com' };
