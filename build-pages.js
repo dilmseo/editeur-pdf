@@ -21,6 +21,8 @@ const jsonEsc = s => JSON.stringify(String(s));
 const COCHE = '<svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg>';
 const CROIX = '<svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>';
 const LOGO  = '<svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h10M5 18h7"/></svg>';
+const GLYPHE = '<span class="glyphe"><svg viewBox="0 0 24 24"><path d="M6 6h12M6 12h8M6 18h5"/></svg></span>';
+const ETOILE = '<svg viewBox="0 0 24 24"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg>';
 const FAVICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231762e0'/%3E%3Cpath d='M9 10h14M9 16h10M9 22h7' stroke='%23fff' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E";
 
 /* ---------------- textes de gabarit, langue par langue ---------------- */
@@ -51,6 +53,14 @@ const UI_FR = {
   editeurRenvoi: "corriger une ligne déjà écrite, même sur un document scanné. C'est la fonction que les autres services réservent à leurs formules payantes, et le point de départ naturel quand il faut retoucher avant de convertir.",
   piedPhrase: 'Construit avec pdf.js, pdf-lib et fflate — tout est embarqué, aucun appel réseau.',
   codeSource: 'Code source',
+  rappelA: 'Un PDF à corriger ?', rappelB: 'Il ne quittera pas votre ordinateur.',
+  rappelBouton: "Ouvrir l'éditeur",
+  piedPitch: "Modifier, convertir et assembler des PDF sans rien téléverser. Vingt-quatre outils, pas de compte, pas de file d'attente, pas de fichier qui traîne sur un serveur.",
+  sceauTitre: "Rien n'est téléversé",
+  sceauTexte: 'Tout le traitement a lieu dans votre navigateur, y compris la reconnaissance des documents scannés.',
+  piedProjet: 'Le projet', piedEditeur: "L'éditeur",
+  piedConfidentialite: 'Confidentialité', piedQuestions: 'Questions fréquentes',
+  piedFin: 'Aucun suivi, aucun cookie, aucun compte.',
   etapes: multiple => [
     `Déposez ${multiple ? 'vos fichiers' : 'votre fichier'} sur la page, ou cliquez pour ${multiple ? 'les' : 'le'} choisir dans vos dossiers.`,
     "Lancez le traitement. Il se déroule dans votre navigateur : rien n'est envoyé sur un serveur.",
@@ -112,23 +122,27 @@ function page(lang, cle){
     const x = lang.outils[k];
     return `<a href="${lang.prefixe}/${x.slug}/"><span class="ico ${x.couleur}"><svg viewBox="0 0 24 24">${x.ico}</svg></span>${esc(x.carte)}</a>`;
   };
-  const plan = () => base.GROUPES.map((gr, i) =>
-      `<div><strong>${esc(lang.groupes[i])}</strong><ul>` +
-      gr.cles.map(k => k === cle
-        ? `<li><span aria-current="page">${esc(lang.outils[k].carte)}</span></li>`
-        : `<li>${lien(k)}</li>`).join('') + '</ul></div>').join('\n    ')
-    + `\n    <div><strong>${esc(ui.plan.autres)}</strong><ul>`
-    + `<li><a href="${lang.prefixe}/">${esc(ui.plan.editeur)}</a></li>`
-    + (cle === 'fusion' ? `<li><span aria-current="page">${esc(ui.plan.fusion)}</span></li>`
-                        : `<li>${lien('fusion')}</li>`) + '</ul></div>';
+  /* Le pied reprend celui de l'accueil : c'est lui qui porte le maillage vers les
+     24 outils. Les textes propres au pied vivent dans `accueil` côté traductions
+     et à plat dans UI_FR, d'où ce `p`. L'outil courant n'est pas un lien : un
+     renvoi vers soi-même ne sert ni le lecteur ni le maillage. */
+  const p = ui.accueil || ui;
+  const ligne = k => k === cle
+    ? `<li><span aria-current="page">${esc(lang.outils[k].carte)}</span></li>`
+    : `<li>${lien(k)}</li>`;
+  const colonnes = base.GROUPES.map((gr, i) =>
+      `<div${gr.cles.length > 6 ? ' class="double"' : ''}><h4>${esc(lang.groupes[i])}</h4><ul>`
+      + gr.cles.map(ligne).join('')
+      + (i === 1 ? ligne('fusion') : '')
+      + '</ul></div>').join('\n    ');
 
   const jsonld = {
     '@context': 'https://schema.org',
     '@graph': [
-      { '@type': 'Organization', '@id': SITE + '/#editeur', name: 'Éditeur PDF', url: SITE + '/',
+      { '@type': 'Organization', '@id': SITE + '/#editeur', name: 'VoilàPDF', url: SITE + '/',
         logo: { '@type': 'ImageObject', url: SITE + '/apercu-editeur.png' },
         sameAs: ['https://github.com/dilmseo/editeur-pdf'] },
-      { '@type': 'WebSite', '@id': SITE + '/#site', url: SITE + '/', name: 'Éditeur PDF',
+      { '@type': 'WebSite', '@id': SITE + '/#site', url: SITE + '/', name: 'VoilàPDF',
         inLanguage: LANGUES.map(l => l.ui.htmlLang), publisher: { '@id': SITE + '/#editeur' } },
       { '@type': 'ImageObject', '@id': url + '#image', url: SITE + '/apercu-editeur.png',
         width: 1360, height: 850 },
@@ -171,7 +185,7 @@ ${GSC}
 ${hreflangs(cle)}
 <meta property="og:type" content="website">
 <meta property="og:locale" content="${ui.htmlLang === 'fr' ? 'fr_FR' : 'en_GB'}">
-<meta property="og:site_name" content="Éditeur PDF">
+<meta property="og:site_name" content="VoilàPDF">
 <meta property="og:title" content="${esc(o.titreSeo)}">
 <meta property="og:description" content="${esc(o.meta)}">
 <meta property="og:url" content="${url}">
@@ -187,7 +201,7 @@ ${hreflangs(cle)}
 <body>
 
 <div class="hnav"><div class="in">
-  <a class="brand" href="${lang.prefixe}/"><i>${LOGO}</i>Éditeur PDF</a>
+  <a class="brand" href="${lang.prefixe}/"><i>${LOGO}</i>VoilàPDF</a>
   <nav>
     <a href="${lang.prefixe}/#outils">${esc(ui.navOutils)}</a>
     <a href="${lang.prefixe}/#confiance">${esc(ui.navConfiance)}</a>
@@ -285,14 +299,39 @@ ${hreflangs(cle)}
      ${esc(ui.editeurRenvoi)}</p>
 </main>
 
-<nav class="plan" aria-label="${esc(ui.autresTitre)}"><div class="in">
-  ${plan()}
-</div></nav>
-
-<div class="pied"><div class="in">
-  <span>${esc(ui.piedPhrase)}</span>
-  <a href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">${esc(ui.codeSource)}</a>
-</div></div>
+<footer class="pied">
+  <div class="rappel">
+    <p class="mot">${esc(p.rappelA)}<br><span>${esc(p.rappelB)}</span></p>
+    <a class="bouton" href="${lang.prefixe}/">${esc(p.rappelBouton)}</a>
+  </div>
+  <div class="cols">
+    <div>
+      <span class="marque">${GLYPHE}VoilàPDF</span>
+      <p class="pitch">${esc(p.piedPitch)}</p>
+      <div class="sceau">
+        <svg viewBox="0 0 24 24"><path d="M12 3 5 6v6c0 4.2 2.9 7.9 7 9 4.1-1.1 7-4.8 7-9V6z"/><path d="m9 12 2 2 4-4"/></svg>
+        <span><b>${esc(p.sceauTitre)}</b>${esc(p.sceauTexte)}</span>
+      </div>
+      <a class="etoiles" href="https://g.page/r/CfBfIXTvKKmwEAE/review" target="_blank" rel="noopener">
+        ${ETOILE.repeat(5)}<em>${esc(ui.avisLien)}</em></a>
+    </div>
+    ${colonnes}
+    <div><h4>${esc(p.piedProjet)}</h4><ul>
+      <li><a href="${lang.prefixe}/">${esc(p.piedEditeur)}</a></li>
+      <li><a href="${lang.prefixe}/#confiance">${esc(p.piedConfidentialite)}</a></li>
+      <li><a href="${lang.prefixe}/#questions">${esc(p.piedQuestions)}</a></li>
+      <li><a href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">${esc(ui.codeSource)}</a></li>
+    </ul></div>
+  </div>
+  <div class="bas">
+    <span>${esc(ui.piedPhrase)}</span>
+    <a href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">${esc(ui.codeSource)}</a>
+    <span class="fin">
+      <svg viewBox="0 0 24 24"><path d="M12 3 5 6v6c0 4.2 2.9 7.9 7 9 4.1-1.1 7-4.8 7-9V6z"/></svg>
+      ${esc(p.piedFin)}
+    </span>
+  </div>
+</footer>
 
 <script src="/vendor/pdf.min.js"></script>
 <script src="/vendor/pdf-lib.min.js"></script>
@@ -324,10 +363,10 @@ function accueilTraduit(lang){
   const jsonld = {
     '@context': 'https://schema.org',
     '@graph': [
-      { '@type': 'Organization', '@id': SITE + '/#editeur', name: 'Éditeur PDF', url: SITE + '/',
+      { '@type': 'Organization', '@id': SITE + '/#editeur', name: 'VoilàPDF', url: SITE + '/',
         logo: { '@type': 'ImageObject', url: SITE + '/apercu-editeur.png' },
         sameAs: ['https://github.com/dilmseo/editeur-pdf'] },
-      { '@type': 'WebSite', '@id': SITE + '/#site', url: SITE + '/', name: 'Éditeur PDF',
+      { '@type': 'WebSite', '@id': SITE + '/#site', url: SITE + '/', name: 'VoilàPDF',
         inLanguage: LANGUES.map(l => l.ui.htmlLang), publisher: { '@id': SITE + '/#editeur' } },
       { '@type': 'WebPage', '@id': url + '#page', url, name: a.titreSeo, description: a.meta,
         inLanguage: ui.htmlLang, isPartOf: { '@id': SITE + '/#site' }, dateModified: JOUR },
@@ -349,15 +388,13 @@ function accueilTraduit(lang){
       + `<span><b>${esc(x.carte)}</b><span>${esc(x.resume)}</span></span>`
       + `<span class="fleche" aria-hidden="true">›</span></a>`;
   };
-  const etoile = '<svg viewBox="0 0 24 24"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg>';
   const listePied = cles => cles.map(k =>
     `<li><a href="${lang.prefixe}/${lang.outils[k].slug}/">${esc(lang.outils[k].carte)}</a></li>`).join('');
-  const GLYPHE = '<span class="glyphe"><svg viewBox="0 0 24 24"><path d="M6 6h12M6 12h8M6 18h5"/></svg></span>';
 
   return { jsonld, bloc: `<div id="home">
 
   <div class="hnav" id="hnav"><div class="in">
-    <a class="marque" href="${lang.prefixe}/">${GLYPHE}Éditeur PDF</a>
+    <a class="marque" href="${lang.prefixe}/">${GLYPHE}VoilàPDF</a>
     <nav>
       <a href="#outils">${esc(ui.navOutils)}</a>
       <a href="#confiance">${esc(ui.navConfiance)}</a>
@@ -497,14 +534,14 @@ function accueilTraduit(lang){
     </div>
     <div class="cols">
       <div>
-        <span class="marque">${GLYPHE}Éditeur PDF</span>
+        <span class="marque">${GLYPHE}VoilàPDF</span>
         <p class="pitch">${esc(a.piedPitch)}</p>
         <div class="sceau">
           <svg viewBox="0 0 24 24"><path d="M12 3 5 6v6c0 4.2 2.9 7.9 7 9 4.1-1.1 7-4.8 7-9V6z"/><path d="m9 12 2 2 4-4"/></svg>
           <span><b>${esc(a.sceauTitre)}</b>${esc(a.sceauTexte)}</span>
         </div>
         <a class="etoiles" href="https://g.page/r/CfBfIXTvKKmwEAE/review" target="_blank" rel="noopener">
-          ${etoile}${etoile}${etoile}${etoile}${etoile}<em>${esc(ui.avisLien)}</em></a>
+          ${ETOILE.repeat(5)}<em>${esc(ui.avisLien)}</em></a>
       </div>
       <div><h4>${esc(lang.groupes[0])}</h4><ul>${listePied(base.GROUPES[0].cles)}</ul></div>
       <div><h4>${esc(lang.groupes[1])}</h4><ul>${listePied(base.GROUPES[1].cles)}

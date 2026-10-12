@@ -197,22 +197,75 @@ details p{margin:0 0 22px;font-size:15.5px;max-width:62ch}
 .renvois{margin:10px 0 0;padding:0;list-style:none;display:grid;gap:11px}
 .renvois li{border-left:2px solid var(--trait);padding-left:14px;font-size:15px;color:var(--encre2)}
 .renvois a{font-weight:650}
-.plan{border-top:1px solid var(--trait);background:var(--papier2)}
-.plan .in{max-width:1080px;margin:0 auto;padding:32px 24px;display:grid;
-  grid-template-columns:repeat(3,1fr);gap:26px}
-.plan strong{display:block;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;
-  color:#8A8577;margin-bottom:10px}
-.plan ul{margin:0;padding:0;list-style:none;display:grid;gap:7px;font-size:14.5px}
-.plan span[aria-current]{color:#9A9486}
-.plan a{color:var(--encre)}
-.plan a:hover{color:var(--bleu)}
-.pied{background:var(--encre);color:#99A3B3;margin-top:0}
-.pied .in{max-width:1080px;margin:0 auto;padding:26px 24px;display:flex;gap:18px;flex-wrap:wrap;
-  align-items:center;font-size:14px;color:#6b7788}
-.pied .in a:last-child{margin-left:auto;color:#C6CEDA}
-.pied .in a:last-child:hover{color:#fff}
+/* ---- pied de page, identique à celui de l'accueil ----
+   Les pages d'outil méritent le même pied que l'accueil : c'est lui qui porte le
+   maillage vers les 24 outils et le rappel de la promesse. */
+.pied{position:relative;background:var(--encre);color:#97A2B2;font-size:14.5px;
+      border-top:3px solid var(--rouge);margin-top:60px}
+.pied::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(to bottom,rgba(255,255,255,.03) 0 1px,transparent 1px 28px);
+  mask-image:linear-gradient(to bottom,#000,transparent 55%)}
+.pied > *{position:relative}
+.pied a{color:#B9C2CF}
+.pied a:hover{color:#fff;text-decoration:none}
+
+.rappel{max-width:1120px;margin:0 auto;padding:36px 24px;display:flex;align-items:center;
+  gap:24px;flex-wrap:wrap;border-bottom:1px solid #212935}
+.rappel .mot{font-family:'Instrument Serif',Georgia,serif;font-size:clamp(1.5rem,2.6vw,2.05rem);
+  color:#fff;line-height:1.15;letter-spacing:-.01em;margin:0}
+.rappel .mot span{color:#8FB2FF}
+.rappel .bouton{margin-left:auto;background:#fff;color:var(--encre);border-radius:11px;
+  padding:14px 26px;font-weight:700;font-size:15.5px;white-space:nowrap}
+.rappel .bouton:hover{background:#8FB2FF;color:var(--encre)}
+
+.pied .cols{max-width:1120px;margin:0 auto;padding:46px 24px 10px;display:grid;
+  grid-template-columns:1.5fr .85fr .85fr 1.7fr .85fr;gap:36px 30px}
+/* Douze liens sur deux colonnes. En grille, un libellé sur deux lignes creuse un
+   trou en face de lui ; le multi-colonne laisse couler les éléments sans aligner
+   les rangées, donc sans trou. */
+.pied .cols .double ul{display:block;columns:2;column-gap:26px}
+.pied .cols .double li{break-inside:avoid;margin-bottom:10px}
+.pied .marque{display:flex;align-items:center;gap:11px;color:#fff;font-weight:700;
+  font-size:16px;margin-bottom:16px}
+.pied .glyphe{width:34px;height:34px;flex:0 0 auto;border-radius:9px;background:#fff;
+  display:grid;place-items:center;position:relative}
+.pied .glyphe svg{width:18px;height:18px;stroke:var(--encre);fill:none;stroke-width:2.2;stroke-linecap:round}
+.pied .glyphe::after{content:'';position:absolute;right:-3px;bottom:-3px;width:11px;height:11px;
+  border-radius:50%;background:var(--rouge);border:2px solid var(--encre)}
+.pied .pitch{max-width:27em;line-height:1.65;margin:0 0 18px;color:#8C97A8}
+.sceau{display:flex;align-items:flex-start;gap:11px;background:rgba(49,178,114,.08);
+  border:1px solid rgba(49,178,114,.26);border-radius:12px;padding:13px 15px;max-width:27em;
+  font-size:13.5px;color:#A4C4B4;line-height:1.5}
+.sceau svg{width:17px;height:17px;flex:0 0 auto;margin-top:2px;stroke:#35C286;fill:none;
+  stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.sceau b{color:#6FDCAA;display:block}
+.pied h4{margin:0 0 15px;font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:#657284}
+.pied ul{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.pied ul a{position:relative;display:inline-block;transition:transform .16s,color .16s}
+.pied ul a:hover{transform:translateX(7px)}
+.pied ul a::before{content:'›';position:absolute;left:-11px;opacity:0;color:var(--rouge);transition:opacity .16s}
+.pied ul a:hover::before{opacity:1}
+.pied ul span[aria-current]{color:#5E6977}
+.pied .etoiles{display:inline-flex;align-items:center;gap:4px;margin-top:16px;
+  background:rgba(255,255,255,.055);border:1px solid #2A3240;border-radius:11px;
+  padding:11px 16px;color:#E7ECF3;font-weight:650;white-space:nowrap}
+.pied .etoiles:hover{border-color:#3C4A5C;background:rgba(255,255,255,.09);color:#fff}
+.pied .etoiles svg{width:14px;height:14px;fill:#E8B64C;stroke:none}
+.pied .etoiles em{font-style:normal;margin-left:9px}
+.pied .bas{max-width:1120px;margin:30px auto 0;padding:20px 24px 30px;border-top:1px solid #212935;
+  display:flex;flex-wrap:wrap;gap:10px 26px;align-items:center;font-size:13.5px;color:#64707F}
+.pied .bas a{color:#8794A6}
+.pied .bas .fin{margin-left:auto;display:inline-flex;align-items:center;gap:8px}
+.pied .bas .fin svg{width:15px;height:15px;stroke:#4E5B6B;fill:none;stroke-width:2.2;
+  stroke-linecap:round;stroke-linejoin:round}
+@media (max-width:960px){
+  .pied .cols{grid-template-columns:1fr 1fr}
+  .pied .cols > div:first-child{grid-column:1 / -1}
+}
 @media (max-width:760px){
-  .etapes,.deux,.autres,.usages,.plan .in{grid-template-columns:1fr}
+  .etapes,.deux,.autres,.usages{grid-template-columns:1fr}
+  .pied .cols{grid-template-columns:1fr}
+  .pied .cols .double ul{grid-template-columns:1fr}
 }
 
 /* sélecteur de langue */

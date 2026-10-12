@@ -232,7 +232,8 @@
      doublerait la hauteur du pied de page, donc elle est large et sur deux files. */
   .pied .cols{max-width:1120px;margin:0 auto;padding:46px 28px 10px;display:grid;
     grid-template-columns:1.5fr .85fr .85fr 1.7fr .85fr;gap:36px 30px}
-  .pied .cols .double ul{grid-template-columns:1fr 1fr;gap:10px 22px}
+  .pied .cols .double ul{display:block;columns:2;column-gap:26px}
+  .pied .cols .double li{break-inside:avoid;margin-bottom:10px}
   #home .pied .marque{color:#fff;margin-bottom:16px;font-size:16px}
   .pied .marque .glyphe{background:#fff}
   .pied .marque .glyphe svg{stroke:var(--encre)}

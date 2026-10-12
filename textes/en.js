@@ -5,7 +5,7 @@
 
 const UI = {
   langue: 'en', htmlLang: 'en', nom: 'English',
-  marque: 'PDF Editor',
+  marque: 'VoilàPDF',
   navOutils: 'Tools', navConfiance: 'Privacy', navQuestions: 'FAQ', navEditer: 'Edit a PDF',
   filAccueil: 'Home',
   pastille: 'Free · no account · nothing uploaded',
@@ -78,7 +78,7 @@ const UI = {
   },
   /* page d'accueil */
   accueil: {
-    titreSeo: 'Edit the text in a PDF for free, nothing uploaded',
+    titreSeo: 'Free PDF editor: edit the text online — VoilàPDF',
     meta: 'Click a line, rewrite it, save. Even on a scanned document. Free, no account, and your file never leaves your computer.',
     badge: 'No file sent to any server',
     h1a: 'Fix the text', h1b: 'already written', h1c: 'in your PDFs.',
@@ -921,7 +921,8 @@ const REMPLACEMENTS = [
   ['Génération…', 'Building…'],
   ['Erreur : ', 'Error: '],
   ['aucun fichier', 'no file'],
-  ['Éditeur PDF — texte', 'PDF Editor — text'],
+  ["Éditeur PDF gratuit : modifier le texte en ligne — VoilàPDF",
+   'Free PDF editor: edit the text online — VoilàPDF'],
   [' modification', ' change'],
   ['Gras italique', 'Bold italic'],
   ['>Sélection<', '>Selection<'],
