@@ -18,10 +18,9 @@ const JOUR = new Date().toISOString().slice(0, 10);
    la validation tient quelle que soit l'URL déclarée dans la console. */
 const GSC = '<meta name="google-site-verification" content="vbmtfEKob3NfEM7iX_1giermuIPpd27wY6HxTupUOTY">';
 const jsonEsc = s => JSON.stringify(String(s));
-/* Clé de site Turnstile : publique par construction, elle est faite pour être
-   lue dans le HTML. La clé secrète, elle, vit dans l'environnement Netlify sous
-   TURNSTILE_SECRET et n'apparaît nulle part dans ce dépôt, qui est public. */
-const TURNSTILE_SITEKEY = '0x4AAAAAAFU9P7fPGn42gSV-';
+/* Le contrôle anti-robot est Altcha : aucune clé publique à poser dans le HTML,
+   le défi est émis par notre propre fonction. La clé qui le signe vit dans
+   l'environnement Netlify sous ALTCHA_HMAC_KEY et n'apparaît nulle part ici. */
 /* Clé IndexNow. Publique par construction : le protocole exige qu'elle soit
    lisible à la racine du site, c'est ce fichier qui prouve qu'on en est
    propriétaire. La changer obligerait à resoumettre tout le site. */
@@ -64,6 +63,7 @@ const UI_FR = {
   autresTitre: 'Les autres outils',
   inverseTexte: lien => `Besoin du chemin inverse ? ${lien} fait exactement l'opération contraire, avec les mêmes garanties.`,
   editeurRenvoi: "corriger une ligne déjà écrite, même sur un document scanné. C'est la fonction que les autres services réservent à leurs formules payantes, et le point de départ naturel quand il faut retoucher avant de convertir.",
+  ogAlt: "VoilàPDF : l'éditeur ouvert sur une convocation, une date en cours de correction",
   piedPhrase: 'Construit avec pdf.js, pdf-lib, tesseract.js et fflate — vos fichiers restent dans votre navigateur.',
   codeSource: 'Code source',
   rappelA: 'Un PDF à corriger ?', rappelB: 'Il ne quittera pas votre ordinateur.',
@@ -115,10 +115,10 @@ const UI_FR = {
             ['Résumer et traduire un PDF',
              "Ces deux outils utilisent un modèle de langue qui s'exécute sur votre machine. Au premier usage, le modèle lui-même est téléchargé depuis Hugging Face, qui voit alors votre adresse IP — comme n'importe quel site que vous visitez. Le sens de l'échange compte : le modèle descend vers vous, votre document ne monte jamais. Les traitements suivants n'appellent plus rien, le navigateur gardant le modèle en cache."],
             ['Formulaire de contact',
-             "Si vous nous écrivez, votre nom, votre adresse e-mail, votre message et la pièce jointe éventuelle sont transmis et conservés chez Netlify. Cette page utilise aussi Cloudflare Turnstile pour écarter les robots : Cloudflare reçoit votre adresse IP et des signaux techniques sur votre navigateur, le temps de la vérification. Turnstile n'est pas un outil publicitaire et ne vous suit pas d'un site à l'autre."]
+             "Si vous nous écrivez, votre nom, votre adresse e-mail, votre message et la pièce jointe éventuelle sont transmis et conservés chez Netlify. Le contrôle anti-robot de cette page, Altcha, ne fait appel à personne : le défi est émis par notre propre serveur, résolu par votre navigateur, puis vérifié ici. Aucune adresse IP n'est communiquée à un tiers."]
           ] },
         { t: 'Transferts hors de l\'Union européenne',
-          p: ["Netlify, Cloudflare et Hugging Face sont des sociétés établies aux États-Unis. Les données techniques décrites ci-dessus, ainsi que les messages envoyés par le formulaire, peuvent donc être traitées hors de l'Union européenne, dans le cadre des clauses contractuelles types et du cadre de protection des données UE–États-Unis.",
+          p: ["Netlify et Hugging Face sont des sociétés établies aux États-Unis. Les données techniques décrites ci-dessus, ainsi que les messages envoyés par le formulaire, peuvent donc être traitées hors de l'Union européenne, dans le cadre des clauses contractuelles types et du cadre de protection des données UE–États-Unis.",
               "C'est précisément pour éviter ce transfert que le traitement des documents, lui, reste chez vous."] },
         { t: 'Durée de conservation',
           p: ["Les messages reçus par le formulaire sont conservés le temps de traiter votre demande, puis trois ans au plus, délai au terme duquel ils sont supprimés. Vous pouvez demander leur effacement à tout moment.",
@@ -195,7 +195,11 @@ const UI_FR = {
     merci: "Merci. Nous lisons tout et répondons sous quelques jours, à l'adresse que vous avez indiquée.",
     encore: 'Écrire un autre message',
     avertTitre: 'Ce que devient votre message',
-    avert: "Les messages arrivent dans une boîte hébergée par Netlify et ne servent qu'à vous répondre : ni liste de diffusion, ni revente, ni statistiques. Cloudflare Turnstile protège le formulaire des robots ; il ne pose pas de cookie publicitaire et ne vous suit pas d'un site à l'autre. Le reste de VoilàPDF continue de fonctionner sans rien envoyer : ouvrez n'importe quel outil, coupez votre connexion, il marche toujours.",
+    avert: "Les messages arrivent dans une boîte hébergée par Netlify et ne servent qu'à vous répondre : ni liste de diffusion, ni revente, ni statistiques. Le formulaire est protégé des robots par Altcha, un contrôle qui s'exécute sur cette page et sur notre serveur, sans appeler aucun tiers : votre navigateur résout un petit calcul, c'est tout. Le reste de VoilàPDF continue de fonctionner sans rien envoyer : ouvrez n'importe quel outil, coupez votre connexion, il marche toujours.",
+    altcha: { label: 'Je ne suis pas un robot', verifying: 'Vérification…',
+              waitAlert: 'Vérification en cours, un instant…', verified: 'Vérifié',
+              error: 'La vérification a échoué', expired: 'Vérification expirée',
+              footer: '' },
     erreurs: {
       champs: 'Le nom et le message sont obligatoires.',
       email: "Cette adresse e-mail ne semble pas valide.",
@@ -379,11 +383,12 @@ ${hreflangs(cle)}
 <meta property="og:title" content="${esc(o.titreSeo)}">
 <meta property="og:description" content="${esc(o.meta)}">
 <meta property="og:url" content="${url}">
-<meta property="og:image" content="${SITE}/apercu-editeur.png">
-<meta property="og:image:width" content="1360">
-<meta property="og:image:height" content="850">
+<meta property="og:image" content="${SITE}/social-preview.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta property="og:image:alt" content="${esc(ui.ogAlt)}">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="${SITE}/apercu-editeur.png">
+<meta name="twitter:image" content="${SITE}/social-preview.png">
 <link rel="icon" href="${FAVICON}">
 <link rel="stylesheet" href="/style-outil.css">
 <script type="application/ld+json">${JSON.stringify(jsonld)}</script>
@@ -594,7 +599,7 @@ ${pied(lang, null)}
 /* ---------------- page de contact ----------------
    La seule page du site qui parle a un serveur. Le formulaire ne s'envoie pas
    tout seul a Netlify Forms : il passe par une fonction qui verifie d'abord le
-   jeton Turnstile aupres de Cloudflare, car un widget pose dans une page ne
+   defi Altcha, car un controle anti-robot pose dans une page ne
    prouve rien tant que personne n'a pose la question avec la cle secrete.
    Un formulaire statique cache accompagne le tout : c'est lui que Netlify
    detecte au deploiement pour creer la boite de reception et son schema. */
@@ -643,7 +648,7 @@ ${altsContact}
 <meta property="og:url" content="${url}">
 <link rel="icon" href="${FAVICON}">
 <link rel="stylesheet" href="/style-outil.css">
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script src="/vendor/altcha/altcha.js" type="module" async defer></script>
 <script type="application/ld+json">${JSON.stringify(jsonld)}</script>
 </head>
 <body>
@@ -699,8 +704,8 @@ ${altsContact}
     <input type="text" name="site" id="c-site" tabindex="-1" autocomplete="off"
            aria-hidden="true" style="position:absolute;left:-9999px;opacity:0">
 
-    <div class="cf-turnstile" data-sitekey="${TURNSTILE_SITEKEY}"
-         data-language="${ui.htmlLang}" data-theme="light"></div>
+    <altcha-widget challengeurl="/.netlify/functions/altcha" name="altcha"
+                   strings="${esc(JSON.stringify(k.altcha))}"></altcha-widget>
 
     <button class="go" id="c-envoyer" type="submit">${esc(k.envoyer)}</button>
     <div class="err" id="c-err" hidden></div>
@@ -728,6 +733,13 @@ ${pied(lang, null, true)}
   var MAX = 3 * 1024 * 1024;
   var form = $('ecrire'), err = $('c-err'), bouton = $('c-envoyer');
 
+  /* Un defi resolu ne vaut qu'une fois ; apres un echec il faut en redemander un,
+     sinon le second envoi serait rejete pour une raison sans rapport. */
+  function rearmer(){
+    var w = form.querySelector('altcha-widget');
+    if (w && typeof w.reset === 'function') w.reset();
+  }
+
   function faute(cle){
     err.textContent = MSG[cle] || MSG.reseau;
     err.hidden = false;
@@ -751,8 +763,8 @@ ${pied(lang, null, true)}
     if (!nom || !message) return faute('champs');
     if (!/^[^@\\s]+@[^@\\s.]+\\.[^@\\s]+$/.test(email)) return faute('email');
 
-    // Le jeton est depose par Turnstile dans un champ cache qu'il cree lui-meme.
-    var champ = form.querySelector('[name="cf-turnstile-response"]');
+    // Altcha depose la preuve resolue dans un champ cache qu'il cree lui-meme.
+    var champ = form.querySelector('[name="altcha"]');
     var jeton = champ ? champ.value : '';
     if (!jeton) return faute('jeton');
 
@@ -775,7 +787,7 @@ ${pied(lang, null, true)}
         body: JSON.stringify(charge)
       });
       var d = await r.json().catch(function(){ return {}; });
-      if (!r.ok || !d.ok){ faute(d.erreur || 'reseau'); if (window.turnstile) turnstile.reset(); }
+      if (!r.ok || !d.ok){ faute(d.erreur || 'reseau'); rearmer(); }
       else { form.hidden = true; $('c-fini').hidden = false; }
     } catch { faute('reseau'); }
     bouton.disabled = false;
@@ -784,7 +796,7 @@ ${pied(lang, null, true)}
 
   $('c-encore').onclick = function(){
     form.reset(); form.hidden = false; $('c-fini').hidden = true;
-    if (window.turnstile) turnstile.reset();
+    rearmer();
   };
 })();
 </script>

@@ -64,10 +64,10 @@ const UI = {
             ['Summarise and translate a PDF',
              'These two tools use a language model that runs on your machine. On first use the model itself is downloaded from Hugging Face, which then sees your IP address — as any site you visit does. The direction matters: the model comes down to you, your document never goes up. Later runs call nothing, as the browser keeps the model in cache.'],
             ['Contact form',
-             'If you write to us, your name, email address, message and any attachment are sent to and stored at Netlify. That page also uses Cloudflare Turnstile to keep bots away: Cloudflare receives your IP address and technical signals about your browser for the duration of the check. Turnstile is not an advertising tool and does not follow you from site to site.']
+             'If you write to us, your name, email address, message and any attachment are sent to and stored at Netlify. The bot check on that page, Altcha, calls nobody: the challenge is issued by our own server, solved by your browser, then verified here. No IP address is handed to a third party.']
           ] },
         { t: 'Transfers outside the European Union',
-          p: ['Netlify, Cloudflare and Hugging Face are companies established in the United States. The technical data described above, along with messages sent through the form, may therefore be processed outside the European Union, under standard contractual clauses and the EU–US Data Privacy Framework.',
+          p: ['Netlify and Hugging Face are companies established in the United States. The technical data described above, along with messages sent through the form, may therefore be processed outside the European Union, under standard contractual clauses and the EU–US Data Privacy Framework.',
               'Avoiding exactly that transfer is why document processing stays on your machine.'] },
         { t: 'Retention',
           p: ['Messages received through the form are kept for as long as it takes to handle your request, and at most three years, after which they are deleted. You may ask for their erasure at any time.',
@@ -144,7 +144,11 @@ const UI = {
     merci: 'Thank you. We read everything and answer within a few days, at the address you gave.',
     encore: 'Write another message',
     avertTitre: 'What happens to your message',
-    avert: 'Messages land in a mailbox hosted by Netlify and serve only to answer you: no mailing list, no resale, no analytics. Cloudflare Turnstile keeps bots off the form; it sets no advertising cookie and does not follow you from site to site. The rest of VoilàPDF keeps working without sending anything: open any tool, cut your connection, it still runs.',
+    avert: 'Messages land in a mailbox hosted by Netlify and serve only to answer you: no mailing list, no resale, no analytics. The form is kept free of bots by Altcha, a check that runs on this page and on our own server without calling any third party: your browser solves a small computation, that is all. The rest of VoilàPDF keeps working without sending anything: open any tool, cut your connection, it still runs.',
+    altcha: { label: 'I am not a robot', verifying: 'Verifying…',
+              waitAlert: 'Verifying, one moment…', verified: 'Verified',
+              error: 'Verification failed', expired: 'Verification expired',
+              footer: '' },
     erreurs: {
       champs: 'Name and message are required.',
       email: 'That email address does not look valid.',
@@ -156,6 +160,7 @@ const UI = {
       config: 'The form is temporarily unavailable.'
     }
   },
+  ogAlt: 'VoilàPDF: the editor open on a letter, a date being corrected',
   piedPhrase: 'Built with pdf.js, pdf-lib, tesseract.js and fflate — your files stay in your browser.',
   codeSource: 'Source code',
   plan: { autres: 'More tools', editeur: 'Edit the text in a PDF', fusion: 'Merge PDFs' },
