@@ -399,7 +399,7 @@ function accueilTraduit(lang){
       <div class="fenetre">
         <div class="barre">
           <span class="pt"></span><span class="pt"></span><span class="pt"></span>
-          <span class="url">editeur-pdf.netlify.app</span>
+          <span class="url">voilapdf.com</span>
         </div>
         <img src="/apercu-editeur.png" width="1360" height="850" alt="${esc(a.legende)}" loading="eager" decoding="async">
       </div>

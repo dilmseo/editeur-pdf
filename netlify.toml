@@ -1,10 +1,16 @@
 [build]
   publish = "."
 
-# Une seule adresse indexée. Le .fr et le www renvoient vers voilapdf.com en 301,
-# sinon la popularité se disperserait entre quatre versions du même site.
-# La redirection depuis editeur-pdf.netlify.app n'est posée qu'une fois le DNS
-# actif : l'activer avant couperait l'accès au site.
+# Une seule adresse indexée. Le .fr, les www et l'ancienne adresse Netlify
+# renvoient vers voilapdf.com en 301, sinon la popularité se disperserait entre
+# cinq versions du même site. La redirection depuis editeur-pdf.netlify.app n'a
+# été posée qu'une fois le nouveau domaine joignable et son certificat émis.
+[[redirects]]
+  from = "https://editeur-pdf.netlify.app/*"
+  to = "https://voilapdf.com/:splat"
+  status = 301
+  force = true
+
 [[redirects]]
   from = "https://voilapdf.fr/*"
   to = "https://voilapdf.com/:splat"

@@ -1008,7 +1008,7 @@ const GROUPES = [
                                        'signer', 'deverrouiller', 'metadonnees'] }
 ];
 
-const DATA = { OUTILS, GROUPES, ICO, ETAPES_UN, SITE: 'https://editeur-pdf.netlify.app' };
+const DATA = { OUTILS, GROUPES, ICO, ETAPES_UN, SITE: 'https://voilapdf.com' };
 if (typeof module !== 'undefined' && module.exports) module.exports = DATA;
 else global.OUTILS_DATA = DATA;
 
