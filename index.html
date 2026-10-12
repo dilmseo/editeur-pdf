@@ -268,8 +268,8 @@
       <div class="card">
         <div class="ico i-violet"><svg viewBox="0 0 24 24"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M8 12h8"/></svg></div>
         <h3>Documents scannés</h3>
-        <p>La reconnaissance de caractères tourne dans votre navigateur et rend le scan modifiable.
-          Incluse, là où elle est presque toujours facturée.</p>
+        <p>La reconnaissance démarre toute seule et rend le scan modifiable, sans quitter votre
+          navigateur. Incluse, là où elle est presque toujours facturée.</p>
       </div>
     </div>
   </section>
@@ -361,9 +361,10 @@
       </details>
       <details>
         <summary>Ça marche avec un document scanné ?</summary>
-        <p>Oui. Si la page est une image, le bouton OCR analyse le document et transforme chaque
-          ligne reconnue en bloc modifiable. La reconnaissance est en français et tourne
-          entièrement sur votre machine.</p>
+        <p>Oui, et vous n'avez rien à faire : si la page est une image, la reconnaissance se
+          lance automatiquement à l'ouverture et transforme chaque ligne en bloc modifiable.
+          Elle est en français, tourne entièrement sur votre machine, et peut être interrompue
+          à tout moment si le document est long.</p>
       </details>
       <details>
         <summary>Y a-t-il une limite de taille ou de pages ?</summary>
@@ -553,6 +554,8 @@ async function open(file){
   document.body.classList.add('loaded');
   $('save').disabled = false;
   $('ocr').disabled = !OCR_OK;
+  // Une page sans couche de texte n'offre rien à cliquer : on la reconnaît d'office.
+  if (OCR_OK && pages.some(p => !p.lines.length)) runOcr(true);
   toast(pdf.numPages + ' page(s) chargée(s)');
 }
 
@@ -745,8 +748,10 @@ function drawBoxes(p){
   if (!p.lines.length){
     const n = document.createElement('div');
     n.className = 'notext';
-    n.textContent = p.ocrDone
-      ? 'OCR passé : aucun texte reconnu sur cette page. Utilisez « Masquer » puis « Ajouter ».'
+    n.textContent = ocrRunning
+      ? 'Page scannée — reconnaissance du texte en cours…'
+      : p.ocrDone
+      ? 'Aucun texte reconnu sur cette page. Utilisez « Masquer » puis « Ajouter ».'
       : 'Aucun texte sélectionnable : page scannée (image). Cliquez sur « OCR » pour la rendre modifiable'
         + (OCR_OK ? '.' : ' — il faut lancer « Editeur PDF.cmd ».');
     p.layer.append(n);
@@ -1016,33 +1021,47 @@ async function ocrPage(worker, p){
   return out;
 }
 
-$('ocr').onclick = async () => {
+/* La reconnaissance démarre seule sur les pages sans texte ; le bouton sert alors
+   à l'interrompre, parce qu'un scan de cinquante pages prend plusieurs minutes. */
+let ocrRunning = false, ocrStop = false;
+
+async function runOcr(auto){
+  if (ocrRunning){ ocrStop = true; toast('Arrêt après la page en cours…'); return; }
   const todo = pages.filter(p => !p.lines.length && !p.ocrDone);
-  if (!todo.length) return toast('Rien à reconnaître : ces pages ont déjà du texte.');
-  $('ocr').disabled = true;
-  let total = 0;
+  if (!todo.length){ if (!auto) toast('Rien à reconnaître : ces pages ont déjà du texte.'); return; }
+
+  ocrRunning = true; ocrStop = false;
+  $('ocr').textContent = 'Arrêter'; $('ocr').classList.add('on');
+  pages.forEach(drawBoxes);
+  let total = 0, faites = 0;
   try {
     await metReady;
     const w = await getOcrWorker();
     for (const p of todo){
-      ocrOn = pc => toast(`OCR page ${p.num} — ${Math.round(pc * 100)} %`, 60000);
+      if (ocrStop) break;
+      const rang = todo.length > 1 ? ` (${faites + 1}/${todo.length})` : '';
+      ocrOn = pc => toast(`Reconnaissance du texte — page ${p.num}${rang} — ${Math.round(pc * 100)} %`, 60000);
       ocrOn(0);
       p.lines = await ocrPage(w, p);
-      p.ocrDone = true;
+      p.ocrDone = true; faites++;
       ocrOn = null;
       total += p.lines.length;
       if (p.rendered) sampleColors(p, p.canvas.getContext('2d', { willReadFrequently: true }));
       drawBoxes(p);
     }
-    toast(total ? `${total} ligne(s) reconnue(s) — cliquez dessus pour les modifier.`
-                : 'Aucun texte reconnu sur ces pages.', 4000);
+    toast(ocrStop  ? `Reconnaissance interrompue — ${total} ligne(s) obtenues.`
+        : total    ? `${total} ligne(s) reconnue(s) — cliquez dessus pour les modifier.`
+                   : 'Aucun texte reconnu sur ces pages.', 4000);
   } catch (e) {
     console.error(e);
-    toast('OCR impossible : ' + e.message, 6000);
+    toast('Reconnaissance impossible : ' + e.message, 6000);
   }
-  ocrOn = null;
+  ocrOn = null; ocrRunning = false; ocrStop = false;
+  $('ocr').textContent = 'OCR'; $('ocr').classList.remove('on');
   $('ocr').disabled = !OCR_OK;
-};
+  pages.forEach(drawBoxes);
+}
+$('ocr').onclick = () => runOcr(false);
 
 /* ---------------- inspecteur ---------------- */
 function commitPending(){
