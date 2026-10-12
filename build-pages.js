@@ -664,8 +664,15 @@ fs.writeFileSync(path.join(RACINE, 'sitemap.xml'),
      aux robots — et vaut mieux qu'un avertissement de dépréciation. */
   '<?xml version="1.0" encoding="UTF-8"?>\n' +
   '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n' +
-  urls.map(u => `  <url>\n    <loc>${u.loc}</loc>\n${alt(u)}\n` +
-    `    <lastmod>${JOUR}</lastmod>\n    <priority>${u.prio}</priority>\n  </url>`).join('\n') +
+  /* ORDRE CRITIQUE. Le schema sitemaps.org impose la sequence loc, lastmod,
+     changefreq, priority, PUIS une zone libre « ##other » pour les extensions.
+     Les xhtml:link placees juste apres <loc> — comme dans les exemples de
+     Google, qui eux n'ont pas de lastmod — ouvrent cette zone trop tot : le
+     <lastmod> qui suit devient invalide et Search Console rend
+     « Impossible de lire le sitemap », 0 page decouverte. Les alternatives
+     passent donc en dernier. */
+  urls.map(u => `  <url>\n    <loc>${u.loc}</loc>\n` +
+    `    <lastmod>${JOUR}</lastmod>\n    <priority>${u.prio}</priority>\n${alt(u)}\n  </url>`).join('\n') +
   '\n</urlset>\n', 'utf8');
 
 /* Les robots des moteurs génératifs sont nommés un par un. « User-agent: * » les
