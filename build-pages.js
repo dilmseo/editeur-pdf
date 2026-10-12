@@ -22,6 +22,10 @@ const jsonEsc = s => JSON.stringify(String(s));
    lue dans le HTML. La clé secrète, elle, vit dans l'environnement Netlify sous
    TURNSTILE_SECRET et n'apparaît nulle part dans ce dépôt, qui est public. */
 const TURNSTILE_SITEKEY = '0x4AAAAAAFU9P7fPGn42gSV-';
+/* Clé IndexNow. Publique par construction : le protocole exige qu'elle soit
+   lisible à la racine du site, c'est ce fichier qui prouve qu'on en est
+   propriétaire. La changer obligerait à resoumettre tout le site. */
+const INDEXNOW = '67ffc0350a7cb80c22ef26d6c6a1798b';
 
 const COCHE = '<svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg>';
 const CROIX = '<svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>';
@@ -926,6 +930,9 @@ const SITEMAP =
   '\n</urlset>\n';
 
 fs.writeFileSync(path.join(RACINE, 'sitemap.xml'), SITEMAP, 'utf8');
+/* Preuve de propriete pour IndexNow : un fichier a la racine dont le nom est la
+   cle et le contenu la meme cle. Sans lui, les moteurs ignorent les soumissions. */
+fs.writeFileSync(path.join(RACINE, INDEXNOW + '.txt'), INDEXNOW, 'utf8');
 /* Même contenu sous une seconde adresse. Search Console garde l'état d'un
    sitemap attaché à son URL : une entrée passée en échec y reste affichée même
    après correction du fichier, tant que Google n'a pas relu. Soumettre une
