@@ -15,21 +15,47 @@
   html,body{height:100%;margin:0}
   body{background:var(--bg);color:var(--txt);font:14px/1.45 "Segoe UI",system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden}
 
-  header{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--panel);border-bottom:1px solid var(--line);flex:0 0 auto;flex-wrap:wrap}
-  header .sep{width:1px;height:24px;background:var(--line);margin:0 4px}
-  button,label.btn,select,input[type=number]{background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:7px;padding:6px 10px;font:inherit;cursor:pointer}
-  button:hover,label.btn:hover{border-color:#44505f}
-  button.on{background:var(--acc);border-color:var(--acc);color:#0b1220;font-weight:600}
-  button:disabled{opacity:.45;cursor:default}
-  button.primary{background:var(--ok);border-color:var(--ok);color:#06140d;font-weight:600}
+  header{display:flex;align-items:center;gap:7px;padding:9px 14px;flex:0 0 auto;flex-wrap:wrap;
+    background:linear-gradient(#1f232c,#1a1e26);border-bottom:1px solid #000;
+    box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 2px 14px rgba(0,0,0,.45);z-index:10}
+  header .sep{width:1px;height:22px;background:var(--line);margin:0 5px}
+  button,label.btn,select,input[type=number]{background:var(--panel2);color:var(--txt);
+    border:1px solid var(--line);border-radius:8px;padding:7px 11px;font:inherit;cursor:pointer;
+    display:inline-flex;align-items:center;gap:7px;line-height:1;transition:background .14s,border-color .14s,color .14s}
+  button svg,label.btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.9;
+    stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
+  button:hover:not(:disabled),label.btn:hover{background:#2b313b;border-color:#4a5667}
+  button.on{background:var(--acc);border-color:var(--acc);color:#07101f;font-weight:650}
+  button.on:hover{background:#6ea6fa}
+  button:disabled{opacity:.4;cursor:default}
+  button.primary{background:var(--ok);border-color:var(--ok);color:#04130c;font-weight:650}
+  button.primary:hover:not(:disabled){background:#45c98a}
+  button.ghost{background:transparent;border-color:transparent;color:var(--dim)}
+  button.ghost:hover{background:#262c35;color:var(--txt)}
   input[type=file]{display:none}
-  #fname{color:var(--dim);max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  /* groupe d'outils soudé : une seule pastille, trois positions */
+  .group{display:inline-flex;background:#191d24;border:1px solid var(--line);border-radius:9px;padding:3px;gap:3px}
+  .group button{border-color:transparent;background:transparent;border-radius:6px;padding:6px 10px}
+  /* Redéclaré ici : à spécificité égale, « .group button » l'emporterait sur
+     « button.on » et l'outil actif deviendrait du texte sombre sur fond sombre. */
+  .group button.on{background:var(--acc);color:#07101f}
+  .group button:hover:not(.on){background:#262c35}
+  #fname{color:var(--dim);max-width:210px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13.5px}
+  #zoom-lbl{min-width:52px;text-align:center;color:var(--dim);font-size:13px;font-variant-numeric:tabular-nums}
+  #count{font-size:12.5px;font-weight:650;color:#9fd9bb;background:rgba(56,184,124,.14);
+         border:1px solid rgba(56,184,124,.3);border-radius:999px;padding:4px 11px}
+  #count:empty{display:none}
   .spacer{flex:1}
 
   main{flex:1;display:flex;min-height:0}
-  #viewer{flex:1;overflow:auto;padding:24px;display:flex;flex-direction:column;align-items:center;gap:24px}
+  #viewer{flex:1;overflow:auto;padding:28px 24px 60px;display:flex;flex-direction:column;
+    align-items:center;gap:30px;
+    background:radial-gradient(70% 50% at 50% 0%,#1b1f28,transparent 70%),#111419}
+  .pagewrap{display:flex;flex-direction:column;align-items:center;gap:9px;flex:0 0 auto}
+  .pagelab{font-size:12px;color:#737d8c;letter-spacing:.05em;text-transform:uppercase;font-weight:600}
 
-  .page{position:relative;box-shadow:0 10px 30px rgba(0,0,0,.5);background:#fff;flex:0 0 auto}
+  .page{position:relative;background:#fff;flex:0 0 auto;border-radius:3px;
+    box-shadow:0 0 0 1px rgba(255,255,255,.07),0 18px 44px rgba(0,0,0,.62)}
   .page canvas{display:block}
   .layer{position:absolute;inset:0}
   .layer.erasing{cursor:crosshair}
@@ -52,8 +78,10 @@
           color:#1b1304;padding:7px 13px;border-radius:7px;font-size:12.5px;line-height:1.4;
           pointer-events:none;max-width:88%;text-align:center;box-shadow:0 3px 10px rgba(0,0,0,.3)}
 
-  aside{width:270px;flex:0 0 auto;background:var(--panel);border-left:1px solid var(--line);padding:14px;overflow:auto}
-  aside h3{margin:0 0 10px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+  aside{width:282px;flex:0 0 auto;background:linear-gradient(#1c2027,#191d24);
+        border-left:1px solid #0a0c10;padding:16px;overflow:auto;
+        box-shadow:-2px 0 14px rgba(0,0,0,.35)}
+  aside h3{margin:0 0 12px;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:#79838f}
   .row{display:flex;align-items:center;gap:8px;margin-bottom:9px}
   .row label{width:74px;color:var(--dim);font-size:12.5px;flex:0 0 auto}
   .row input,.row select{flex:1;min-width:0}
@@ -63,8 +91,30 @@
   .hint kbd{background:var(--panel2);border:1px solid var(--line);border-radius:4px;padding:0 4px}
   .over{color:var(--warn)}
   #toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#0d1017;border:1px solid var(--line);
-         padding:10px 16px;border-radius:9px;opacity:0;transition:.25s;pointer-events:none;z-index:50}
+         padding:10px 16px;border-radius:9px;opacity:0;transition:.25s;pointer-events:none;z-index:50;
+         box-shadow:0 10px 30px rgba(0,0,0,.5)}
   #toast.show{opacity:1}
+
+  /* ---------- écran de fin, après enregistrement ---------- */
+  #done{position:fixed;inset:0;z-index:60;display:grid;place-items:center;
+        background:rgba(6,8,12,.72);backdrop-filter:blur(5px)}
+  #done[hidden]{display:none}
+  #done .box{width:min(430px,92vw);background:linear-gradient(#20252e,#1a1e26);
+    border:1px solid #333b48;border-radius:18px;padding:30px 28px 24px;text-align:center;
+    box-shadow:0 30px 80px rgba(0,0,0,.6)}
+  #done .tick{width:62px;height:62px;margin:0 auto;border-radius:50%;display:grid;place-items:center;
+    background:rgba(56,184,124,.16);border:1px solid rgba(56,184,124,.42)}
+  #done .tick svg{width:30px;height:30px;stroke:var(--ok);fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+  #done h2{margin:17px 0 6px;font-size:21px;letter-spacing:-.01em}
+  #done .nom{margin:0;color:var(--dim);font-size:13.5px;word-break:break-all}
+  #done .acts{display:grid;gap:9px;margin-top:22px}
+  #done .acts button{justify-content:center;padding:12px;font-size:15px;border-radius:10px}
+  #done .avis{display:block;margin-top:20px;padding-top:18px;border-top:1px solid var(--line);
+    color:var(--dim);font-size:13.5px;text-decoration:none}
+  #done .avis span{display:block;margin-top:7px;color:#8fb6f5;font-weight:650;font-size:14.5px}
+  #done .avis:hover span{color:#b3cffc}
+  #done .etoiles{display:inline-flex;gap:3px;margin-top:3px}
+  #done .etoiles svg{width:17px;height:17px;fill:#f2b53c;stroke:none}
 
   /* ---------- page d'accueil ----------
      L'accueil est clair et l'éditeur reste sombre : la page vend, l'éditeur est
@@ -391,23 +441,41 @@
 </div>
 
 <header>
-  <button id="accueil" title="Revenir à l'accueil et ouvrir un autre fichier">← Accueil</button>
-  <label class="btn" for="file">Ouvrir un PDF</label>
+  <button id="accueil" class="ghost" title="Revenir à l'accueil et ouvrir un autre fichier">
+    <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>Accueil</button>
+  <label class="btn" for="file" title="Ouvrir un autre PDF">
+    <svg viewBox="0 0 24 24"><path d="M14 3v5h5M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/></svg></label>
   <input id="file" type="file" accept="application/pdf">
   <span id="fname">aucun fichier</span>
   <span class="sep"></span>
-  <button id="tool-edit" class="on" title="Cliquer un texte pour le modifier">Éditer</button>
-  <button id="tool-add" title="Cliquer pour ajouter du texte">Ajouter</button>
-  <button id="tool-erase" title="Glisser pour masquer une zone">Masquer</button>
+
+  <div class="group">
+    <button id="tool-edit" class="on" title="Cliquer sur un texte pour le modifier">
+      <svg viewBox="0 0 24 24"><path d="M4 20h16M5 15.5 15.5 5a2.1 2.1 0 0 1 3 3L8 18.5l-4 1z"/></svg>Éditer</button>
+    <button id="tool-add" title="Cliquer pour ajouter du texte">
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Ajouter</button>
+    <button id="tool-erase" title="Glisser pour masquer une zone">
+      <svg viewBox="0 0 24 24"><path d="M3 5h18v14H3z"/><path d="M7 9h10v6H7z"/></svg>Masquer</button>
+  </div>
+
+  <button id="hl" class="on" title="Encadrer tous les blocs de texte modifiables">
+    <svg viewBox="0 0 24 24"><path d="M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2"/></svg>Repères</button>
+  <button id="ocr" disabled title="Reconnaître le texte des pages scannées">
+    <svg viewBox="0 0 24 24"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M8 12h8"/></svg>OCR</button>
   <span class="sep"></span>
-  <button id="hl" class="on" title="Encadrer tous les blocs de texte modifiables">Repères</button>
-  <button id="ocr" disabled title="Reconnaître le texte des pages scannées">OCR</button>
-  <span class="sep"></span>
-  <button id="zoom-out">−</button><span id="zoom-lbl" style="color:var(--dim);min-width:48px;text-align:center">150%</span><button id="zoom-in">+</button>
+
+  <div class="group">
+    <button id="zoom-out" title="Réduire"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
+    <span id="zoom-lbl">150%</span>
+    <button id="zoom-in" title="Agrandir"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+  </div>
+
   <span class="spacer"></span>
-  <span id="count" style="color:var(--dim)"></span>
-  <button id="reset" disabled>Tout annuler</button>
-  <button id="save" class="primary" disabled>Enregistrer le PDF</button>
+  <span id="count"></span>
+  <button id="reset" disabled title="Annuler toutes les modifications">
+    <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/></svg>Tout annuler</button>
+  <button id="save" class="primary" disabled>
+    <svg viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>Enregistrer le PDF</button>
 </header>
 
 <main>
@@ -452,6 +520,29 @@
 </main>
 
 <div id="toast"></div>
+
+<div id="done" hidden>
+  <div class="box">
+    <div class="tick"><svg viewBox="0 0 24 24"><path d="m4 12.5 5.5 5.5L20 7"/></svg></div>
+    <h2>PDF enregistré</h2>
+    <p class="nom" id="done-nom"></p>
+    <div class="acts">
+      <button id="done-continue" class="primary">Continuer l'édition</button>
+      <button id="done-new">Éditer un nouveau fichier</button>
+    </div>
+    <a class="avis" href="https://g.page/r/CfBfIXTvKKmwEAE/review" target="_blank" rel="noopener">
+      Ça vous a rendu service ?
+      <span class="etoiles">
+        <svg viewBox="0 0 24 24"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg>
+      </span>
+      <span>Donner mon avis</span>
+    </a>
+  </div>
+</div>
 
 <script src="vendor/pdf.min.js"></script>
 <script src="vendor/pdf-lib.min.js"></script>
@@ -528,10 +619,16 @@ document.addEventListener('dragleave', e => {
   if (!e.relatedTarget) $('dropcard').classList.remove('over');
 });
 
-$('accueil').onclick = () => {
-  let n = 0;
-  pages.forEach(p => { n += p.lines.filter(l => l.newText !== null).length + p.adds.length + p.erases.length; });
-  if (n && !confirm(n + ' modification(s) non enregistrée(s). Revenir à l\'accueil ?')) return;
+/* Nombre de modifications au moment du dernier enregistrement : sans ça, revenir
+   à l'accueil juste après avoir enregistré réclamerait une confirmation absurde. */
+let savedAt = -1;
+
+$('accueil').onclick = () => retourAccueil(false);
+
+function retourAccueil(force){
+  const n = nbModifs();
+  if (!force && n && n !== savedAt
+      && !confirm(n + ' modification(s) non enregistrée(s). Revenir à l\'accueil ?')) return;
   commitPending(); editing = null;
   pages = []; pdf = null; originalBytes = null; sel = null;
   viewer.innerHTML = '';
@@ -540,8 +637,10 @@ $('accueil').onclick = () => {
   $('save').disabled = $('ocr').disabled = true;
   document.title = 'Éditeur PDF — texte';
   document.body.classList.remove('loaded');
+  $('done').hidden = true;
+  savedAt = -1;
   refreshCount(); fillInspector();
-};
+}
 
 async function open(file){
   const buf = await file.arrayBuffer();
@@ -569,7 +668,11 @@ async function build(){
     const el = document.createElement('div'); el.className = 'page';
     const canvas = document.createElement('canvas');
     const layer = document.createElement('div'); layer.className = 'layer';
-    el.append(canvas, layer); viewer.append(el);
+    el.append(canvas, layer);
+    const wrap = document.createElement('div'); wrap.className = 'pagewrap';
+    const lab = document.createElement('div'); lab.className = 'pagelab';
+    lab.textContent = `Page ${i} / ${pdf.numPages}`;
+    wrap.append(lab, el); viewer.append(wrap);
     const p = { pdfPage, lines, adds: [], erases: [], el, canvas, layer,
                 vp: null, rendered: false, num: i };
     pages.push(p);
@@ -1031,7 +1134,7 @@ async function runOcr(auto){
   if (!todo.length){ if (!auto) toast('Rien à reconnaître : ces pages ont déjà du texte.'); return; }
 
   ocrRunning = true; ocrStop = false;
-  $('ocr').textContent = 'Arrêter'; $('ocr').classList.add('on');
+  $('ocr').lastChild.textContent = 'Arrêter'; $('ocr').classList.add('on');
   pages.forEach(drawBoxes);
   let total = 0, faites = 0;
   try {
@@ -1057,7 +1160,7 @@ async function runOcr(auto){
     toast('Reconnaissance impossible : ' + e.message, 6000);
   }
   ocrOn = null; ocrRunning = false; ocrStop = false;
-  $('ocr').textContent = 'OCR'; $('ocr').classList.remove('on');
+  $('ocr').lastChild.textContent = 'OCR'; $('ocr').classList.remove('on');
   $('ocr').disabled = !OCR_OK;
   pages.forEach(drawBoxes);
 }
@@ -1187,16 +1290,22 @@ $('reset').onclick = () => {
   select(null); refreshCount(); toast('Modifications annulées');
 };
 
-function refreshCount(){
+function nbModifs(){
   let n = 0;
   pages.forEach(p => { n += p.lines.filter(l => l.newText !== null).length + p.adds.length + p.erases.length; });
+  return n;
+}
+
+function refreshCount(){
+  const n = nbModifs();
   $('count').textContent = n ? n + ' modification' + (n > 1 ? 's' : '') : '';
   $('reset').disabled = !n;
 }
 
 /* ---------------- enregistrement ---------------- */
 $('save').onclick = async () => {
-  $('save').disabled = true; $('save').textContent = 'Génération…';
+  // lastChild, pas textContent : le bouton contient aussi son icône SVG.
+  $('save').disabled = true; $('save').lastChild.textContent = 'Génération…';
   try {
     const doc = await PDFDocument.load(originalBytes);
     const cache = {};
@@ -1248,18 +1357,30 @@ $('save').onclick = async () => {
 
     const out = await doc.save();
     const url = URL.createObjectURL(new Blob([out], { type: 'application/pdf' }));
+    const nom = ($('fname').textContent.replace(/\.pdf$/i, '') || 'document') + '-modifie.pdf';
     const a = document.createElement('a');
     a.href = url;
-    a.download = ($('fname').textContent.replace(/\.pdf$/i, '') || 'document') + '-modifie.pdf';
+    a.download = nom;
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 10000);
-    toast('PDF enregistré');
+    savedAt = nbModifs();
+    $('done-nom').textContent = nom;
+    $('done').hidden = false;
+    $('done-continue').focus();
   } catch (err) {
     console.error(err);
     toast('Erreur : ' + err.message, 5000);
   }
-  $('save').disabled = false; $('save').textContent = 'Enregistrer le PDF';
+  $('save').disabled = false;
+  $('save').lastChild.textContent = 'Enregistrer le PDF';
 };
+
+$('done-continue').onclick = () => { $('done').hidden = true; };
+$('done-new').onclick = () => { $('done').hidden = true; retourAccueil(true); };
+$('done').addEventListener('mousedown', e => { if (e.target === $('done')) $('done').hidden = true; });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && !$('done').hidden) $('done').hidden = true;
+});
 </script>
 </body>
 </html>
