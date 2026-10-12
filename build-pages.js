@@ -649,31 +649,34 @@ for (const lang of LANGUES){
   }
 }
 
-/* Le sitemap porte les alternatives : c'est la déclaration de langues la plus sûre,
-   un lien hreflang oublié dans une page passant alors inaperçu. Le x-default y
-   figure aussi : les pages le déclarent déjà, les deux sources doivent dire la
-   même chose, sinon Google arbitre tout seul. */
-const alt = u => LANGUES.map(l =>
-    `    <xhtml:link rel="alternate" hreflang="${l.ui.htmlLang}" href="${u.cle ? urlDe(l, u.cle) : accueilDe(l)}"/>`).join('\n')
-  + `\n    <xhtml:link rel="alternate" hreflang="x-default" href="${u.cle ? urlDe(LANGUES[0], u.cle) : accueilDe(LANGUES[0])}"/>`;
+/* Sitemap réduit à l'os : <loc> et <lastmod>, rien d'autre.
 
-fs.writeFileSync(path.join(RACINE, 'sitemap.xml'),
-  /* Pas de feuille XSL : elle rendait le fichier lisible dans le navigateur, mais
-     Chrome coiffe désormais toute page XSLT d'un bandeau rouge annonçant le
-     retrait de la fonction. Un sitemap affiché en vrac est normal — il s'adresse
-     aux robots — et vaut mieux qu'un avertissement de dépréciation. */
+   Il portait les alternatives de langue en <xhtml:link>. Deux raisons de les
+   avoir retirées. D'abord un vrai piège : le schéma impose la séquence loc,
+   lastmod, changefreq, priority PUIS la zone d'extension « ##other » ; placer
+   les xhtml:link après <loc>, comme le montrent les exemples de Google — qui
+   n'ont pas de lastmod — rendait le <lastmod> suivant invalide, et Search
+   Console répondait « Impossible de lire le sitemap », 0 page découverte.
+   Ensuite, même corrigées, ces balises n'apportaient rien : chaque page déclare
+   déjà ses alternatives et son x-default dans son <head>, ce qui est l'une des
+   trois méthodes officielles et se suffit à elle-même. Google demande d'en
+   choisir UNE. Autant garder celle qui ne peut pas casser le fichier.
+
+   priority et changefreq sont partis pour la même raison : Google les ignore
+   depuis des années, ils ne faisaient qu'ajouter de la surface d'erreur. */
+const SITEMAP =
   '<?xml version="1.0" encoding="UTF-8"?>\n' +
-  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n' +
-  /* ORDRE CRITIQUE. Le schema sitemaps.org impose la sequence loc, lastmod,
-     changefreq, priority, PUIS une zone libre « ##other » pour les extensions.
-     Les xhtml:link placees juste apres <loc> — comme dans les exemples de
-     Google, qui eux n'ont pas de lastmod — ouvrent cette zone trop tot : le
-     <lastmod> qui suit devient invalide et Search Console rend
-     « Impossible de lire le sitemap », 0 page decouverte. Les alternatives
-     passent donc en dernier. */
-  urls.map(u => `  <url>\n    <loc>${u.loc}</loc>\n` +
-    `    <lastmod>${JOUR}</lastmod>\n    <priority>${u.prio}</priority>\n${alt(u)}\n  </url>`).join('\n') +
-  '\n</urlset>\n', 'utf8');
+  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+  urls.map(u => `  <url>\n    <loc>${u.loc}</loc>\n    <lastmod>${JOUR}</lastmod>\n  </url>`).join('\n') +
+  '\n</urlset>\n';
+
+fs.writeFileSync(path.join(RACINE, 'sitemap.xml'), SITEMAP, 'utf8');
+/* Même contenu sous une seconde adresse. Search Console garde l'état d'un
+   sitemap attaché à son URL : une entrée passée en échec y reste affichée même
+   après correction du fichier, tant que Google n'a pas relu. Soumettre une
+   adresse neuve repart d'une ardoise vierge et tranche la question — si
+   sitemap2 est lu et pas l'autre, le fichier n'était plus en cause. */
+fs.writeFileSync(path.join(RACINE, 'sitemap2.xml'), SITEMAP, 'utf8');
 
 /* Les robots des moteurs génératifs sont nommés un par un. « User-agent: * » les
    autorise déjà, mais plusieurs n'obéissent qu'à une règle qui les désigne, et
