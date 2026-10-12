@@ -349,40 +349,8 @@ function accueilTraduit(lang){
   const listePied = cles => cles.map(k =>
     `<li><a href="${lang.prefixe}/${lang.outils[k].slug}/">${esc(lang.outils[k].carte)}</a></li>`).join('');
   const GLYPHE = '<span class="glyphe"><svg viewBox="0 0 24 24"><path d="M6 6h12M6 12h8M6 18h5"/></svg></span>';
-  const editeurFr = `${SITE}/`;
 
-  return `<!doctype html>
-<html lang="${ui.htmlLang}">
-<head>
-<meta charset="utf-8">
-<title>${esc(a.titreSeo)}</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="${esc(a.meta)}">
-<link rel="canonical" href="${url}">
-${hreflangs(null)}
-<meta property="og:type" content="website">
-<meta property="og:locale" content="${ui.htmlLang === 'fr' ? 'fr_FR' : 'en_GB'}">
-<meta property="og:site_name" content="Éditeur PDF">
-<meta property="og:title" content="${esc(a.titreSeo)}">
-<meta property="og:description" content="${esc(a.meta)}">
-<meta property="og:url" content="${url}">
-<meta property="og:image" content="${SITE}/apercu-editeur.png">
-<meta property="og:image:width" content="1360">
-<meta property="og:image:height" content="850">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="${SITE}/apercu-editeur.png">
-<link rel="icon" href="${FAVICON}">
-<link rel="stylesheet" href="/style-accueil.css">
-<style>
-  /* style-accueil.css attend que #home soit le conteneur qui défile, comme sur la
-     page française : sans cette mise en page, le contenu déborde sans ascenseur. */
-  html,body{height:100%;margin:0}
-  body{display:flex;flex-direction:column;overflow:hidden;background:#FBF9F5}
-</style>
-<script type="application/ld+json">${JSON.stringify(jsonld)}</script>
-</head>
-<body>
-<div id="home">
+  return { jsonld, bloc: `<div id="home">
 
   <div class="hnav" id="hnav"><div class="in">
     <a class="marque" href="${lang.prefixe}/">${GLYPHE}Éditeur PDF</a>
@@ -391,7 +359,7 @@ ${hreflangs(null)}
       <a href="#confiance">${esc(ui.navConfiance)}</a>
       <a href="#questions">${esc(ui.navQuestions)}</a>
       ${selecteurLangue(lang, null)}
-      <a class="cta-nav" href="${lang.prefixe}/${lang.outils['pdf-word'].slug}/">${esc(a.ctaOutils)}</a>
+      <a class="cta-nav" href="#" id="nav-ouvrir">${esc(ui.navEditer)}</a>
     </nav>
   </div></div>
 
@@ -411,14 +379,14 @@ ${hreflangs(null)}
         <span class="ligne neuve">${esc(a.demoApres)} <b>${esc(a.demoApresDate)}</b></span>
       </p>
 
-      <a class="depot" href="#outils">
-        <span class="ic"><svg viewBox="0 0 24 24"><path d="M4 7h7a3 3 0 0 1 3 3v4a3 3 0 0 0 3 3h3"/><path d="m17 14 3 3-3 3"/></svg></span>
+      <label class="depot" id="dropcard" for="file">
+        <span class="ic"><svg viewBox="0 0 24 24"><path d="M12 16V4m0 0 4 4m-4-4L8 8"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></span>
         <span>
-          <span class="t">${esc(a.carteT)}</span>
-          <span class="s">${esc(a.carteS)}</span>
+          <span class="t">${esc(a.deposer)}</span>
+          <span class="s">${esc(a.deposerSous)}</span>
         </span>
-        <span class="bouton">${esc(a.ctaOutils)}</span>
-      </a>
+        <span class="bouton">${esc(a.bouton)}</span>
+      </label>
 
       <div class="gages">
         <span><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg>${esc(a.gage1)}</span>
@@ -461,8 +429,7 @@ ${hreflangs(null)}
       <div class="fonction"><span class="ic i-ambre"><svg viewBox="0 0 24 24"><path d="M3 5h18v14H3z"/><path d="M7 9h10v6H7z"/></svg></span>
         <div><h3>${esc(a.f4t)}</h3><p>${esc(a.f4d)}</p></div></div>
     </div>
-    <p class="intro" style="margin-top:22px"><em>${esc(a.noteEditeur)}</em>
-       <a href="${editeurFr}">${esc(ui.plan.editeur)} →</a></p>
+
   </div></section>
 
   <section class="bloc-sec alt" id="outils"><div class="sec">
@@ -472,7 +439,7 @@ ${hreflangs(null)}
       <p class="intro">${esc(a.introOutils)}</p>
     </div>
     <div class="phares">
-      <a class="phare" href="${editeurFr}"><span class="ic i-rouge">${svgI(base.ICO.crayon)}</span>
+      <a class="phare" href="#" id="phare-editeur"><span class="ic i-rouge">${svgI(base.ICO.crayon)}</span>
         <span><b>${esc(a.phare1t)}</b><span>${esc(a.phare1d)}</span></span></a>
       <a class="phare" href="${lang.prefixe}/${lang.outils.fusion.slug}/"><span class="ic i-bleu">${svgI(base.ICO.fusion)}</span>
         <span><b>${esc(a.phare2t)}</b><span>${esc(a.phare2d)}</span></span></a>
@@ -515,14 +482,14 @@ ${hreflangs(null)}
   <section class="final"><div class="sec">
     <h2 class="titre">${esc(a.finalTitre)}</h2>
     <p class="intro" style="margin:12px auto 0">${esc(a.finalIntro)}</p>
-    <a class="bouton" href="#outils">${esc(a.ctaOutils)}</a>
+    <a class="bouton" href="#" id="cta-final">${esc(a.finalBouton)}</a>
     <p class="sous">${esc(a.finalSous)}</p>
   </div></section>
 
   <footer class="pied">
     <div class="rappel">
       <p class="mot">${esc(a.rappelA)}<br><span>${esc(a.rappelB)}</span></p>
-      <a class="bouton" href="${editeurFr}">${esc(a.rappelBouton)}</a>
+      <a class="bouton" href="#" id="pied-ouvrir">${esc(a.rappelBouton)}</a>
     </div>
     <div class="cols">
       <div>
@@ -556,17 +523,50 @@ ${hreflangs(null)}
     </div>
   </footer>
 </div>
-<script>
-  // Le filet sous la barre n'apparaît qu'une fois la page défilée. C'est #home
-  // qui défile, pas la fenêtre : l'écouteur doit donc être posé sur lui.
-  (function(){
-    const z = document.getElementById('home'), n = document.getElementById('hnav');
-    z.addEventListener('scroll', () => n.classList.toggle('colle', z.scrollTop > 8), { passive: true });
-  })();
-</script>
-</body>
-</html>
-`;
+`};
+}
+
+/* L'accueil d'une langue traduite, c'est l'application française elle-même :
+   on y remplace le bloc d'accueil par sa version traduite, puis on traduit les
+   mots de l'éditeur. L'application n'est donc jamais dupliquée — une correction
+   faite dans index.html se retrouve dans toutes les langues au prochain build. */
+function pageAppli(lang){
+  const a = lang.ui.accueil;
+  const { jsonld, bloc } = accueilTraduit(lang);
+  let html = fs.readFileSync(path.join(RACINE, 'index.html'), 'utf8');
+
+  const i = html.indexOf('<div id="home">');
+  const j = html.indexOf('<header>', i);
+  if (i < 0 || j < 0) throw new Error("index.html : bloc d'accueil introuvable");
+  html = html.slice(0, i) + bloc + '\n\n' + html.slice(j);
+
+  // tête : titre, description, canonique et alternatives propres à la langue
+  const tete = html.slice(0, html.indexOf('</head>'));
+  let nouvelleTete = tete
+    .replace(/<title>[\s\S]*?<\/title>/, `<title>${esc(a.titreSeo)}</title>`)
+    .replace(/<meta name="description"[^>]*>/, `<meta name="description" content="${esc(a.meta)}">`)
+    .replace(/<link rel="canonical"[^>]*>/, `<link rel="canonical" href="${accueilDe(lang)}">`)
+    .replace(/<link rel="alternate"[^>]*>\s*/g, '')
+    .replace(/<meta property="og:title"[^>]*>/, `<meta property="og:title" content="${esc(a.titreSeo)}">`)
+    .replace(/<meta property="og:description"[^>]*>/, `<meta property="og:description" content="${esc(a.meta)}">`)
+    .replace(/<meta property="og:url"[^>]*>/, `<meta property="og:url" content="${accueilDe(lang)}">`)
+    .replace(/<meta property="og:locale"[^>]*>/, `<meta property="og:locale" content="en_GB">`)
+    .replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/,
+             `<script type="application/ld+json">${JSON.stringify(jsonld)}</script>`)
+    .replace(/<script type="application\/ld\+json" id="ld-outils"><\/script>/, '')
+    .replace('<link rel="canonical"', hreflangs(null) + '\n<link rel="canonical"');
+  html = nouvelleTete + html.slice(html.indexOf('</head>'));
+
+  html = html.replace('<html lang="fr">', `<html lang="${lang.ui.htmlLang}">`);
+
+  // Les chemins relatifs doivent devenir absolus : la page vit dans /en/.
+  // Les attributs d'abord, puis ceux écrits en dur dans le script — worker pdf.js
+  // et moteur de reconnaissance — que la première passe ne voit pas.
+  html = html.replace(/(src|href)="(?!https?:|\/|#|data:)/g, '$1="/')
+             .split("'vendor/").join("'/vendor/");
+
+  for (const [fr, en] of (lang.trad.REMPLACEMENTS || [])) html = html.split(fr).join(en);
+  return html;
 }
 
 /* ---------------- écriture ---------------- */
@@ -578,7 +578,7 @@ for (const lang of LANGUES){
   if (lang.code !== 'fr'){
     const d = path.join(RACINE, lang.prefixe.replace(/^\//, ''));
     fs.mkdirSync(d, { recursive: true });
-    fs.writeFileSync(path.join(d, 'index.html'), accueilTraduit(lang), 'utf8');
+    fs.writeFileSync(path.join(d, 'index.html'), pageAppli(lang), 'utf8');
   }
   for (const cle of Object.keys(lang.outils)){
     const dossier = path.join(RACINE, lang.prefixe.replace(/^\//, ''), lang.outils[cle].slug);

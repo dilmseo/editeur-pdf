@@ -668,16 +668,18 @@ document.addEventListener('dragleave', e => {
       numberOfItems: items.length, itemListElement: items });
   }
 
-  // Les appels à l'éditeur ouvrent le sélecteur sur place, sans recharger la page.
+})();
+
+/* Câblage indépendant de la grille : une page traduite fournit son sommaire en
+   HTML statique, mais doit quand même pouvoir ouvrir l'éditeur. */
+(function brancherAccueil(){
   ['phare-editeur', 'nav-ouvrir', 'cta-final', 'pied-ouvrir'].forEach(id => {
     const e = $(id);
     if (e) e.addEventListener('click', ev => { ev.preventDefault(); $('file').click(); });
   });
-
-  // Le filet sous la barre n'apparaît qu'une fois la page défilée.
   const nav = $('hnav'), zone = $('home');
-  zone.addEventListener('scroll', () => nav.classList.toggle('colle', zone.scrollTop > 8),
-                        { passive: true });
+  if (nav && zone) zone.addEventListener('scroll',
+    () => nav.classList.toggle('colle', zone.scrollTop > 8), { passive: true });
 })();
 
 /* Nombre de modifications au moment du dernier enregistrement : sans ça, revenir
