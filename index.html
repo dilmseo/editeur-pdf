@@ -1,0 +1,902 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Éditeur PDF — texte</title>
+<style>
+  :root{
+    --bg:#15171c; --panel:#1c1f26; --panel2:#23272f; --line:#2f343e;
+    --txt:#e7e9ee; --dim:#9aa2b1; --acc:#5b9cf8; --ok:#38b87c; --warn:#e0a33a;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{background:var(--bg);color:var(--txt);font:14px/1.45 "Segoe UI",system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden}
+
+  header{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--panel);border-bottom:1px solid var(--line);flex:0 0 auto;flex-wrap:wrap}
+  header .sep{width:1px;height:24px;background:var(--line);margin:0 4px}
+  button,label.btn,select,input[type=number]{background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:7px;padding:6px 10px;font:inherit;cursor:pointer}
+  button:hover,label.btn:hover{border-color:#44505f}
+  button.on{background:var(--acc);border-color:var(--acc);color:#0b1220;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  button.primary{background:var(--ok);border-color:var(--ok);color:#06140d;font-weight:600}
+  input[type=file]{display:none}
+  #fname{color:var(--dim);max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .spacer{flex:1}
+
+  main{flex:1;display:flex;min-height:0}
+  #viewer{flex:1;overflow:auto;padding:24px;display:flex;flex-direction:column;align-items:center;gap:24px}
+  #drop{margin:auto;text-align:center;color:var(--dim);border:2px dashed var(--line);border-radius:16px;padding:60px 70px}
+  #drop b{color:var(--txt);display:block;font-size:17px;margin-bottom:6px}
+
+  .page{position:relative;box-shadow:0 10px 30px rgba(0,0,0,.5);background:#fff;flex:0 0 auto}
+  .page canvas{display:block}
+  .layer{position:absolute;inset:0}
+  .layer.erasing{cursor:crosshair}
+  .layer.adding{cursor:text}
+
+  .tbox{position:absolute;transform-origin:0 0;white-space:pre;outline:0;cursor:text;
+        border:1px solid transparent;border-radius:2px;line-height:1;overflow:visible;
+        font-kerning:none;letter-spacing:0}
+  .layer.hl .tbox{border-color:rgba(91,156,248,.28)}
+  .tbox:hover{border-color:rgba(91,156,248,.85);background:rgba(91,156,248,.10)}
+  .tbox.dirty{border-color:rgba(56,184,124,.6)}
+  .tbox.sel{border-color:var(--acc);box-shadow:0 0 0 2px rgba(91,156,248,.25)}
+  .tbox[contenteditable=true]{cursor:text;border-color:var(--acc)}
+  .tbox.ghost{color:transparent}
+
+  .erase{position:absolute;border:1px dashed rgba(224,163,58,.8)}
+  .erase.sel{border-color:var(--acc);box-shadow:0 0 0 2px rgba(91,156,248,.25)}
+  .marquee{position:absolute;background:rgba(224,163,58,.25);border:1px dashed var(--warn);pointer-events:none}
+  .notext{position:absolute;left:50%;top:10px;transform:translateX(-50%);background:rgba(224,163,58,.96);
+          color:#1b1304;padding:7px 13px;border-radius:7px;font-size:12.5px;line-height:1.4;
+          pointer-events:none;max-width:88%;text-align:center;box-shadow:0 3px 10px rgba(0,0,0,.3)}
+
+  aside{width:270px;flex:0 0 auto;background:var(--panel);border-left:1px solid var(--line);padding:14px;overflow:auto}
+  aside h3{margin:0 0 10px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+  .row{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+  .row label{width:74px;color:var(--dim);font-size:12.5px;flex:0 0 auto}
+  .row input,.row select{flex:1;min-width:0}
+  .row input[type=color]{padding:2px;height:30px}
+  #insp textarea{width:100%;min-height:72px;background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:7px;padding:7px;font:inherit;resize:vertical}
+  .hint{color:var(--dim);font-size:12.5px;line-height:1.5}
+  .hint kbd{background:var(--panel2);border:1px solid var(--line);border-radius:4px;padding:0 4px}
+  .over{color:var(--warn)}
+  #toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#0d1017;border:1px solid var(--line);
+         padding:10px 16px;border-radius:9px;opacity:0;transition:.25s;pointer-events:none}
+  #toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<header>
+  <label class="btn" for="file">Ouvrir un PDF</label>
+  <input id="file" type="file" accept="application/pdf">
+  <span id="fname">aucun fichier</span>
+  <span class="sep"></span>
+  <button id="tool-edit" class="on" title="Cliquer un texte pour le modifier">Éditer</button>
+  <button id="tool-add" title="Cliquer pour ajouter du texte">Ajouter</button>
+  <button id="tool-erase" title="Glisser pour masquer une zone">Masquer</button>
+  <span class="sep"></span>
+  <button id="hl" class="on" title="Encadrer tous les blocs de texte modifiables">Repères</button>
+  <button id="ocr" disabled title="Reconnaître le texte des pages scannées">OCR</button>
+  <span class="sep"></span>
+  <button id="zoom-out">−</button><span id="zoom-lbl" style="color:var(--dim);min-width:48px;text-align:center">150%</span><button id="zoom-in">+</button>
+  <span class="spacer"></span>
+  <span id="count" style="color:var(--dim)"></span>
+  <button id="reset" disabled>Tout annuler</button>
+  <button id="save" class="primary" disabled>Enregistrer le PDF</button>
+</header>
+
+<main>
+  <div id="viewer">
+    <div id="drop"><b>Dépose un PDF ici</b>ou clique « Ouvrir un PDF »</div>
+  </div>
+  <aside>
+    <div id="insp">
+      <h3>Sélection</h3>
+      <p class="hint" id="nosel">Clique un bloc de texte dans la page pour l'éditer.<br><br>
+        <b style="color:var(--txt)">Éditer</b> — modifie le texte existant (le texte d'origine est recouvert).<br>
+        <b style="color:var(--txt)">Ajouter</b> — pose un nouveau texte où tu cliques.<br>
+        <b style="color:var(--txt)">Masquer</b> — glisse pour couvrir une zone.<br><br>
+        <kbd>Échap</kbd> sortir · <kbd>Suppr</kbd> retirer l'élément sélectionné</p>
+      <div id="fields" style="display:none">
+        <div class="row" id="r-text"><label>Texte</label></div>
+        <textarea id="f-text" spellcheck="false"></textarea>
+        <div class="row" id="r-font"><label>Police</label>
+          <select id="f-font">
+            <option value="Helvetica">Helvetica (sans)</option>
+            <option value="Times">Times (serif)</option>
+            <option value="Courier">Courier (mono)</option>
+          </select>
+        </div>
+        <div class="row" id="r-style"><label>Style</label>
+          <select id="f-style">
+            <option value="">Normal</option>
+            <option value="B">Gras</option>
+            <option value="I">Italique</option>
+            <option value="BI">Gras italique</option>
+          </select>
+        </div>
+        <div class="row" id="r-size"><label>Taille</label><input id="f-size" type="number" min="2" max="200" step="0.5"></div>
+        <div class="row" id="r-color"><label>Couleur</label><input id="f-color" type="color"></div>
+        <div class="row" id="r-bg"><label>Fond</label><input id="f-bg" type="color"></div>
+        <div class="row" style="gap:6px;margin-top:12px">
+          <button id="f-fit" style="flex:1" title="Réduit la taille pour tenir dans la largeur d'origine">Ajuster</button>
+          <button id="f-del" style="flex:1">Rétablir</button>
+        </div>
+        <p class="hint" id="f-info" style="margin-top:12px"></p>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<div id="toast"></div>
+
+<script src="vendor/pdf.min.js"></script>
+<script src="vendor/pdf-lib.min.js"></script>
+<script src="vendor/tesseract.min.js"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'vendor/pdf.worker.min.js';
+const { PDFDocument, StandardFonts, rgb, degrees } = PDFLib;
+
+/* ---------------- état ---------------- */
+let originalBytes = null;       // copie intacte, réservée à pdf-lib
+let pdf = null;                 // document pdf.js
+let pages = [];                 // { pdfPage, lines[], adds[], erases[], el, canvas, layer, vp }
+let scale = 1.5;
+let tool = 'edit';
+let showHl = true;              // encadrer les blocs modifiables
+let sel = null;                 // { kind:'line'|'add'|'erase', p, l|i }
+let editing = null;             // { commit } de la saisie en cours, s'il y en a une
+const DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+const $ = id => document.getElementById(id);
+const viewer = $('viewer');
+
+function toast(msg, ms = 2200){
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), ms);
+}
+
+/* ---------------- polices & mesures ---------------- */
+const FONTS = {
+  Helvetica: { '': StandardFonts.Helvetica, B: StandardFonts.HelveticaBold, I: StandardFonts.HelveticaOblique, BI: StandardFonts.HelveticaBoldOblique },
+  Times:     { '': StandardFonts.TimesRoman, B: StandardFonts.TimesRomanBold, I: StandardFonts.TimesRomanItalic, BI: StandardFonts.TimesRomanBoldItalic },
+  Courier:   { '': StandardFonts.Courier, B: StandardFonts.CourierBold, I: StandardFonts.CourierOblique, BI: StandardFonts.CourierBoldOblique }
+};
+/* Jeu de polices jetable servant à mesurer en points exactement comme le fera
+   l'export. Une mesure par canvas se tromperait de plusieurs pourcents. */
+const MET = {};
+const metReady = (async () => {
+  const d = await PDFDocument.create();
+  for (const fam in FONTS)
+    for (const sty in FONTS[fam]) MET[fam + sty] = await d.embedFont(FONTS[fam][sty]);
+})();
+const metOf = (fam, sty) => MET[fam + ((FONTS[fam] && sty in FONTS[fam]) ? sty : '')] || MET.Helvetica;
+
+/* WinAnsi couvre tout le latin-1 plus les apostrophes et tirets typographiques.
+   Le reste (CJK, symboles) est remplacé, sinon l'enregistrement échouerait. */
+function encFor(f, s){
+  let out = '';
+  for (const ch of s){
+    try { f.widthOfTextAtSize(ch, 10); out += ch; }
+    catch { out += ch.trim() ? '?' : ' '; }
+  }
+  return out;
+}
+function widthOf(txt, fam, sty, size){
+  const f = metOf(fam, sty);
+  if (!f || !txt) return 0;
+  try { return f.widthOfTextAtSize(txt, size); }
+  catch { return f.widthOfTextAtSize(encFor(f, txt), size); }
+}
+
+/* ---------------- ouverture ---------------- */
+$('file').onchange = e => { if (e.target.files[0]) open(e.target.files[0]); };
+['dragover','drop'].forEach(ev => document.addEventListener(ev, e => e.preventDefault()));
+document.addEventListener('drop', e => {
+  const f = [...(e.dataTransfer?.files || [])].find(f => /\.pdf$/i.test(f.name));
+  if (f) open(f);
+});
+
+async function open(file){
+  const buf = await file.arrayBuffer();
+  originalBytes = new Uint8Array(buf.slice(0));          // pdf.js consomme sa propre copie
+  pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf.slice(0)) }).promise;
+  $('fname').textContent = file.name;
+  document.title = file.name + ' — Éditeur PDF';
+  sel = null;
+  await build();
+  $('save').disabled = false;
+  $('ocr').disabled = !OCR_OK;
+  toast(pdf.numPages + ' page(s) chargée(s)');
+}
+
+/* ---------------- construction des pages ---------------- */
+async function build(){
+  viewer.innerHTML = '';
+  pages = [];
+  for (let i = 1; i <= pdf.numPages; i++){
+    const pdfPage = await pdf.getPage(i);
+    const lines = await extractLines(pdfPage);
+    const el = document.createElement('div'); el.className = 'page';
+    const canvas = document.createElement('canvas');
+    const layer = document.createElement('div'); layer.className = 'layer';
+    el.append(canvas, layer); viewer.append(el);
+    const p = { pdfPage, lines, adds: [], erases: [], el, canvas, layer,
+                vp: null, rendered: false, num: i };
+    pages.push(p);
+    layout(p);
+    hookLayer(p);
+  }
+  observe();
+  refreshCount();
+  fillInspector();
+}
+
+/* Regroupe les fragments pdf.js en lignes éditables : même police, même taille,
+   même ligne de base, sans trou horizontal notable. */
+async function extractLines(pdfPage){
+  const tc = await pdfPage.getTextContent({ disableCombineTextItems: false });
+  const lines = [];
+  let cur = null;
+  for (const it of tc.items){
+    if (!it.str) continue;
+    const tr = it.transform;
+    const size = Math.hypot(tr[0], tr[1]) || Math.hypot(tr[2], tr[3]) || 10;
+    const angle = Math.atan2(tr[1], tr[0]);
+    const x = tr[4], y = tr[5], w = it.width || 0;
+    if (!it.str.trim()){ if (cur) cur.pendingSpace = true; continue; }
+    const gap = cur ? x - (cur.x + cur.width) : 0;
+    const fit = cur
+      && cur.fontName === it.fontName
+      && Math.abs(cur.angle - angle) < 0.01
+      && Math.abs(cur.size - size) < Math.max(0.6, size * 0.08)
+      && Math.abs(cur.y - y) < size * 0.3
+      && gap > -size * 0.6 && gap < size * 1.1;
+    if (fit){
+      if ((gap > size * 0.16 || cur.pendingSpace) && !/\s$/.test(cur.text) && !/^\s/.test(it.str)) cur.text += ' ';
+      cur.text += it.str;
+      cur.width = (x + w) - cur.x;
+    } else {
+      cur = { text: it.str, x, y, width: w, size, angle,
+              fontName: it.fontName || '', idx: lines.length };
+      lines.push(cur);
+    }
+    cur.pendingSpace = false;
+  }
+  await metReady;
+  for (const l of lines){
+    l.orig  = l.text;
+    l.font  = guessFont(l.fontName, tc.styles?.[l.fontName]);
+    l.bold   = /bold|black|heavy|semib/i.test(l.fontName) || matchesBold(l);
+    l.italic = /italic|oblique/i.test(l.fontName);
+    l.style = (l.bold ? 'B' : '') + (l.italic ? 'I' : '');
+    l.color = null; l.bg = null;        // relevés sur le rendu
+    l.newText = l.newSize = l.newColor = l.newBg = l.newFont = l.newStyle = null;
+  }
+  return lines;
+}
+
+/* Les polices intégrées portent un nom interne ("g_d0_f1") qui n'apprend rien.
+   pdf.js expose en revanche la famille générique dans tc.styles. */
+function guessFont(name, st){
+  const ff = (st?.fontFamily || '').toLowerCase();
+  if (ff.includes('mono')) return 'Courier';
+  if (ff.includes('sans')) return 'Helvetica';
+  if (ff.includes('serif')) return 'Times';
+  return /times|serif|georgia|garamond|roman|book|minion/i.test(name) ? 'Times'
+       : /courier|mono|consol/i.test(name) ? 'Courier' : 'Helvetica';
+}
+
+/* Le gras se retrouve dans la largeur : pdf.js donne la largeur réelle du texte,
+   et seule la bonne graisse la reproduit à mieux que 1 % (contre 3-4 % sinon). */
+function matchesBold(l){
+  if (!l.width || l.text.length < 4 || !MET.Helvetica) return false;
+  const err = sty => {
+    const w = widthOf(l.text, l.font, sty, l.size);
+    return w ? Math.abs(w - l.width) / l.width : Infinity;
+  };
+  const e0 = err(''), eB = err('B');
+  return eB < 0.015 && eB < e0 * 0.5;
+}
+
+/* ---------------- mise en page / rendu ---------------- */
+function layout(p){
+  p.vp = p.pdfPage.getViewport({ scale });
+  p.el.style.width  = Math.floor(p.vp.width) + 'px';
+  p.el.style.height = Math.floor(p.vp.height) + 'px';
+  p.canvas.width  = Math.floor(p.vp.width * DPR);
+  p.canvas.height = Math.floor(p.vp.height * DPR);
+  p.canvas.style.width  = Math.floor(p.vp.width) + 'px';
+  p.canvas.style.height = Math.floor(p.vp.height) + 'px';
+  p.rendered = false;
+  drawBoxes(p);
+}
+
+async function render(p){
+  if (p.rendered || p.busy) return;
+  p.busy = true;
+  const ctx = p.canvas.getContext('2d', { willReadFrequently: true });
+  ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,p.canvas.width,p.canvas.height);
+  try {
+    await p.pdfPage.render({ canvasContext: ctx, viewport: p.vp,
+                             transform: [DPR,0,0,DPR,0,0] }).promise;
+    p.rendered = true;
+    sampleColors(p, ctx);
+  } catch (e) { console.error(e); }
+  p.busy = false;
+  drawBoxes(p);
+}
+
+function observe(){
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting){ const p = pages.find(p => p.el === e.target); if (p) render(p); }
+  }), { root: viewer, rootMargin: '600px' });
+  pages.forEach(p => io.observe(p.el));
+}
+
+/* Devine la couleur du texte et celle du fond en lisant les pixels rendus.
+   Les pixels sont regroupés par teinte approchée, mais la couleur retenue est
+   la MOYENNE EXACTE du groupe : une valeur quantifiée laisserait un rectangle
+   légèrement gris visible sur un fond blanc. */
+function sampleColors(p, ctx){
+  for (const l of p.lines){
+    if (l.color && l.bg) continue;
+    const b = screenBox(p, l);
+    const x = Math.max(0, Math.round(b.left * DPR)), y = Math.max(0, Math.round(b.top * DPR));
+    const w = Math.min(p.canvas.width - x,  Math.max(2, Math.round(b.w * DPR)));
+    const h = Math.min(p.canvas.height - y, Math.max(2, Math.round(b.h * DPR)));
+    if (w < 1 || h < 1){ l.color = [0,0,0]; l.bg = [255,255,255]; continue; }
+    let d;
+    try { d = ctx.getImageData(x, y, w, h).data; }
+    catch { l.color = [0,0,0]; l.bg = [255,255,255]; continue; }
+    const hist = new Map();
+    for (let i = 0; i < d.length; i += 4){
+      const k = (d[i]>>3<<10) | (d[i+1]>>3<<5) | (d[i+2]>>3);
+      let e = hist.get(k);
+      if (!e) hist.set(k, e = { n:0, r:0, g:0, b:0 });
+      e.n++; e.r += d[i]; e.g += d[i+1]; e.b += d[i+2];
+    }
+    const avg = e => [Math.round(e.r/e.n), Math.round(e.g/e.n), Math.round(e.b/e.n)];
+    let bgE = null;
+    for (const e of hist.values()) if (!bgE || e.n > bgE.n) bgE = e;
+    const bg = avg(bgE);
+    let best = bg, bd = -1;
+    for (const e of hist.values()){
+      if (e.n < 3) continue;
+      const v = avg(e), dd = (v[0]-bg[0])**2 + (v[1]-bg[1])**2 + (v[2]-bg[2])**2;
+      if (dd > bd){ bd = dd; best = v; }
+    }
+    l.bg = bg;
+    l.color = bd > 900 ? best : (bg[0]+bg[1]+bg[2] > 382 ? [0,0,0] : [255,255,255]);
+  }
+}
+/* L'italique, lui, reste indétectable : le nom interne ne le dit pas, les largeurs
+   sont identiques à celles du romain, et mesurer la pente de l'encre s'est révélé
+   faux (3 lignes droites sur 4 marquées italiques). À régler dans « Style ». */
+
+/* Position écran d'une ligne, dérivée de sa transformation PDF. */
+function screenBox(p, l){
+  const c = Math.cos(l.angle), s = Math.sin(l.angle);
+  const t = pdfjsLib.Util.transform(p.vp.transform,
+            [l.size*c, l.size*s, -l.size*s, l.size*c, l.x, l.y]);
+  const px = Math.hypot(t[2], t[3]) || l.size * scale;
+  return { left: t[4], top: t[5] - px * 0.88, w: Math.max(4, l.width * scale),
+           h: px * 1.14, px, rot: -l.angle * 180 / Math.PI };
+}
+
+const cssFont = f => f === 'Times' ? 'Times New Roman, Times, serif'
+                   : f === 'Courier' ? 'Consolas, Courier New, monospace'
+                   : 'Helvetica, Arial, sans-serif';
+const css   = c => `rgb(${c[0]},${c[1]},${c[2]})`;
+const hex   = c => '#' + c.map(v => Math.max(0, Math.min(255, v)).toString(16).padStart(2,'0')).join('');
+const unhex = s => [1,3,5].map(i => parseInt(s.substr(i,2),16));
+const pageH = p => p.pdfPage.view[3] - p.pdfPage.view[1];
+
+function drawBoxes(p){
+  p.layer.querySelectorAll('.tbox,.erase,.notext').forEach(n => n.remove());
+  // Une page sans couche de texte (scan, image) n'offre rien à cliquer : le dire,
+  // plutôt que de laisser croire que l'outil Éditer est en panne.
+  if (!p.lines.length){
+    const n = document.createElement('div');
+    n.className = 'notext';
+    n.textContent = p.ocrDone
+      ? 'OCR passé : aucun texte reconnu sur cette page. Utilise « Masquer » puis « Ajouter ».'
+      : 'Aucun texte sélectionnable : page scannée (image). Clique « OCR » pour la rendre modifiable'
+        + (OCR_OK ? '.' : ' — il faut lancer « Editeur PDF.cmd ».');
+    p.layer.append(n);
+  }
+  // zones masquées, sous le texte
+  p.erases.forEach((e, i) => {
+    const d = document.createElement('div');
+    d.className = 'erase'; d.dataset.i = i;
+    Object.assign(d.style, {
+      left: (e.x - p.pdfPage.view[0]) * scale + 'px',
+      top: (pageH(p) - (e.y - p.pdfPage.view[1]) - e.h) * scale + 'px',
+      width: e.w * scale + 'px', height: e.h * scale + 'px', background: css(e.color) });
+    if (sel?.kind === 'erase' && sel.p === p && sel.i === i) d.classList.add('sel');
+    p.layer.append(d);
+  });
+  // lignes existantes
+  p.lines.forEach(l => {
+    const b = screenBox(p, l);
+    const size = l.newSize ?? l.size;
+    const d = document.createElement('div');
+    d.className = 'tbox'; d.dataset.line = l.idx;
+    const sty = l.newStyle ?? l.style;
+    Object.assign(d.style, {
+      left: b.left + 'px', top: b.top + 'px', minWidth: b.w + 'px', height: b.h + 'px',
+      fontSize: size * scale + 'px',
+      fontFamily: cssFont(l.newFont ?? l.font),
+      fontWeight: sty.includes('B') ? '700' : '400',
+      fontStyle:  sty.includes('I') ? 'italic' : 'normal',
+      transform: b.rot ? `rotate(${b.rot}deg)` : '',
+      paddingTop: Math.max(0, (b.h - size * scale * 1.02) / 2) + 'px'
+    });
+    if (l.newText !== null){
+      d.classList.add('dirty');
+      d.textContent = l.newText;
+      d.style.color = css(l.newColor ?? l.color ?? [0,0,0]);
+      d.style.background = css(l.newBg ?? l.bg ?? [255,255,255]);
+    } else {
+      d.classList.add('ghost');
+      d.textContent = l.text;
+    }
+    if (sel?.kind === 'line' && sel.p === p && sel.l === l) d.classList.add('sel');
+    p.layer.append(d);
+  });
+  // textes ajoutés
+  p.adds.forEach((a, i) => {
+    const d = document.createElement('div');
+    d.className = 'tbox dirty'; d.dataset.add = i;
+    Object.assign(d.style, {
+      left: (a.x - p.pdfPage.view[0]) * scale + 'px',
+      top: (pageH(p) - (a.y - p.pdfPage.view[1])) * scale - a.size * scale * 0.88 + 'px',
+      fontSize: a.size * scale + 'px', fontFamily: cssFont(a.font),
+      fontWeight: a.style.includes('B') ? '700' : '400',
+      fontStyle:  a.style.includes('I') ? 'italic' : 'normal',
+      color: css(a.color), background: a.bg ? css(a.bg) : 'transparent'
+    });
+    d.textContent = a.text;
+    if (sel?.kind === 'add' && sel.p === p && sel.i === i) d.classList.add('sel');
+    p.layer.append(d);
+  });
+  p.layer.className = 'layer' + (tool === 'erase' ? ' erasing' : tool === 'add' ? ' adding' : '')
+                    + (showHl ? ' hl' : '');
+}
+
+/* ---------------- interactions ---------------- */
+function hookLayer(p){
+  p.layer.addEventListener('mousedown', e => {
+    if (tool === 'erase'){ startMarquee(p, e); return; }
+    // L'identité du bloc est relevée AVANT toute sélection : select() reconstruit
+    // les blocs, donc le nœud cliqué ne survit pas à l'appel.
+    const box = e.target.closest('.tbox');
+    const er  = e.target.closest('.erase');
+    const kind = box ? (box.dataset.line !== undefined ? 'line' : 'add') : er ? 'erase' : null;
+    const key  = box ? +(box.dataset.line ?? box.dataset.add) : er ? +er.dataset.i : -1;
+    commitPending();
+
+    if (tool === 'add' && !box){
+      const r = p.layer.getBoundingClientRect();
+      const [ux, uy] = pdfjsLib.Util.applyInverseTransform(
+        [e.clientX - r.left, e.clientY - r.top], p.vp.transform);
+      p.adds.push({ x: ux, y: uy, size: 12, color: [0,0,0], bg: null,
+                    font: 'Helvetica', style: '', text: 'Nouveau texte' });
+      refreshCount();
+      select({ kind: 'add', p, i: p.adds.length - 1 });
+      edit(p, 'add', p.adds.length - 1);
+      return;
+    }
+    if (kind === 'line'){
+      e.preventDefault();
+      select({ kind: 'line', p, l: p.lines[key] });
+      edit(p, 'line', key);
+    } else if (kind === 'add'){
+      e.preventDefault();
+      select({ kind: 'add', p, i: key });
+      edit(p, 'add', key);
+    } else if (kind === 'erase'){
+      select({ kind: 'erase', p, i: key });
+    } else {
+      select(null);
+    }
+  });
+}
+
+/* Édition sur place : le bloc devient contenteditable et masque l'original.
+   Le nœud est retrouvé ici, après le dernier drawBoxes(), jamais passé en argument. */
+function edit(p, kind, key){
+  const box = p.layer.querySelector(kind === 'line' ? `[data-line="${key}"]` : `[data-add="${key}"]`);
+  if (!box || box.isContentEditable) return;
+  const s = sel;
+  if (kind === 'line'){
+    const l = p.lines[key];
+    box.classList.remove('ghost');
+    box.textContent = l.newText ?? l.text;
+    box.style.color = css(l.newColor ?? l.color ?? [0,0,0]);
+    box.style.background = css(l.newBg ?? l.bg ?? [255,255,255]);
+  }
+  box.contentEditable = 'true';
+  box.focus();
+  const r = document.createRange(); r.selectNodeContents(box);
+  const g = getSelection(); g.removeAllRanges(); g.addRange(r);
+
+  const commit = () => {
+    box.contentEditable = 'false';
+    const txt = box.innerText.replace(/ /g, ' ').replace(/\n+$/, '').replace(/\n/g, ' ');
+    if (s.kind === 'line'){
+      s.l.newText = (txt === s.l.orig) ? null : txt;
+    } else if (s.p.adds[s.i]){
+      if (!txt.trim()){ s.p.adds.splice(s.i, 1); sel = null; }
+      else s.p.adds[s.i].text = txt;
+    }
+    drawBoxes(s.p); refreshCount(); fillInspector();
+  };
+  // Une saisie en cours doit être validée avant tout redessin : retirer un nœud
+  // focalisé ne déclenche pas « blur » de façon fiable.
+  editing = { commit };
+  box.addEventListener('blur', () => {
+    if (editing?.commit === commit) editing = null;
+    commit();
+  }, { once: true });
+  box.addEventListener('keydown', ev => {
+    if (ev.key === 'Enter' && !ev.shiftKey){ ev.preventDefault(); box.blur(); }
+    if (ev.key === 'Escape'){ ev.preventDefault(); box.blur(); }
+  });
+}
+
+function startMarquee(p, e){
+  const r = p.layer.getBoundingClientRect();
+  const x0 = e.clientX - r.left, y0 = e.clientY - r.top;
+  const m = document.createElement('div'); m.className = 'marquee'; p.layer.append(m);
+  const mv = ev => {
+    const x = ev.clientX - r.left, y = ev.clientY - r.top;
+    Object.assign(m.style, { left: Math.min(x,x0)+'px', top: Math.min(y,y0)+'px',
+                             width: Math.abs(x-x0)+'px', height: Math.abs(y-y0)+'px' });
+  };
+  const up = ev => {
+    document.removeEventListener('mousemove', mv);
+    document.removeEventListener('mouseup', up);
+    m.remove();
+    const x1 = ev.clientX - r.left, y1 = ev.clientY - r.top;
+    if (Math.abs(x1-x0) < 4 || Math.abs(y1-y0) < 4) return;
+    const [ax, ay] = pdfjsLib.Util.applyInverseTransform([Math.min(x0,x1), Math.max(y0,y1)], p.vp.transform);
+    const [bx, by] = pdfjsLib.Util.applyInverseTransform([Math.max(x0,x1), Math.min(y0,y1)], p.vp.transform);
+    let color = [255,255,255];
+    if (p.rendered){
+      try {
+        const px = p.canvas.getContext('2d', { willReadFrequently: true })
+                    .getImageData(Math.round(Math.min(x0,x1)*DPR), Math.round(Math.min(y0,y1)*DPR), 1, 1).data;
+        color = [px[0], px[1], px[2]];
+      } catch {}
+    }
+    p.erases.push({ x: ax, y: ay, w: bx-ax, h: by-ay, color });
+    drawBoxes(p); refreshCount();
+    select({ kind: 'erase', p, i: p.erases.length - 1 });
+  };
+  document.addEventListener('mousemove', mv);
+  document.addEventListener('mouseup', up);
+}
+
+document.addEventListener('keydown', e => {
+  const a = document.activeElement;
+  if (a?.isContentEditable || /INPUT|TEXTAREA|SELECT/.test(a?.tagName || '')) return;
+  if (e.key === 'Escape') select(null);
+  if ((e.key === 'Delete' || e.key === 'Backspace') && sel){ e.preventDefault(); removeSel(); }
+});
+
+/* ---------------- outils / zoom ---------------- */
+function setTool(t){
+  tool = t;
+  ['edit','add','erase'].forEach(k => $('tool-'+k).classList.toggle('on', k === t));
+  pages.forEach(drawBoxes);
+}
+$('hl').onclick = () => {
+  showHl = !showHl;
+  $('hl').classList.toggle('on', showHl);
+  pages.forEach(drawBoxes);
+};
+$('tool-edit').onclick  = () => setTool('edit');
+$('tool-add').onclick   = () => setTool('add');
+$('tool-erase').onclick = () => setTool('erase');
+
+function setScale(s){
+  scale = Math.min(4, Math.max(0.4, +s.toFixed(2)));
+  $('zoom-lbl').textContent = Math.round(scale * 100) + '%';
+  pages.forEach(p => { layout(p); render(p); });
+}
+$('zoom-in').onclick  = () => setScale(scale * 1.25);
+$('zoom-out').onclick = () => setScale(scale / 1.25);
+
+/* ---------------- OCR des pages scannées ----------------
+   Tesseract a besoin d'un Worker et de lire ses données de langue : depuis un
+   file:// Chrome refuse les deux, d'où le serveur local (« Editeur PDF.cmd »). */
+const OCR_OK = /^https?:$/.test(location.protocol) && typeof Tesseract !== 'undefined';
+const OCR_SCALE = 3;            // ~216 ppp, assez pour un scan courant
+let ocrWorker = null, ocrOn = null;
+
+if (!OCR_OK) $('ocr').title = "L'OCR demande le serveur local : lance « Editeur PDF.cmd »";
+
+async function getOcrWorker(){
+  if (ocrWorker) return ocrWorker;
+  toast('Chargement du moteur OCR…', 60000);
+  ocrWorker = await Tesseract.createWorker('fra', 1, {
+    workerPath: 'vendor/tesseract-worker.min.js',
+    corePath:   'vendor/',
+    langPath:   'vendor/lang',
+    gzip: true,
+    logger: m => { if (ocrOn && m.status === 'recognizing text') ocrOn(m.progress); }
+  });
+  return ocrWorker;
+}
+
+async function ocrPage(worker, p){
+  const vp = p.pdfPage.getViewport({ scale: OCR_SCALE });
+  const c = document.createElement('canvas');
+  c.width = Math.round(vp.width); c.height = Math.round(vp.height);
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+  await p.pdfPage.render({ canvasContext: ctx, viewport: vp }).promise;
+
+  const { data } = await worker.recognize(c, {}, { blocks: true });
+  const inv = (x, y) => pdfjsLib.Util.applyInverseTransform([x, y], vp.transform);
+  const out = [];
+  for (const blk of data.blocks || [])
+    for (const par of blk.paragraphs || [])
+      for (const ln of par.lines || []){
+        const txt = (ln.text || '').replace(/\s+/g, ' ').trim();
+        if (!txt || (ln.confidence ?? 0) < 40) continue;
+        const bb = ln.bbox;
+        const [xa, ya] = inv(bb.x0, bb.y0);
+        const [xb, yb] = inv(bb.x1, bb.y1);
+        const wPt = xb - xa, hPt = ya - yb;
+        if (wPt < 2 || hPt < 2) continue;
+        // Le cadre d'une ligne va du haut des hampes au bas des jambages : la taille
+        // n'en découle qu'approximativement, donc on la recale sur la largeur mesurée.
+        let size = Math.max(3, hPt * 0.92);
+        const w0 = widthOf(txt, 'Helvetica', '', size);
+        if (w0 > 0) size = Math.max(3, Math.min(size * 1.6, size * wPt / w0));
+        // Ligne de base : celle de Tesseract si elle tombe dans le cadre, sinon estimée.
+        const bY = ln.baseline && ln.baseline.has_baseline
+                 && ln.baseline.y0 > bb.y0 && ln.baseline.y0 <= bb.y1 + (bb.y1 - bb.y0) * 0.3
+                 ? ln.baseline.y0 : bb.y1 - (bb.y1 - bb.y0) * 0.18;
+        const [x, y] = inv(bb.x0, bY);
+        out.push({ text: txt, orig: txt, x, y, width: wPt, size, angle: 0,
+                   fontName: 'OCR', font: 'Helvetica', style: '', bold: false, italic: false,
+                   color: null, bg: null, ocr: true, idx: out.length,
+                   newText: null, newSize: null, newColor: null, newBg: null,
+                   newFont: null, newStyle: null });
+      }
+  return out;
+}
+
+$('ocr').onclick = async () => {
+  const todo = pages.filter(p => !p.lines.length && !p.ocrDone);
+  if (!todo.length) return toast('Rien à reconnaître : ces pages ont déjà du texte.');
+  $('ocr').disabled = true;
+  let total = 0;
+  try {
+    await metReady;
+    const w = await getOcrWorker();
+    for (const p of todo){
+      ocrOn = pc => toast(`OCR page ${p.num} — ${Math.round(pc * 100)} %`, 60000);
+      ocrOn(0);
+      p.lines = await ocrPage(w, p);
+      p.ocrDone = true;
+      ocrOn = null;
+      total += p.lines.length;
+      if (p.rendered) sampleColors(p, p.canvas.getContext('2d', { willReadFrequently: true }));
+      drawBoxes(p);
+    }
+    toast(total ? `${total} ligne(s) reconnue(s) — clique pour modifier.`
+                : 'Aucun texte reconnu sur ces pages.', 4000);
+  } catch (e) {
+    console.error(e);
+    toast('OCR impossible : ' + e.message, 6000);
+  }
+  ocrOn = null;
+  $('ocr').disabled = !OCR_OK;
+};
+
+/* ---------------- inspecteur ---------------- */
+function commitPending(){
+  if (!editing) return;
+  const c = editing.commit;
+  editing = null;
+  c();
+}
+
+function select(s){
+  commitPending();
+  sel = s;
+  pages.forEach(drawBoxes);
+  fillInspector();
+}
+
+function current(){
+  if (!sel) return null;
+  if (sel.kind === 'line'){
+    const l = sel.l;
+    return { text: l.newText ?? l.text, font: l.newFont ?? l.font, style: l.newStyle ?? l.style,
+             size: l.newSize ?? l.size, color: l.newColor ?? l.color ?? [0,0,0],
+             bg: l.newBg ?? l.bg ?? [255,255,255] };
+  }
+  if (sel.kind === 'add'){
+    const a = sel.p.adds[sel.i];
+    return a && { text: a.text, font: a.font, style: a.style, size: a.size,
+                  color: a.color, bg: a.bg ?? [255,255,255] };
+  }
+  const e = sel.p.erases[sel.i];
+  return e && { erase: true, bg: e.color };
+}
+
+const TEXT_ROWS = ['r-text','r-font','r-style','r-size','r-color'];
+function fillInspector(){
+  const c = current();
+  $('fields').style.display = c ? 'block' : 'none';
+  $('nosel').style.display  = c ? 'none' : 'block';
+  if (!c) return;
+  const isText = !c.erase;
+  TEXT_ROWS.forEach(id => $(id).style.display = isText ? '' : 'none');
+  $('f-text').style.display = isText ? '' : 'none';
+  $('f-fit').style.display  = sel.kind === 'line' ? '' : 'none';
+  $('f-bg').value = hex(c.bg);
+  if (!isText){
+    $('f-del').textContent = 'Supprimer';
+    $('f-info').textContent = `Page ${sel.p.num} · zone masquée (${Math.round(c.bg[0])},${Math.round(c.bg[1])},${Math.round(c.bg[2])})`;
+    return;
+  }
+  $('f-text').value  = c.text;
+  $('f-font').value  = c.font;
+  $('f-style').value = c.style;
+  $('f-size').value  = Math.round(c.size * 10) / 10;
+  $('f-color').value = hex(c.color);
+  $('f-del').textContent = sel.kind === 'add' ? 'Supprimer' : 'Rétablir';
+
+  if (sel.kind === 'add'){
+    $('f-info').textContent = `Page ${sel.p.num} · texte ajouté`;
+  } else {
+    const w = widthOf(c.text, c.font, c.style, c.size);
+    const over = sel.l.width > 0 && w > sel.l.width + 0.5;
+    $('f-info').innerHTML = `Page ${sel.p.num} · police d'origine : ${sel.l.fontName || '?'}<br>`
+      + `largeur ${w.toFixed(0)} pt / ${sel.l.width.toFixed(0)} pt d'origine`
+      + (over ? ` <span class="over">— débordement, « Ajuster » le réduit</span>` : '');
+  }
+}
+
+function apply(fn){
+  if (!sel) return;
+  if (sel.kind === 'line') fn(sel.l, 'line');
+  else if (sel.kind === 'add') fn(sel.p.adds[sel.i], 'add');
+  else fn(sel.p.erases[sel.i], 'erase');
+  drawBoxes(sel.p); refreshCount();
+}
+/* Toute retouche de style vaut modification : le texte d'origine devra être recouvert. */
+const setLine = (l, k, v) => { if (l.newText === null) l.newText = l.text; l['new'+k] = v; };
+
+$('f-text').oninput = () => { apply((o,k) => k === 'line'
+  ? (o.newText = $('f-text').value) : (o.text = $('f-text').value)); fillInspector(); };
+$('f-size').oninput = () => { apply((o,k) => k === 'line'
+  ? setLine(o,'Size', +$('f-size').value) : (o.size = +$('f-size').value)); fillInspector(); };
+$('f-font').onchange = () => { apply((o,k) => k === 'line'
+  ? setLine(o,'Font', $('f-font').value) : (o.font = $('f-font').value)); fillInspector(); };
+$('f-style').onchange = () => { apply((o,k) => k === 'line'
+  ? setLine(o,'Style', $('f-style').value) : (o.style = $('f-style').value)); fillInspector(); };
+$('f-color').oninput = () => apply((o,k) => k === 'line'
+  ? setLine(o,'Color', unhex($('f-color').value)) : (o.color = unhex($('f-color').value)));
+$('f-bg').oninput = () => apply((o,k) => k === 'line'
+  ? setLine(o,'Bg', unhex($('f-bg').value))
+  : k === 'add' ? (o.bg = unhex($('f-bg').value)) : (o.color = unhex($('f-bg').value)));
+
+$('f-fit').onclick = () => {
+  if (sel?.kind !== 'line') return;
+  const l = sel.l, c = current();
+  const w = widthOf(c.text, c.font, c.style, c.size);
+  if (!l.width || w <= l.width) return toast('Le texte tient déjà dans la largeur d\'origine.');
+  setLine(l, 'Size', Math.max(2, Math.floor(c.size * l.width / w * 10) / 10));
+  drawBoxes(sel.p); fillInspector();
+  toast('Taille ramenée à ' + l.newSize + ' pt');
+};
+$('f-del').onclick = removeSel;
+
+function removeSel(){
+  if (!sel) return;
+  const p = sel.p;
+  if (sel.kind === 'line'){
+    const l = sel.l;
+    l.newText = l.newSize = l.newColor = l.newBg = l.newFont = l.newStyle = null;
+    drawBoxes(p); fillInspector();
+  } else if (sel.kind === 'add'){
+    p.adds.splice(sel.i, 1); select(null);
+  } else {
+    p.erases.splice(sel.i, 1); select(null);
+  }
+  refreshCount();
+}
+
+$('reset').onclick = () => {
+  pages.forEach(p => {
+    p.lines.forEach(l => { l.newText = l.newSize = l.newColor = l.newBg = l.newFont = l.newStyle = null; });
+    p.adds = []; p.erases = [];
+  });
+  select(null); refreshCount(); toast('Modifications annulées');
+};
+
+function refreshCount(){
+  let n = 0;
+  pages.forEach(p => { n += p.lines.filter(l => l.newText !== null).length + p.adds.length + p.erases.length; });
+  $('count').textContent = n ? n + ' modification' + (n > 1 ? 's' : '') : '';
+  $('reset').disabled = !n;
+}
+
+/* ---------------- enregistrement ---------------- */
+$('save').onclick = async () => {
+  $('save').disabled = true; $('save').textContent = 'Génération…';
+  try {
+    const doc = await PDFDocument.load(originalBytes);
+    const cache = {};
+    const embed = async (fam, sty) => {
+      const k = fam + sty;
+      return cache[k] || (cache[k] = await doc.embedFont(FONTS[fam][sty] || FONTS[fam]['']));
+    };
+
+    for (const p of pages){
+      const page = doc.getPage(p.num - 1);
+
+      for (const e of p.erases)
+        page.drawRectangle({ x: e.x, y: e.y, width: e.w, height: e.h,
+                             color: rgb(e.color[0]/255, e.color[1]/255, e.color[2]/255) });
+
+      for (const l of p.lines){
+        if (l.newText === null) continue;
+        const size = l.newSize  ?? l.size;
+        const col  = l.newColor ?? l.color ?? [0,0,0];
+        const bgc  = l.newBg    ?? l.bg    ?? [255,255,255];
+        const f    = await embed(l.newFont ?? l.font, l.newStyle ?? l.style);
+        const txt  = encFor(f, l.newText);
+        const rot  = degrees(l.angle * 180 / Math.PI);
+        const pad  = l.size * 0.08;
+        const wNew = txt ? f.widthOfTextAtSize(txt, size) : 0;
+        // 1) recouvrir l'ancien texte avec la couleur de fond relevée sur le rendu
+        page.drawRectangle({
+          x: l.x - pad, y: l.y - l.size * 0.26,
+          width: Math.max(l.width, wNew) + pad * 2, height: l.size * 1.16,
+          rotate: rot, color: rgb(bgc[0]/255, bgc[1]/255, bgc[2]/255)
+        });
+        // 2) réécrire sur la même ligne de base
+        if (txt) page.drawText(txt, { x: l.x, y: l.y, size, font: f, rotate: rot,
+                                      color: rgb(col[0]/255, col[1]/255, col[2]/255) });
+      }
+
+      for (const a of p.adds){
+        const f = await embed(a.font, a.style);
+        const txt = encFor(f, a.text);
+        if (!txt.trim()) continue;
+        if (a.bg) page.drawRectangle({
+          x: a.x - a.size * 0.08, y: a.y - a.size * 0.26,
+          width: f.widthOfTextAtSize(txt, a.size) + a.size * 0.16, height: a.size * 1.16,
+          color: rgb(a.bg[0]/255, a.bg[1]/255, a.bg[2]/255) });
+        page.drawText(txt, { x: a.x, y: a.y, size: a.size, font: f,
+                             color: rgb(a.color[0]/255, a.color[1]/255, a.color[2]/255) });
+      }
+    }
+
+    const out = await doc.save();
+    const url = URL.createObjectURL(new Blob([out], { type: 'application/pdf' }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = ($('fname').textContent.replace(/\.pdf$/i, '') || 'document') + '-modifie.pdf';
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    toast('PDF enregistré');
+  } catch (err) {
+    console.error(err);
+    toast('Erreur : ' + err.message, 5000);
+  }
+  $('save').disabled = false; $('save').textContent = 'Enregistrer le PDF';
+};
+</script>
+</body>
+</html>
