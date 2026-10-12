@@ -337,6 +337,20 @@ function accueilTraduit(lang){
     ]
   };
 
+  const svgI = ico => `<svg viewBox="0 0 24 24">${ico}</svg>`;
+  const ligneOutil = k => {
+    const x = lang.outils[k];
+    return `<a class="outil" href="${lang.prefixe}/${x.slug}/">`
+      + `<span class="ic ${x.couleur}">${svgI(x.ico)}</span>`
+      + `<span><b>${esc(x.carte)}</b><span>${esc(x.resume)}</span></span>`
+      + `<span class="fleche" aria-hidden="true">›</span></a>`;
+  };
+  const etoile = '<svg viewBox="0 0 24 24"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg>';
+  const listePied = cles => cles.map(k =>
+    `<li><a href="${lang.prefixe}/${lang.outils[k].slug}/">${esc(lang.outils[k].carte)}</a></li>`).join('');
+  const GLYPHE = '<span class="glyphe"><svg viewBox="0 0 24 24"><path d="M6 6h12M6 12h8M6 18h5"/></svg></span>';
+  const editeurFr = `${SITE}/`;
+
   return `<!doctype html>
 <html lang="${ui.htmlLang}">
 <head>
@@ -353,79 +367,203 @@ ${hreflangs(null)}
 <meta property="og:description" content="${esc(a.meta)}">
 <meta property="og:url" content="${url}">
 <meta property="og:image" content="${SITE}/apercu-editeur.png">
+<meta property="og:image:width" content="1360">
+<meta property="og:image:height" content="850">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="${SITE}/apercu-editeur.png">
 <link rel="icon" href="${FAVICON}">
-<link rel="stylesheet" href="/style-outil.css">
+<link rel="stylesheet" href="/style-accueil.css">
+<style>
+  /* style-accueil.css attend que #home soit le conteneur qui défile, comme sur la
+     page française : sans cette mise en page, le contenu déborde sans ascenseur. */
+  html,body{height:100%;margin:0}
+  body{display:flex;flex-direction:column;overflow:hidden;background:#FBF9F5}
+</style>
 <script type="application/ld+json">${JSON.stringify(jsonld)}</script>
 </head>
 <body>
+<div id="home">
 
-<div class="hnav"><div class="in">
-  <a class="brand" href="${lang.prefixe}/"><i>${LOGO}</i>Éditeur PDF</a>
-  <nav>
-    <a href="#outils">${esc(ui.navOutils)}</a>
-    <a href="#confiance">${esc(ui.navConfiance)}</a>
-    <a href="#questions">${esc(ui.navQuestions)}</a>
-    ${selecteurLangue(lang, null)}
-  </nav>
-</div></div>
+  <div class="hnav" id="hnav"><div class="in">
+    <a class="marque" href="${lang.prefixe}/">${GLYPHE}Éditeur PDF</a>
+    <nav>
+      <a href="#outils">${esc(ui.navOutils)}</a>
+      <a href="#confiance">${esc(ui.navConfiance)}</a>
+      <a href="#questions">${esc(ui.navQuestions)}</a>
+      ${selecteurLangue(lang, null)}
+      <a class="cta-nav" href="${lang.prefixe}/${lang.outils['pdf-word'].slug}/">${esc(a.ctaOutils)}</a>
+    </nav>
+  </div></div>
 
-<header class="tete"><div class="sec">
-  <p style="margin:0 0 6px"><span class="pastille"><b></b>${esc(a.badge)}</span></p>
-  <h1>${esc(a.h1a)} ${esc(a.h1b)} ${esc(a.h1c)}</h1>
-  <p class="chapo">${esc(a.accroche)} <strong>${esc(a.accrocheFort)}</strong>${esc(a.accrocheFin)}</p>
-  <p class="apres" style="margin-top:22px">
-    <strong>${esc(a.demoAvant)} <s>${esc(a.demoAvantDate)}</s> → ${esc(a.demoApresDate)}</strong><br>
-    ${esc(a.legende)}</p>
-  <p style="margin-top:26px"><a class="dl" style="display:inline-block" href="#outils">${esc(a.ctaOutils)}</a></p>
-  <img src="/apercu-editeur.png" width="1360" height="850" loading="lazy" decoding="async"
-       alt="${esc(a.legende)}" style="width:100%;height:auto;border-radius:14px;margin-top:26px;box-shadow:0 20px 50px -20px rgba(20,26,36,.45)">
-  <p class="fil" style="margin-top:12px">${esc(a.noteEditeur)}</p>
-</div></header>
+  <section class="hero"><div class="in">
+    <div>
+      <span class="badge"><b></b>${esc(a.badge)}</span>
+      <h1>${esc(a.h1a)}<br>
+        <span class="souligne">${esc(a.h1b)}<svg viewBox="0 0 200 12" preserveAspectRatio="none"
+          aria-hidden="true"><path d="M3 8c38-5 72-6 104-4 24 1 54 4 90 1"/></svg></span>
+        ${esc(a.h1c)}</h1>
+      <p class="accroche">${esc(a.accroche)} <strong>${esc(a.accrocheFort)}</strong>${esc(a.accrocheFin)}</p>
 
-<main class="sec corps">
-  <h2 id="outils">${esc(a.titreOutils)}</h2>
-  <p>${esc(a.introOutils)}</p>
-  ${base.GROUPES.map((gr, i) => `
-  <h3 style="margin:30px 0 10px">${esc(lang.groupes[i])}</h3>
-  <div class="autres">
-    ${gr.cles.map(carte).join('\n    ')}
-  </div>`).join('')}
-  <h3 style="margin:30px 0 10px">${esc(ui.plan.autres)}</h3>
-  <div class="autres">
-    ${carte('fusion')}
-  </div>
+      <p class="demo">
+        <span class="ligne">${esc(a.demoAvant)} <s>${esc(a.demoAvantDate)}</s></span>
+        <span class="fleche-demo" aria-hidden="true">
+          <svg viewBox="0 0 40 12"><path d="M1 6h34m0 0-5-4m5 4-5 4"/></svg></span>
+        <span class="ligne neuve">${esc(a.demoApres)} <b>${esc(a.demoApresDate)}</b></span>
+      </p>
 
-  <h2 id="confiance">${esc(a.titreConfiance)}</h2>
-  <p>${a.introConfiance}</p>
-  <div class="deux">
-    <div class="bloc non">
-      <h3>${esc(a.euxTitre)}</h3>
-      <ul>${a.eux.map(t => `<li>${CROIX}<span>${t}</span></li>`).join('')}</ul>
+      <a class="depot" href="#outils">
+        <span class="ic"><svg viewBox="0 0 24 24"><path d="M4 7h7a3 3 0 0 1 3 3v4a3 3 0 0 0 3 3h3"/><path d="m17 14 3 3-3 3"/></svg></span>
+        <span>
+          <span class="t">${esc(a.carteT)}</span>
+          <span class="s">${esc(a.carteS)}</span>
+        </span>
+        <span class="bouton">${esc(a.ctaOutils)}</span>
+      </a>
+
+      <div class="gages">
+        <span><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg>${esc(a.gage1)}</span>
+        <span><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg>${esc(a.gage2)}</span>
+        <span><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg>${esc(a.gage3)}</span>
+      </div>
     </div>
-    <div class="bloc oui">
-      <h3>${esc(a.nousTitre)}</h3>
-      <ul>${a.nous.map(t => `<li>${COCHE}<span>${t}</span></li>`).join('')}</ul>
+
+    <div>
+      <div class="fenetre">
+        <div class="barre">
+          <span class="pt"></span><span class="pt"></span><span class="pt"></span>
+          <span class="url">editeur-pdf.netlify.app</span>
+        </div>
+        <img src="/apercu-editeur.png" width="1360" height="850" alt="${esc(a.legende)}" loading="eager" decoding="async">
+      </div>
+      <p class="legende">${esc(a.legende)}</p>
     </div>
-  </div>
+  </div></section>
 
-  <h2>${esc(ui.gratuitTitre)}</h2>
-  <div class="confiance">
-    <p style="margin:0">${esc(ui.gratuitP1)}</p>
-    <p style="margin:12px 0 0"><b>${esc(ui.gratuitP2fort)}</b>${esc(ui.gratuitP2)}</p>
-  </div>
+  <div class="preuve"><div class="in">
+    <span><b>${esc(a.preuve1)}</b></span>
+    <span>${esc(a.preuve2)}</span>
+    <span>${esc(a.preuve3a)} <a href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">${esc(a.preuve3b)}</a>.</span>
+  </div></div>
 
-  <h2 id="questions">${esc(a.titreQuestions)}</h2>
-  ${a.faq.map((f, i) => `<details${i === 0 ? ' open' : ''}>
-    <summary>${esc(f.q)}</summary>
-    <p>${esc(f.r)}</p>
-  </details>`).join('\n  ')}
-</main>
+  <section class="bloc-sec" id="fonctions"><div class="sec">
+    <div class="entete">
+      <p class="surtitre">${esc(a.surtitreEditeur)}</p>
+      <h2 class="titre">${esc(a.titreEditeur)}</h2>
+      <p class="intro">${esc(a.introEditeur)}</p>
+    </div>
+    <div class="fonctions">
+      <div class="fonction"><span class="ic i-rouge">${svgI(base.ICO.crayon)}</span>
+        <div><h3>${esc(a.f1t)}</h3><p>${esc(a.f1d)}</p></div></div>
+      <div class="fonction"><span class="ic i-violet">${svgI(base.ICO.loupe)}</span>
+        <div><h3>${esc(a.f2t)}</h3><p>${esc(a.f2d)}</p></div></div>
+      <div class="fonction"><span class="ic i-vert"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span>
+        <div><h3>${esc(a.f3t)}</h3><p>${esc(a.f3d)}</p></div></div>
+      <div class="fonction"><span class="ic i-ambre"><svg viewBox="0 0 24 24"><path d="M3 5h18v14H3z"/><path d="M7 9h10v6H7z"/></svg></span>
+        <div><h3>${esc(a.f4t)}</h3><p>${esc(a.f4d)}</p></div></div>
+    </div>
+    <p class="intro" style="margin-top:22px"><em>${esc(a.noteEditeur)}</em>
+       <a href="${editeurFr}">${esc(ui.plan.editeur)} →</a></p>
+  </div></section>
 
-<div class="pied"><div class="in">
-  <span>${esc(ui.piedPhrase)}</span>
-  <a href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">${esc(ui.codeSource)}</a>
-</div></div>
+  <section class="bloc-sec alt" id="outils"><div class="sec">
+    <div class="entete">
+      <p class="surtitre">${esc(a.surtitreOutils)}</p>
+      <h2 class="titre">${esc(a.titreOutils)}</h2>
+      <p class="intro">${esc(a.introOutils)}</p>
+    </div>
+    <div class="phares">
+      <a class="phare" href="${editeurFr}"><span class="ic i-rouge">${svgI(base.ICO.crayon)}</span>
+        <span><b>${esc(a.phare1t)}</b><span>${esc(a.phare1d)}</span></span></a>
+      <a class="phare" href="${lang.prefixe}/${lang.outils.fusion.slug}/"><span class="ic i-bleu">${svgI(base.ICO.fusion)}</span>
+        <span><b>${esc(a.phare2t)}</b><span>${esc(a.phare2d)}</span></span></a>
+    </div>
+    <div class="outils-grille">
+      ${base.GROUPES.map((gr, i) =>
+        `<div class="colonne${gr.cles.length > 6 ? ' large' : ''}">`
+        + `<h3>${esc(lang.groupes[i])}<em>${gr.cles.length} ${esc(a.outilsCompte)}</em></h3>`
+        + `<div class="rangee">${gr.cles.map(ligneOutil).join('')}</div></div>`).join('\n      ')}
+    </div>
+  </div></section>
+
+  <section class="bloc-sec sombre" id="confiance"><div class="sec">
+    <div class="entete">
+      <p class="surtitre">${esc(a.surtitreConfiance)}</p>
+      <h2 class="titre">${esc(a.titreConfiance)}</h2>
+      <p class="intro">${a.introConfiance}</p>
+    </div>
+    <div class="face">
+      <div class="eux"><h3>${esc(a.euxTitre)}</h3>
+        <ul>${a.eux.map(t => `<li>${CROIX}<span>${t}</span></li>`).join('')}</ul></div>
+      <div class="nous"><h3>${esc(a.nousTitre)}</h3>
+        <ul>${a.nous.map(t => `<li>${COCHE}<span>${t}</span></li>`).join('')}</ul></div>
+    </div>
+  </div></section>
+
+  <section class="bloc-sec" id="questions"><div class="sec">
+    <div class="entete">
+      <p class="surtitre">${esc(a.surtitreQuestions)}</p>
+      <h2 class="titre">${esc(a.titreQuestions)}</h2>
+    </div>
+    <div class="faq">
+      ${a.faq.map((f, i) => `<details${i === 0 ? ' open' : ''}>
+        <summary>${esc(f.q)}</summary>
+        <p>${esc(f.r)}</p>
+      </details>`).join('\n      ')}
+    </div>
+  </div></section>
+
+  <section class="final"><div class="sec">
+    <h2 class="titre">${esc(a.finalTitre)}</h2>
+    <p class="intro" style="margin:12px auto 0">${esc(a.finalIntro)}</p>
+    <a class="bouton" href="#outils">${esc(a.ctaOutils)}</a>
+    <p class="sous">${esc(a.finalSous)}</p>
+  </div></section>
+
+  <footer class="pied">
+    <div class="rappel">
+      <p class="mot">${esc(a.rappelA)}<br><span>${esc(a.rappelB)}</span></p>
+      <a class="bouton" href="${editeurFr}">${esc(a.rappelBouton)}</a>
+    </div>
+    <div class="cols">
+      <div>
+        <span class="marque">${GLYPHE}Éditeur PDF</span>
+        <p class="pitch">${esc(a.piedPitch)}</p>
+        <div class="sceau">
+          <svg viewBox="0 0 24 24"><path d="M12 3 5 6v6c0 4.2 2.9 7.9 7 9 4.1-1.1 7-4.8 7-9V6z"/><path d="m9 12 2 2 4-4"/></svg>
+          <span><b>${esc(a.sceauTitre)}</b>${esc(a.sceauTexte)}</span>
+        </div>
+        <a class="etoiles" href="https://g.page/r/CfBfIXTvKKmwEAE/review" target="_blank" rel="noopener">
+          ${etoile}${etoile}${etoile}${etoile}${etoile}<em>${esc(ui.avisLien)}</em></a>
+      </div>
+      <div><h4>${esc(lang.groupes[0])}</h4><ul>${listePied(base.GROUPES[0].cles)}</ul></div>
+      <div><h4>${esc(lang.groupes[1])}</h4><ul>${listePied(base.GROUPES[1].cles)}
+        <li><a href="${lang.prefixe}/${lang.outils.fusion.slug}/">${esc(ui.plan.fusion)}</a></li></ul></div>
+      <div class="double"><h4>${esc(lang.groupes[2])}</h4><ul>${listePied(base.GROUPES[2].cles)}</ul></div>
+      <div><h4>${esc(a.piedProjet)}</h4><ul>
+        <li><a href="#fonctions">${esc(a.piedEditeur)}</a></li>
+        <li><a href="#confiance">${esc(a.piedConfidentialite)}</a></li>
+        <li><a href="#questions">${esc(a.piedQuestions)}</a></li>
+        <li><a href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">${esc(ui.codeSource)}</a></li>
+      </ul></div>
+    </div>
+    <div class="bas">
+      <span>${esc(ui.piedPhrase)}</span>
+      <a href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">${esc(ui.codeSource)}</a>
+      <span class="fin">
+        <svg viewBox="0 0 24 24"><path d="M12 3 5 6v6c0 4.2 2.9 7.9 7 9 4.1-1.1 7-4.8 7-9V6z"/></svg>
+        ${esc(a.piedFin)}
+      </span>
+    </div>
+  </footer>
+</div>
+<script>
+  // Le filet sous la barre n'apparaît qu'une fois la page défilée. C'est #home
+  // qui défile, pas la fenêtre : l'écouteur doit donc être posé sur lui.
+  (function(){
+    const z = document.getElementById('home'), n = document.getElementById('hnav');
+    z.addEventListener('scroll', () => n.classList.toggle('colle', z.scrollTop > 8), { passive: true });
+  })();
+</script>
 </body>
 </html>
 `;

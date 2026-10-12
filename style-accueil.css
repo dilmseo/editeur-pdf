@@ -1,0 +1,291 @@
+/* Styles de la page d'accueil, partagés par toutes les langues.
+   Tout est porté par #home : l'éditeur sombre et l'accueil clair cohabitent dans
+   le même document sans se marcher dessus. */
+
+  /* ================= page d'accueil =================
+     Palette prise au métier : un papier légèrement chaud, une encre presque noire,
+     un bleu pour agir et un rouge de correcteur pour les marques. L'éditeur, lui,
+     reste sombre : c'est un plan de travail, le document doit y être la seule
+     chose lumineuse. */
+  @font-face{
+    font-family:'Instrument Serif';
+    src:url('vendor/instrument-serif.woff2') format('woff2');
+    font-weight:400;font-style:normal;font-display:swap;
+  }
+  body:not(.loaded) > header, body:not(.loaded) > main{display:none}
+  body.loaded #home{display:none}
+
+  #home{
+    --papier:#FBF9F5; --papier2:#F4F1EA; --encre:#141A24; --encre2:#4C5666;
+    --bleu:#1B4ACB; --bleu-clair:#E9EEFC; --rouge:#CE4A32; --trait:#E4DFD4;
+    flex:1;overflow:hidden auto;background:var(--papier);color:var(--encre);
+    scroll-behavior:smooth;font:16px/1.65 "Segoe UI",system-ui,-apple-system,sans-serif}
+  #home section{scroll-margin-top:72px}
+  /* Un « #home a » coloré écraserait la couleur de chaque composant — bouton,
+     marque, pied de page — à cause de l'identifiant. Les liens héritent donc par
+     défaut, et seuls les liens de texte courant sont colorés, au même niveau. */
+  #home a{color:inherit;text-decoration:none}
+  #home p a, #home .intro a, #home .preuve a, #home .faq p a,
+  #home .legende a{color:var(--bleu);text-decoration:underline;text-underline-offset:3px}
+  #home p a:hover, #home .preuve a:hover{color:#1740B4}
+  .sec{max-width:1120px;margin:0 auto;padding:0 28px}
+  .titre{font-family:'Instrument Serif',Georgia,serif;font-weight:400;letter-spacing:-.01em;
+         line-height:1.08;color:var(--encre)}
+  h2.titre{font-size:clamp(2rem,4vw,2.9rem);margin:0 0 10px}
+  .surtitre{font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+            color:var(--bleu);margin:0 0 12px}
+  .intro{color:var(--encre2);font-size:17px;max-width:40em;margin:0}
+
+  /* ---- barre de navigation ---- */
+  .hnav{position:sticky;top:0;z-index:30;background:rgba(251,249,245,.82);
+        backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid transparent;
+        transition:border-color .2s,box-shadow .2s}
+  .hnav.colle{border-bottom-color:var(--trait);box-shadow:0 6px 24px rgba(20,26,36,.06)}
+  .hnav .in{max-width:1120px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:30px}
+  #home .marque{display:flex;align-items:center;gap:11px;color:var(--encre);font-weight:700;font-size:17px;letter-spacing:-.01em}
+  .marque .glyphe{width:34px;height:34px;flex:0 0 auto;border-radius:9px;background:var(--encre);
+    display:grid;place-items:center;position:relative}
+  .marque .glyphe svg{width:18px;height:18px;stroke:var(--papier);fill:none;stroke-width:2.2;stroke-linecap:round}
+  .marque .glyphe::after{content:'';position:absolute;right:-3px;bottom:-3px;width:11px;height:11px;
+    border-radius:50%;background:var(--rouge);border:2px solid var(--papier)}
+  .hnav nav{margin-left:auto;display:flex;align-items:center;gap:26px;font-size:15px}
+  #home .hnav nav a{color:var(--encre2);font-weight:500}
+  #home .hnav nav a:hover{color:var(--encre)}
+  #home .hnav .cta-nav{background:var(--encre);color:var(--papier);padding:10px 18px;border-radius:9px;
+    font-weight:600;font-size:14.5px}
+  #home .hnav .cta-nav:hover{background:var(--bleu);color:#fff}
+
+  /* ---- hero ---- */
+  .hero{position:relative;overflow:hidden}
+  /* Trame de lignes de texte : le décor dit « document », pas « dégradé de modèle ». */
+  .hero::before{content:'';position:absolute;inset:0;pointer-events:none;
+    background:repeating-linear-gradient(to bottom,rgba(20,26,36,.045) 0 1px,transparent 1px 28px);
+    mask-image:radial-gradient(70% 60% at 70% 30%,#000,transparent 75%)}
+  .hero .in{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.04fr);
+    gap:56px;align-items:center;padding:58px 28px 72px;max-width:1120px;margin:0 auto}
+  .badge{display:inline-flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;
+    color:#1F6B47;background:#E6F4EC;border:1px solid #C7E6D6;border-radius:999px;padding:7px 15px}
+  .badge b{width:7px;height:7px;border-radius:50%;background:#1F8A56}
+  .hero h1{margin:20px 0 0;font-family:'Instrument Serif',Georgia,serif;font-weight:400;
+    font-size:clamp(2.4rem,4.6vw,3.7rem);line-height:1.06;letter-spacing:-.018em;
+    text-wrap:balance}
+  /* Le trait sous le mot-clé est dessiné, pas souligné : une main, pas un style. */
+  .souligne{position:relative;white-space:nowrap}
+  .souligne svg{position:absolute;left:0;right:0;bottom:-.16em;width:100%;height:.3em;
+    stroke:var(--rouge);fill:none;stroke-width:5;stroke-linecap:round}
+  .hero .accroche{margin:22px 0 0;font-size:18.5px;line-height:1.6;color:var(--encre2);max-width:30em}
+  .hero .accroche strong{color:var(--encre);font-weight:600}
+
+  /* Démonstration en une ligne : montrer le geste vaut mieux que le décrire. */
+  .demo{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:24px 0 0}
+  .demo .ligne{display:inline-flex;align-items:center;gap:10px;background:#fff;
+    border:1px solid var(--trait);border-radius:10px;padding:10px 15px;font-size:15px;
+    color:var(--encre2);box-shadow:0 2px 8px rgba(20,26,36,.05)}
+  .demo s{color:#A9A294;text-decoration-color:var(--rouge);text-decoration-thickness:2px}
+  .demo .neuve{border-color:#B9CEF7;background:var(--bleu-clair);color:var(--encre)}
+  .demo .neuve b{color:var(--bleu);font-weight:700}
+  .demo .fleche-demo svg{width:34px;height:12px;stroke:#B3ACA0;fill:none;stroke-width:1.6;
+    stroke-linecap:round;stroke-linejoin:round}
+
+  .depot{display:block;margin-top:30px;border:2px dashed #C6BFAF;border-radius:16px;
+    background:#fff;padding:22px 24px;cursor:pointer;display:flex;align-items:center;gap:18px;
+    transition:border-color .18s,box-shadow .18s,transform .18s}
+  .depot:hover,.depot.over{border-color:var(--bleu);box-shadow:0 0 0 5px rgba(27,74,203,.08),0 18px 40px rgba(20,26,36,.10);transform:translateY(-2px)}
+  .depot .ic{width:46px;height:46px;flex:0 0 auto;border-radius:12px;background:var(--bleu-clair);display:grid;place-items:center}
+  .depot .ic svg{width:22px;height:22px;stroke:var(--bleu);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .depot .t{display:block;font-size:17px;font-weight:700}
+  .depot .s{display:block;font-size:14px;color:var(--encre2);margin-top:2px}
+  .depot .bouton{margin-left:auto;background:var(--bleu);color:#fff;border-radius:10px;
+    padding:13px 22px;font-weight:650;font-size:15px;white-space:nowrap}
+  .depot:hover .bouton{background:#1740B4}
+  .gages{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:16px;font-size:14px;color:var(--encre2)}
+  .gages span{display:inline-flex;align-items:center;gap:7px}
+  .gages svg{width:15px;height:15px;stroke:#1F8A56;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+
+  /* fenêtre produit */
+  .fenetre{border-radius:14px;overflow:hidden;background:#1A1E26;
+    box-shadow:0 2px 0 rgba(255,255,255,.5) inset,0 30px 70px -20px rgba(20,26,36,.45),
+               0 0 0 1px rgba(20,26,36,.10);transform:rotate(-.5deg)}
+  .fenetre .barre{display:flex;align-items:center;gap:7px;padding:10px 14px;background:#22272F}
+  .fenetre .pt{width:11px;height:11px;border-radius:50%;background:#3A424E}
+  .fenetre .url{margin-left:10px;font-size:11.5px;color:#7A8697;background:#171B22;
+    border-radius:6px;padding:4px 12px}
+  .fenetre img{display:block;width:100%;height:auto}
+  .legende{margin:14px 0 0;font-size:13.5px;color:#7C8394;text-align:center}
+
+  /* ---- bandeau de preuve ---- */
+  .preuve{background:var(--encre);color:#D8DEE9;padding:18px 0}
+  .preuve .in{max-width:1120px;margin:0 auto;padding:0 28px;display:flex;flex-wrap:wrap;
+    gap:10px 42px;align-items:center;justify-content:center;font-size:14.5px}
+  .preuve b{color:#fff;font-weight:650}
+
+  /* ---- sections ---- */
+  .bloc-sec{padding:78px 0}
+  .bloc-sec.alt{background:var(--papier2);border-top:1px solid var(--trait);border-bottom:1px solid var(--trait)}
+  .entete{max-width:46em;margin-bottom:34px}
+
+  /* ce que fait l'éditeur */
+  .fonctions{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  .fonction{display:flex;gap:16px;background:#fff;border:1px solid var(--trait);border-radius:16px;padding:22px}
+  .fonction .ic{width:42px;height:42px;flex:0 0 auto;border-radius:11px;display:grid;place-items:center}
+  .fonction .ic svg{width:20px;height:20px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .fonction h3{margin:0 0 6px;font-size:17px}
+  .fonction p{margin:0;font-size:14.5px;color:var(--encre2);line-height:1.55}
+  .i-bleu{background:var(--bleu-clair)} .i-bleu svg{stroke:var(--bleu)}
+  .i-vert{background:#E6F4EC} .i-vert svg{stroke:#1F8A56}
+  .i-ambre{background:#FBF0DD} .i-ambre svg{stroke:#A8742A}
+  .i-violet{background:#EFEBFB} .i-violet svg{stroke:#5B45C0}
+  .i-rouge{background:#FBEAE6} .i-rouge svg{stroke:var(--rouge)}
+
+  /* outils : deux colonnes nommées, pas une grille uniforme */
+  .outils-grille{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:8px;
+    align-items:start}
+  .colonne{background:#fff;border:1px solid var(--trait);border-radius:18px;padding:8px 8px 14px}
+  /* Un groupe trop fourni pour une colonne prend toute la largeur et répartit ses
+     outils, au lieu de laisser la moitié droite vide. */
+  .colonne.large{grid-column:1 / -1}
+  .colonne.large .rangee{display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:2px}
+  .colonne > h3{margin:16px 16px 12px;font-size:12.5px;letter-spacing:.12em;
+    text-transform:uppercase;color:#8A8577;display:flex;align-items:baseline;gap:9px}
+  .colonne > h3 em{font-style:normal;letter-spacing:0;text-transform:none;font-size:12.5px;
+    color:#B3ACA0;font-weight:400}
+  #home .outil{display:flex;align-items:center;gap:13px;padding:12px 14px;border-radius:12px;color:var(--encre)}
+  /* Préfixés par #home : sans l'id, « #home a:hover » l'emporterait et viendrait
+     souligner les deux lignes de la carte au survol. */
+  #home .outil:hover, #home .phare:hover, #home .marque:hover,
+  #home .depot:hover, #home .final .bouton:hover, #home .hnav .cta-nav:hover{text-decoration:none}
+  .outil:hover{background:var(--papier2)}
+  .outil .ic{width:34px;height:34px;flex:0 0 auto;border-radius:9px;display:grid;place-items:center}
+  .outil .ic svg{width:17px;height:17px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .outil b{font-size:15px;font-weight:600;display:block}
+  .outil span{font-size:13px;color:var(--encre2);display:block;margin-top:1px}
+  .outil .fleche{margin-left:auto;color:#B9B3A4;font-size:18px;line-height:1}
+  .outil:hover .fleche{color:var(--bleu)}
+  .phares{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-bottom:22px}
+  .phare{display:flex;gap:16px;align-items:flex-start;border-radius:18px;padding:24px;
+    background:linear-gradient(180deg,#fff,#FCFBF8);border:1px solid #D6CFBE;
+    box-shadow:0 14px 34px -18px rgba(20,26,36,.35)}
+  #home .phare{color:var(--encre)}
+  .phare:hover{border-color:var(--bleu);box-shadow:0 18px 40px -18px rgba(27,74,203,.4)}
+  .phare .ic{width:46px;height:46px;flex:0 0 auto;border-radius:12px;display:grid;place-items:center}
+  .phare .ic svg{width:22px;height:22px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .phare b{display:block;font-size:18px;margin-bottom:5px}
+  .phare span{display:block;font-size:14.5px;color:var(--encre2);line-height:1.55}
+
+  /* comparatif */
+  .sombre{background:var(--encre);color:#DCE2EC}
+  .sombre h2.titre{color:#fff}
+  .sombre .intro{color:#9AA5B6}
+  .sombre .surtitre{color:#7FA6FF}
+  .face{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:880px}
+  .face > div{border-radius:18px;padding:26px}
+  .face h3{margin:0 0 16px;font-size:13px;letter-spacing:.12em;text-transform:uppercase}
+  .face ul{margin:0;padding:0;list-style:none;display:grid;gap:13px;font-size:15.2px;line-height:1.5}
+  .face li{display:flex;gap:12px;align-items:flex-start}
+  .face li svg{width:19px;height:19px;flex:0 0 auto;margin-top:2px;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .eux{background:rgba(255,255,255,.035);border:1px solid #2A3240}
+  .eux h3{color:#8591A3} .eux li{color:#A7B1C0} .eux li svg{stroke:#D4624F}
+  .eux li b{color:#E7ECF3}
+  .nous{background:rgba(31,138,86,.10);border:1px solid rgba(49,178,114,.35)}
+  .nous h3{color:#5FD199} .nous li svg{stroke:#35C286} .nous li b{color:#fff}
+
+  /* questions */
+  .faq{max-width:780px}
+  .faq details{border-bottom:1px solid var(--trait);background:none}
+  .faq details:first-of-type{border-top:1px solid var(--trait)}
+  .faq summary{cursor:pointer;list-style:none;padding:20px 40px 20px 0;font-weight:600;
+    font-size:17px;position:relative}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:'+';position:absolute;right:8px;top:18px;font-size:24px;
+    color:var(--bleu);font-weight:400;line-height:1}
+  .faq details[open] summary::after{content:'−'}
+  .faq p{margin:0 0 22px;color:var(--encre2);font-size:15.5px;max-width:62ch}
+
+  /* appel final */
+  .final{text-align:center;padding:76px 0 84px}
+  #home .final .bouton{display:inline-block;margin-top:22px;background:var(--bleu);color:#fff;
+    border-radius:12px;padding:16px 36px;font-size:17px;font-weight:700;
+    box-shadow:0 14px 32px -10px rgba(27,74,203,.6)}
+  #home .final .bouton:hover{background:#1740B4}
+  .final .sous{margin-top:12px;font-size:14px;color:var(--encre2)}
+
+  /* ---- pied de page ---- */
+  .pied{position:relative;background:var(--encre);color:#97A2B2;font-size:14.5px;
+        border-top:3px solid var(--rouge)}
+  /* La même trame de lignes de texte que le hero, en négatif : le document
+     encadre la page du début à la fin. */
+  .pied::before{content:'';position:absolute;inset:0;pointer-events:none;
+    background:repeating-linear-gradient(to bottom,rgba(255,255,255,.03) 0 1px,transparent 1px 28px);
+    mask-image:linear-gradient(to bottom,#000,transparent 55%)}
+  .pied > *{position:relative}
+
+  .rappel{max-width:1120px;margin:0 auto;padding:36px 28px;display:flex;align-items:center;
+    gap:24px;flex-wrap:wrap;border-bottom:1px solid #212935}
+  .rappel .mot{font-family:'Instrument Serif',Georgia,serif;font-size:clamp(1.5rem,2.6vw,2.05rem);
+    color:#fff;line-height:1.15;letter-spacing:-.01em;margin:0}
+  .rappel .mot span{color:#8FB2FF}
+  #home .rappel .bouton{margin-left:auto;background:#fff;color:var(--encre);border-radius:11px;
+    padding:14px 26px;font-weight:700;font-size:15.5px;white-space:nowrap}
+  #home .rappel .bouton:hover{background:#8FB2FF}
+
+  /* La colonne « Travailler le PDF » compte douze liens : sur une seule file elle
+     doublerait la hauteur du pied de page, donc elle est large et sur deux files. */
+  .pied .cols{max-width:1120px;margin:0 auto;padding:46px 28px 10px;display:grid;
+    grid-template-columns:1.5fr .85fr .85fr 1.7fr .85fr;gap:36px 30px}
+  .pied .cols .double ul{grid-template-columns:1fr 1fr;gap:10px 22px}
+  #home .pied .marque{color:#fff;margin-bottom:16px;font-size:16px}
+  .pied .marque .glyphe{background:#fff}
+  .pied .marque .glyphe svg{stroke:var(--encre)}
+  .pied .marque .glyphe::after{border-color:var(--encre)}
+  .pied .pitch{max-width:27em;line-height:1.65;margin:0 0 18px;color:#8C97A8}
+  .sceau{display:flex;align-items:flex-start;gap:11px;background:rgba(49,178,114,.08);
+    border:1px solid rgba(49,178,114,.26);border-radius:12px;padding:13px 15px;max-width:27em;
+    font-size:13.5px;color:#A4C4B4;line-height:1.5}
+  .sceau svg{width:17px;height:17px;flex:0 0 auto;margin-top:2px;stroke:#35C286;fill:none;
+    stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .sceau b{color:#6FDCAA;display:block}
+  .pied h4{margin:0 0 15px;font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:#657284}
+  .pied ul{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+  #home .pied a{color:#B9C2CF}
+  #home .pied a:hover{color:#fff}
+  #home .pied ul a{position:relative;display:inline-block;transition:transform .16s,color .16s}
+  #home .pied ul a:hover{transform:translateX(7px)}
+  #home .pied ul a::before{content:'›';position:absolute;left:-11px;opacity:0;color:var(--rouge);
+    transition:opacity .16s}
+  #home .pied ul a:hover::before{opacity:1}
+  #home .pied .etoiles{display:inline-flex;align-items:center;gap:4px;margin-top:16px;
+    background:rgba(255,255,255,.055);border:1px solid #2A3240;border-radius:11px;
+    padding:11px 16px;color:#E7ECF3;font-weight:650;white-space:nowrap}
+  #home .pied .etoiles:hover{border-color:#3C4A5C;background:rgba(255,255,255,.09);color:#fff}
+  .pied .etoiles svg{width:14px;height:14px;fill:#E8B64C;stroke:none}
+  .pied .etoiles em{font-style:normal;margin-left:9px}
+  .pied .bas{max-width:1120px;margin:30px auto 0;padding:20px 28px 30px;border-top:1px solid #212935;
+    display:flex;flex-wrap:wrap;gap:10px 26px;align-items:center;font-size:13.5px;color:#64707F}
+  #home .pied .bas a{color:#8794A6}
+  .pied .bas .fin{margin-left:auto;display:inline-flex;align-items:center;gap:8px}
+  .pied .bas .fin svg{width:15px;height:15px;stroke:#4E5B6B;fill:none;stroke-width:2.2;
+    stroke-linecap:round;stroke-linejoin:round}
+
+  @media (max-width:960px){
+    .hero .in{grid-template-columns:1fr;gap:38px;padding-top:40px}
+    .fenetre{transform:none}
+    .fonctions,.outils-grille,.phares,.face{grid-template-columns:1fr}
+    .colonne.large .rangee{grid-template-columns:1fr}
+    .pied .cols{grid-template-columns:1fr 1fr}
+    .pied .cols > div:first-child{grid-column:1 / -1}
+    .hnav nav a:not(.cta-nav){display:none}
+  }
+  @media (max-width:560px){
+    .depot{flex-direction:column;align-items:flex-start}
+    .depot .bouton{margin-left:0;width:100%;text-align:center}
+    .pied .cols{grid-template-columns:1fr}
+    .bloc-sec{padding:54px 0}
+  }
+
+  /* sélecteur de langue */
+  .langues{display:inline-flex;align-items:center;gap:2px;border:1px solid var(--trait);
+    border-radius:9px;padding:3px;background:#fff}
+  #home .langues a, #home .langues b{display:inline-block;padding:4px 9px;border-radius:6px;
+    font-size:12.5px;font-weight:700;letter-spacing:.03em;color:#8A8577;text-decoration:none}
+  #home .langues b{background:var(--encre);color:var(--papier)}
+  #home .langues a:hover{background:var(--papier2);color:var(--encre)}

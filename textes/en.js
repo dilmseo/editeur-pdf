@@ -92,6 +92,7 @@ const UI = {
     gage1: 'No sign-up', gage2: 'No watermark', gage3: 'No size limit',
     legende: 'The date was rewritten inside the document, exactly where it was.',
     ctaOutils: 'See all 24 tools',
+    carteT: 'Pick your tool', carteS: 'all 24 run inside your browser',
     noteEditeur: 'The 24 tools below are in English. The text editor itself is shown here with its French interface — an English version is on the way.',
     preuve1: 'Everything runs in your browser.',
     preuve2: 'Cut your connection after loading: it keeps working.',

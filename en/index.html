@@ -16,126 +16,221 @@
 <meta property="og:description" content="Click a line, rewrite it, save. Even on a scanned document. Free, no account, and your file never leaves your computer.">
 <meta property="og:url" content="https://editeur-pdf.netlify.app/en/">
 <meta property="og:image" content="https://editeur-pdf.netlify.app/apercu-editeur.png">
+<meta property="og:image:width" content="1360">
+<meta property="og:image:height" content="850">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://editeur-pdf.netlify.app/apercu-editeur.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231762e0'/%3E%3Cpath d='M9 10h14M9 16h10M9 22h7' stroke='%23fff' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="/style-outil.css">
+<link rel="stylesheet" href="/style-accueil.css">
+<style>
+  /* style-accueil.css attend que #home soit le conteneur qui défile, comme sur la
+     page française : sans cette mise en page, le contenu déborde sans ascenseur. */
+  html,body{height:100%;margin:0}
+  body{display:flex;flex-direction:column;overflow:hidden;background:#FBF9F5}
+</style>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://editeur-pdf.netlify.app/#editeur","name":"Éditeur PDF","url":"https://editeur-pdf.netlify.app/","logo":{"@type":"ImageObject","url":"https://editeur-pdf.netlify.app/apercu-editeur.png"},"sameAs":["https://github.com/dilmseo/editeur-pdf"]},{"@type":"WebSite","@id":"https://editeur-pdf.netlify.app/#site","url":"https://editeur-pdf.netlify.app/","name":"Éditeur PDF","inLanguage":["fr","en"],"publisher":{"@id":"https://editeur-pdf.netlify.app/#editeur"}},{"@type":"WebPage","@id":"https://editeur-pdf.netlify.app/en/#page","url":"https://editeur-pdf.netlify.app/en/","name":"Edit the text in a PDF for free, nothing uploaded","description":"Click a line, rewrite it, save. Even on a scanned document. Free, no account, and your file never leaves your computer.","inLanguage":"en","isPartOf":{"@id":"https://editeur-pdf.netlify.app/#site"},"dateModified":"2026-10-12"},{"@type":"ItemList","@id":"https://editeur-pdf.netlify.app/en/#liste","name":"Tools","numberOfItems":24,"itemListElement":[{"@type":"ListItem","position":1,"name":"PDF to Word","url":"https://editeur-pdf.netlify.app/en/pdf-to-word/"},{"@type":"ListItem","position":2,"name":"PDF to Excel","url":"https://editeur-pdf.netlify.app/en/pdf-to-excel/"},{"@type":"ListItem","position":3,"name":"PDF to PowerPoint","url":"https://editeur-pdf.netlify.app/en/pdf-to-powerpoint/"},{"@type":"ListItem","position":4,"name":"PDF to JPG","url":"https://editeur-pdf.netlify.app/en/pdf-to-jpg/"},{"@type":"ListItem","position":5,"name":"PDF to PNG","url":"https://editeur-pdf.netlify.app/en/pdf-to-png/"},{"@type":"ListItem","position":6,"name":"Word to PDF","url":"https://editeur-pdf.netlify.app/en/word-to-pdf/"},{"@type":"ListItem","position":7,"name":"Excel to PDF","url":"https://editeur-pdf.netlify.app/en/excel-to-pdf/"},{"@type":"ListItem","position":8,"name":"PowerPoint to PDF","url":"https://editeur-pdf.netlify.app/en/powerpoint-to-pdf/"},{"@type":"ListItem","position":9,"name":"JPG to PDF","url":"https://editeur-pdf.netlify.app/en/jpg-to-pdf/"},{"@type":"ListItem","position":10,"name":"PNG to PDF","url":"https://editeur-pdf.netlify.app/en/png-to-pdf/"},{"@type":"ListItem","position":11,"name":"Merge PDFs","url":"https://editeur-pdf.netlify.app/en/merge-pdf/"},{"@type":"ListItem","position":12,"name":"Compress a PDF","url":"https://editeur-pdf.netlify.app/en/compress-pdf/"},{"@type":"ListItem","position":13,"name":"Split a PDF","url":"https://editeur-pdf.netlify.app/en/split-pdf/"},{"@type":"ListItem","position":14,"name":"Extract pages","url":"https://editeur-pdf.netlify.app/en/extract-pdf-pages/"},{"@type":"ListItem","position":15,"name":"Delete pages","url":"https://editeur-pdf.netlify.app/en/delete-pdf-pages/"},{"@type":"ListItem","position":16,"name":"Organise a PDF","url":"https://editeur-pdf.netlify.app/en/organize-pdf/"},{"@type":"ListItem","position":17,"name":"Rotate a PDF","url":"https://editeur-pdf.netlify.app/en/rotate-pdf/"},{"@type":"ListItem","position":18,"name":"Crop a PDF","url":"https://editeur-pdf.netlify.app/en/crop-pdf/"},{"@type":"ListItem","position":19,"name":"Number a PDF","url":"https://editeur-pdf.netlify.app/en/add-page-numbers/"},{"@type":"ListItem","position":20,"name":"Watermark a PDF","url":"https://editeur-pdf.netlify.app/en/watermark-pdf/"},{"@type":"ListItem","position":21,"name":"PDF metadata","url":"https://editeur-pdf.netlify.app/en/remove-pdf-metadata/"},{"@type":"ListItem","position":22,"name":"Unlock a PDF","url":"https://editeur-pdf.netlify.app/en/unlock-pdf/"},{"@type":"ListItem","position":23,"name":"Sign a PDF","url":"https://editeur-pdf.netlify.app/en/sign-pdf/"},{"@type":"ListItem","position":24,"name":"OCR a PDF","url":"https://editeur-pdf.netlify.app/en/ocr-pdf/"}]},{"@type":"FAQPage","@id":"https://editeur-pdf.netlify.app/en/#questions","inLanguage":"en","mainEntity":[{"@type":"Question","name":"What does it cost?","acceptedAnswer":{"@type":"Answer","text":"Nothing, and there is nothing to buy: no paid tier, no limited trial, no watermark. That includes fixing existing text and reading scanned documents, which online services almost all keep for their paid plans. The reason is simple: for them every document burns server time. Here your own computer does the work, so there is nothing to bill."}},{"@type":"Question","name":"Is my file really private?","acceptedAnswer":{"@type":"Answer","text":"Yes. The PDF is opened and modified by your browser; no data is sent anywhere. The site contains no server code at all: it could not receive your file even if it wanted to. You can check by cutting your connection once the page has loaded — everything keeps working."}},{"@type":"Question","name":"Is hidden text really erased?","acceptedAnswer":{"@type":"Answer","text":"No, and that matters: replaced text is covered visually but stays inside the file — a copy and paste can bring it back. To truly remove sensitive data, redact the area then reprint the result as a PDF (Print → Save as PDF): the old text is then gone for good."}},{"@type":"Question","name":"Is the original font kept?","acceptedAnswer":{"@type":"Answer","text":"The text is rewritten in a close standard font — Helvetica, Times or Courier — picked automatically from the document, with bold detected by comparing the measured width against the font metrics. On a common typeface the result is very close; on a distinctive one the difference shows. The right-hand panel lets you correct it by hand."}},{"@type":"Question","name":"Is there a size or page limit?","acceptedAnswer":{"@type":"Answer","text":"None imposed. The only constraint is your computer memory, and pages are rendered as you scroll so a thick document stays smooth."}},{"@type":"Question","name":"Can I use it offline?","acceptedAnswer":{"@type":"Answer","text":"Yes. Once the page has loaded you can cut your internet connection. The code can also be downloaded from the public repository for fully local use, including the small development server needed for character recognition."}}]}]}</script>
 </head>
 <body>
+<div id="home">
 
-<div class="hnav"><div class="in">
-  <a class="brand" href="/en/"><i><svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h10M5 18h7"/></svg></i>Éditeur PDF</a>
-  <nav>
-    <a href="#outils">Tools</a>
-    <a href="#confiance">Privacy</a>
-    <a href="#questions">FAQ</a>
-    <span class="langues"><a href="https://editeur-pdf.netlify.app/" hreflang="fr">FR</a><b>EN</b></span>
-  </nav>
-</div></div>
+  <div class="hnav" id="hnav"><div class="in">
+    <a class="marque" href="/en/"><span class="glyphe"><svg viewBox="0 0 24 24"><path d="M6 6h12M6 12h8M6 18h5"/></svg></span>Éditeur PDF</a>
+    <nav>
+      <a href="#outils">Tools</a>
+      <a href="#confiance">Privacy</a>
+      <a href="#questions">FAQ</a>
+      <span class="langues"><a href="https://editeur-pdf.netlify.app/" hreflang="fr">FR</a><b>EN</b></span>
+      <a class="cta-nav" href="/en/pdf-to-word/">See all 24 tools</a>
+    </nav>
+  </div></div>
 
-<header class="tete"><div class="sec">
-  <p style="margin:0 0 6px"><span class="pastille"><b></b>No file sent to any server</span></p>
-  <h1>Fix the text already written in your PDFs.</h1>
-  <p class="chapo">Not a note stuck on top: you click a line of the document, you rewrite it, you save. <strong>Even on a scan.</strong> It is the feature other services charge for.</p>
-  <p class="apres" style="margin-top:22px">
-    <strong>Meeting on <s>12 October</s> → 19 October</strong><br>
-    The date was rewritten inside the document, exactly where it was.</p>
-  <p style="margin-top:26px"><a class="dl" style="display:inline-block" href="#outils">See all 24 tools</a></p>
-  <img src="/apercu-editeur.png" width="1360" height="850" loading="lazy" decoding="async"
-       alt="The date was rewritten inside the document, exactly where it was." style="width:100%;height:auto;border-radius:14px;margin-top:26px;box-shadow:0 20px 50px -20px rgba(20,26,36,.45)">
-  <p class="fil" style="margin-top:12px">The 24 tools below are in English. The text editor itself is shown here with its French interface — an English version is on the way.</p>
-</div></header>
+  <section class="hero"><div class="in">
+    <div>
+      <span class="badge"><b></b>No file sent to any server</span>
+      <h1>Fix the text<br>
+        <span class="souligne">already written<svg viewBox="0 0 200 12" preserveAspectRatio="none"
+          aria-hidden="true"><path d="M3 8c38-5 72-6 104-4 24 1 54 4 90 1"/></svg></span>
+        in your PDFs.</h1>
+      <p class="accroche">Not a note stuck on top: you click a line of the document, you rewrite it, you save. <strong>Even on a scan.</strong> It is the feature other services charge for.</p>
 
-<main class="sec corps">
-  <h2 id="outils">And everything else, in one place</h2>
-  <p>Convert both ways, assemble, extract. Every tool has its own page, with what it keeps and what it drops stated before you begin.</p>
-  
-  <h3 style="margin:30px 0 10px">Convert a PDF</h3>
-  <div class="autres">
-    <a href="/en/pdf-to-word/"><span class="ico i-bleu"><svg viewBox="0 0 24 24"><path d="M14 3v5h5M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M8 13l1.5 4 1.5-4 1.5 4L14 13"/></svg></span>PDF → Word</a>
-    <a href="/en/pdf-to-excel/"><span class="ico i-vert"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 10v10"/></svg></span>PDF → Excel</a>
-    <a href="/en/pdf-to-powerpoint/"><span class="ico i-violet"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v4M8 20h8"/></svg></span>PDF → PowerPoint</a>
-    <a href="/en/pdf-to-jpg/"><span class="ico i-ambre"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m5 17 4.5-4.5L13 16l2.5-2.5L19 17"/></svg></span>PDF → JPG</a>
-    <a href="/en/pdf-to-png/"><span class="ico i-ambre"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m5 17 4.5-4.5L13 16l2.5-2.5L19 17"/></svg></span>PDF → PNG</a>
-    <a href="/en/ocr-pdf/"><span class="ico i-violet"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></span>Scanned PDF to text</a>
-  </div>
-  <h3 style="margin:30px 0 10px">Create a PDF</h3>
-  <div class="autres">
-    <a href="/en/word-to-pdf/"><span class="ico i-bleu"><svg viewBox="0 0 24 24"><path d="M14 3v5h5M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M8 13l1.5 4 1.5-4 1.5 4L14 13"/></svg></span>Word → PDF</a>
-    <a href="/en/excel-to-pdf/"><span class="ico i-vert"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 10v10"/></svg></span>Excel → PDF</a>
-    <a href="/en/powerpoint-to-pdf/"><span class="ico i-violet"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v4M8 20h8"/></svg></span>PowerPoint → PDF</a>
-    <a href="/en/jpg-to-pdf/"><span class="ico i-ambre"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m5 17 4.5-4.5L13 16l2.5-2.5L19 17"/></svg></span>JPG → PDF</a>
-    <a href="/en/png-to-pdf/"><span class="ico i-ambre"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m5 17 4.5-4.5L13 16l2.5-2.5L19 17"/></svg></span>PNG → PDF</a>
-  </div>
-  <h3 style="margin:30px 0 10px">Work on the PDF</h3>
-  <div class="autres">
-    <a href="/en/compress-pdf/"><span class="ico i-vert"><svg viewBox="0 0 24 24"><path d="M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2"/><path d="M9 12h6"/></svg></span>Compress a PDF</a>
-    <a href="/en/split-pdf/"><span class="ico i-bleu"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.4"/><circle cx="6" cy="18" r="2.4"/><path d="M8 7.5 20 18M8 16.5 20 6"/></svg></span>Split a PDF</a>
-    <a href="/en/extract-pdf-pages/"><span class="ico i-bleu"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="11" height="14" rx="2"/><path d="M17 8h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9"/></svg></span>Extract pages</a>
-    <a href="/en/delete-pdf-pages/"><span class="ico i-rouge"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 12h6"/></svg></span>Delete pages</a>
-    <a href="/en/organize-pdf/"><span class="ico i-violet"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="11" height="14" rx="2"/><path d="M17 8h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9"/></svg></span>Organise pages</a>
-    <a href="/en/rotate-pdf/"><span class="ico i-violet"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 2.6-6.4M3 4v5h5"/></svg></span>Rotate a PDF</a>
-    <a href="/en/crop-pdf/"><span class="ico i-ambre"><svg viewBox="0 0 24 24"><path d="M6 2v14a2 2 0 0 0 2 2h14M2 6h14a2 2 0 0 1 2 2v14"/></svg></span>Crop a PDF</a>
-    <a href="/en/add-page-numbers/"><span class="ico i-bleu"><svg viewBox="0 0 24 24"><path d="M4 5h16M4 10h16M4 15h10"/><path d="M15 19h5"/></svg></span>Add page numbers</a>
-    <a href="/en/watermark-pdf/"><span class="ico i-ambre"><svg viewBox="0 0 24 24"><path d="M12 3 5 9v6l7 6 7-6V9z"/><path d="M8.5 12h7"/></svg></span>Add a watermark</a>
-    <a href="/en/sign-pdf/"><span class="ico i-vert"><svg viewBox="0 0 24 24"><path d="M3 20c3 .5 5-1 6.5-3.5M5.5 14.5 15 5a2.1 2.1 0 0 1 3 3l-9.5 9.5-4 1z"/></svg></span>Sign a PDF</a>
-    <a href="/en/unlock-pdf/"><span class="ico i-rouge"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0"/></svg></span>Unlock a PDF</a>
-    <a href="/en/remove-pdf-metadata/"><span class="ico i-rouge"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h6l9 9-6 6-9-9z"/><circle cx="8" cy="10" r="1.2"/></svg></span>Clean the metadata</a>
-  </div>
-  <h3 style="margin:30px 0 10px">More tools</h3>
-  <div class="autres">
-    <a href="/en/merge-pdf/"><span class="ico i-bleu"><svg viewBox="0 0 24 24"><path d="M4 7h7a3 3 0 0 1 3 3v4a3 3 0 0 0 3 3h3M4 17h7a3 3 0 0 0 3-3v-4a3 3 0 0 1 3-3h3"/></svg></span>Merge PDFs</a>
-  </div>
+      <p class="demo">
+        <span class="ligne">Meeting on <s>12 October</s></span>
+        <span class="fleche-demo" aria-hidden="true">
+          <svg viewBox="0 0 40 12"><path d="M1 6h34m0 0-5-4m5 4-5 4"/></svg></span>
+        <span class="ligne neuve">Meeting on <b>19 October</b></span>
+      </p>
 
-  <h2 id="confiance">The paywall is editing the text</h2>
-  <p>Online editors happily let you <em>add</em> text on top of the document. But fixing a line that is already written — the very thing you came for — almost always requires a subscription. And your file left for their servers before you even noticed.</p>
-  <div class="deux">
-    <div class="bloc non">
-      <h3>The usual services</h3>
-      <ul><li><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg><span><b>Editing existing text: paid</b></span></li><li><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg><span>Scanned document recognition: paid too</span></li><li><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg><span>Your file leaves for a remote server</span></li><li><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg><span>Size capped, often at 100 MB</span></li><li><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg><span>Account required, or a watermark on the result</span></li></ul>
+      <a class="depot" href="#outils">
+        <span class="ic"><svg viewBox="0 0 24 24"><path d="M4 7h7a3 3 0 0 1 3 3v4a3 3 0 0 0 3 3h3"/><path d="m17 14 3 3-3 3"/></svg></span>
+        <span>
+          <span class="t">Pick your tool</span>
+          <span class="s">all 24 run inside your browser</span>
+        </span>
+        <span class="bouton">See all 24 tools</span>
+      </a>
+
+      <div class="gages">
+        <span><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg>No sign-up</span>
+        <span><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg>No watermark</span>
+        <span><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg>No size limit</span>
+      </div>
     </div>
-    <div class="bloc oui">
-      <h3>Here</h3>
-      <ul><li><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg><span><b>Editing existing text: free</b></span></li><li><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg><span>Scan recognition included, no extra charge</span></li><li><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg><span>The file never leaves your browser</span></li><li><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg><span>No size or count limit</span></li><li><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg><span>No account, no watermark; source code public</span></li></ul>
+
+    <div>
+      <div class="fenetre">
+        <div class="barre">
+          <span class="pt"></span><span class="pt"></span><span class="pt"></span>
+          <span class="url">editeur-pdf.netlify.app</span>
+        </div>
+        <img src="/apercu-editeur.png" width="1360" height="850" alt="The date was rewritten inside the document, exactly where it was." loading="eager" decoding="async">
+      </div>
+      <p class="legende">The date was rewritten inside the document, exactly where it was.</p>
     </div>
-  </div>
+  </div></section>
 
-  <h2>Why it's free</h2>
-  <div class="confiance">
-    <p style="margin:0">Online converters receive your file on their servers, process it, then promise to delete it. Every document costs them computing time: that is why they charge, and why they cap file sizes.</p>
-    <p style="margin:12px 0 0"><b>Here, the work happens on your own computer.</b> The page contains no server code: your document cannot be received, because it is never sent. So there is nothing to bill, nothing to cap, and nothing to delete afterwards. Cut your connection once the page has loaded — everything keeps working.</p>
-  </div>
+  <div class="preuve"><div class="in">
+    <span><b>Everything runs in your browser.</b></span>
+    <span>Cut your connection after loading: it keeps working.</span>
+    <span>Source code <a href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">public and verifiable</a>.</span>
+  </div></div>
 
-  <h2 id="questions">The questions we get</h2>
-  <details open>
-    <summary>What does it cost?</summary>
-    <p>Nothing, and there is nothing to buy: no paid tier, no limited trial, no watermark. That includes fixing existing text and reading scanned documents, which online services almost all keep for their paid plans. The reason is simple: for them every document burns server time. Here your own computer does the work, so there is nothing to bill.</p>
-  </details>
-  <details>
-    <summary>Is my file really private?</summary>
-    <p>Yes. The PDF is opened and modified by your browser; no data is sent anywhere. The site contains no server code at all: it could not receive your file even if it wanted to. You can check by cutting your connection once the page has loaded — everything keeps working.</p>
-  </details>
-  <details>
-    <summary>Is hidden text really erased?</summary>
-    <p>No, and that matters: replaced text is covered visually but stays inside the file — a copy and paste can bring it back. To truly remove sensitive data, redact the area then reprint the result as a PDF (Print → Save as PDF): the old text is then gone for good.</p>
-  </details>
-  <details>
-    <summary>Is the original font kept?</summary>
-    <p>The text is rewritten in a close standard font — Helvetica, Times or Courier — picked automatically from the document, with bold detected by comparing the measured width against the font metrics. On a common typeface the result is very close; on a distinctive one the difference shows. The right-hand panel lets you correct it by hand.</p>
-  </details>
-  <details>
-    <summary>Is there a size or page limit?</summary>
-    <p>None imposed. The only constraint is your computer memory, and pages are rendered as you scroll so a thick document stays smooth.</p>
-  </details>
-  <details>
-    <summary>Can I use it offline?</summary>
-    <p>Yes. Once the page has loaded you can cut your internet connection. The code can also be downloaded from the public repository for fully local use, including the small development server needed for character recognition.</p>
-  </details>
-</main>
+  <section class="bloc-sec" id="fonctions"><div class="sec">
+    <div class="entete">
+      <p class="surtitre">The editor</p>
+      <h2 class="titre">Four moves, one screen</h2>
+      <p class="intro">No menu to explore, no option to guess: open the document, click what is wrong, save.</p>
+    </div>
+    <div class="fonctions">
+      <div class="fonction"><span class="ic i-rouge"><svg viewBox="0 0 24 24"><path d="M4 20h16M5 15.5 15.5 5a2.1 2.1 0 0 1 3 3L8 18.5l-4 1z"/></svg></span>
+        <div><h3>Fix the text</h3><p>Every line of the document becomes a clickable block. You rewrite it in exactly the same place, with its font and colour found automatically.</p></div></div>
+      <div class="fonction"><span class="ic i-violet"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></span>
+        <div><h3>Scanned documents too</h3><p>If the page is an image, character recognition starts on its own when the file opens, and makes every line editable.</p></div></div>
+      <div class="fonction"><span class="ic i-vert"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span>
+        <div><h3>Add a note</h3><p>A date, a reference, a typed signature: place the text where you click, with the font, size and colour you want.</p></div></div>
+      <div class="fonction"><span class="ic i-ambre"><svg viewBox="0 0 24 24"><path d="M3 5h18v14H3z"/><path d="M7 9h10v6H7z"/></svg></span>
+        <div><h3>Hide an area</h3><p>Cover an amount or an address by dragging the mouse. The background colour is read off the page, so the rectangle blends in.</p></div></div>
+    </div>
+    <p class="intro" style="margin-top:22px"><em>The 24 tools below are in English. The text editor itself is shown here with its French interface — an English version is on the way.</em>
+       <a href="https://editeur-pdf.netlify.app/">Edit the text in a PDF →</a></p>
+  </div></section>
 
-<div class="pied"><div class="in">
-  <span>Built with pdf.js, pdf-lib and fflate — everything is bundled, no network calls.</span>
-  <a href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">Source code</a>
-</div></div>
+  <section class="bloc-sec alt" id="outils"><div class="sec">
+    <div class="entete">
+      <p class="surtitre">The toolbox</p>
+      <h2 class="titre">And everything else, in one place</h2>
+      <p class="intro">Convert both ways, assemble, extract. Every tool has its own page, with what it keeps and what it drops stated before you begin.</p>
+    </div>
+    <div class="phares">
+      <a class="phare" href="https://editeur-pdf.netlify.app/"><span class="ic i-rouge"><svg viewBox="0 0 24 24"><path d="M4 20h16M5 15.5 15.5 5a2.1 2.1 0 0 1 3 3L8 18.5l-4 1z"/></svg></span>
+        <span><b>Edit the text in a PDF</b><span>Fix a line that is already written, even on a scanned document. This is the feature others charge for.</span></span></a>
+      <a class="phare" href="/en/merge-pdf/"><span class="ic i-bleu"><svg viewBox="0 0 24 24"><path d="M4 7h7a3 3 0 0 1 3 3v4a3 3 0 0 0 3 3h3M4 17h7a3 3 0 0 0 3-3v-4a3 3 0 0 1 3-3h3"/></svg></span>
+        <span><b>Merge PDFs</b><span>Several documents end to end, in the order you choose, with no loss of quality.</span></span></a>
+    </div>
+    <div class="outils-grille">
+      <div class="colonne"><h3>Convert a PDF<em>6 tools</em></h3><div class="rangee"><a class="outil" href="/en/pdf-to-word/"><span class="ic i-bleu"><svg viewBox="0 0 24 24"><path d="M14 3v5h5M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M8 13l1.5 4 1.5-4 1.5 4L14 13"/></svg></span><span><b>PDF → Word</b><span>A .docx whose text stays editable</span></span><span class="fleche" aria-hidden="true">›</span></a><a class="outil" href="/en/pdf-to-excel/"><span class="ic i-vert"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 10v10"/></svg></span><span><b>PDF → Excel</b><span>Tables as a spreadsheet</span></span><span class="fleche" aria-hidden="true">›</span></a><a class="outil" href="/en/pdf-to-powerpoint/"><span class="ic i-violet"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v4M8 20h8"/></svg></span><span><b>PDF → PowerPoint</b><span>One slide per page</span></span><span class="fleche" aria-hidden="true">›</span></a><a class="outil" href="/en/pdf-to-jpg/"><span class="ic i-ambre"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m5 17 4.5-4.5L13 16l2.5-2.5L19 17"/></svg></span><span><b>PDF → JPG</b><span>One image per page</span></span><span class="fleche" aria-hidden="true">›</span></a><a class="outil" href="/en/pdf-to-png/"><span class="ic i-ambre"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m5 17 4.5-4.5L13 16l2.5-2.5L19 17"/></svg></span><span><b>PDF → PNG</b><span>One image per page, lossless</span></span><span class="fleche" aria-hidden="true">›</span></a><a class="outil" href="/en/ocr-pdf/"><span class="ic i-violet"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></span><span><b>Scanned PDF to text</b><span>Character recognition</span></span><span class="fleche" aria-hidden="true">›</span></a></div></div>
+      <div class="colonne"><h3>Create a PDF<em>5 tools</em></h3><div class="rangee"><a class="outil" href="/en/word-to-pdf/"><span class="ic i-bleu"><svg viewBox="0 0 24 24"><path d="M14 3v5h5M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M8 13l1.5 4 1.5-4 1.5 4L14 13"/></svg></span><span><b>Word → PDF</b><span>From a .docx</span></span><span class="fleche" aria-hidden="true">›</span></a><a class="outil" href="/en/excel-to-pdf/"><span class="ic i-vert"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 10v10"/></svg></span><span><b>Excel → PDF</b><span>From an .xlsx</span></span><span class="fleche" aria-hidden="true">›</span></a><a class="outil" href="/en/powerpoint-to-pdf/"><span class="ic i-violet"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v4M8 20h8"/></svg></span><span><b>PowerPoint → PDF</b><span>From a .pptx</span></span><span class="fleche" aria-hidden="true">›</span></a><a class="outil" href="/en/jpg-to-pdf/"><span class="ic i-ambre"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m5 17 4.5-4.5L13 16l2.5-2.5L19 17"/></svg></span><span><b>JPG → PDF</b><span>One page per image</span></span><span class="fleche" aria-hidden="true">›</span></a><a class="outil" href="/en/png-to-pdf/"><span class="ic i-ambre"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m5 17 4.5-4.5L13 16l2.5-2.5L19 17"/></svg></span><span><b>PNG → PDF</b><span>One page per image</span></span><span class="fleche" aria-hidden="true">›</span></a></div></div>
+      <div class="colonne large"><h3>Work on the PDF<em>12 tools</em></h3><div class="rangee"><a class="outil" href="/en/compress-pdf/"><span class="ic i-vert"><svg viewBox="0 0 24 24"><path d="M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2"/><path d="M9 12h6"/></svg></span><span><b>Compress a PDF</b><span>To fit an attachment</span></span><span class="fleche" aria-hidden="true">›</span></a><a class="outil" href="/en/split-pdf/"><span class="ic i-bleu"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.4"/><circle cx="6" cy="18" r="2.4"/><path d="M8 7.5 20 18M8 16.5 20 6"/></svg></span><span><b>Split a PDF</b><span>One file per page or per range</span></span><span class="fleche" aria-hidden="true">›</span></a><a class="outil" href="/en/extract-pdf-pages/"><span class="ic i-bleu"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="11" height="14" rx="2"/><path d="M17 8h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9"/></svg></span><span><b>Extract pages</b><span>Keep only what matters</span></span><span class="fleche" aria-hidden="true">›</span></a><a class="outil" href="/en/delete-pdf-pages/"><span class="ic i-rouge"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 12h6"/></svg></span><span><b>Delete pages</b><span>Remove what does not belong</span></span><span class="fleche" aria-hidden="true">›</span></a><a class="outil" href="/en/organize-pdf/"><span class="ic i-violet"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="11" height="14" rx="2"/><path d="M17 8h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9"/></svg></span><span><b>Organise pages</b><span>Reorder and straighten</span></span><span class="fleche" aria-hidden="true">›</span></a><a class="outil" href="/en/rotate-pdf/"><span class="ic i-violet"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 2.6-6.4M3 4v5h5"/></svg></span><span><b>Rotate a PDF</b><span>Straighten sideways pages</span></span><span class="fleche" aria-hidden="true">›</span></a><a class="outil" href="/en/crop-pdf/"><span class="ic i-ambre"><svg viewBox="0 0 24 24"><path d="M6 2v14a2 2 0 0 0 2 2h14M2 6h14a2 2 0 0 1 2 2v14"/></svg></span><span><b>Crop a PDF</b><span>Cut the useless margins</span></span><span class="fleche" aria-hidden="true">›</span></a><a class="outil" href="/en/add-page-numbers/"><span class="ic i-bleu"><svg viewBox="0 0 24 24"><path d="M4 5h16M4 10h16M4 15h10"/><path d="M15 19h5"/></svg></span><span><b>Add page numbers</b><span>Paginate a document</span></span><span class="fleche" aria-hidden="true">›</span></a><a class="outil" href="/en/watermark-pdf/"><span class="ic i-ambre"><svg viewBox="0 0 24 24"><path d="M12 3 5 9v6l7 6 7-6V9z"/><path d="M8.5 12h7"/></svg></span><span><b>Add a watermark</b><span>Mark every page</span></span><span class="fleche" aria-hidden="true">›</span></a><a class="outil" href="/en/sign-pdf/"><span class="ic i-vert"><svg viewBox="0 0 24 24"><path d="M3 20c3 .5 5-1 6.5-3.5M5.5 14.5 15 5a2.1 2.1 0 0 1 3 3l-9.5 9.5-4 1z"/></svg></span><span><b>Sign a PDF</b><span>Draw and place your signature</span></span><span class="fleche" aria-hidden="true">›</span></a><a class="outil" href="/en/unlock-pdf/"><span class="ic i-rouge"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0"/></svg></span><span><b>Unlock a PDF</b><span>Remove a protection you know</span></span><span class="fleche" aria-hidden="true">›</span></a><a class="outil" href="/en/remove-pdf-metadata/"><span class="ic i-rouge"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h6l9 9-6 6-9-9z"/><circle cx="8" cy="10" r="1.2"/></svg></span><span><b>Clean the metadata</b><span>What your file says about you</span></span><span class="fleche" aria-hidden="true">›</span></a></div></div>
+    </div>
+  </div></section>
+
+  <section class="bloc-sec sombre" id="confiance"><div class="sec">
+    <div class="entete">
+      <p class="surtitre">What really changes</p>
+      <h2 class="titre">The paywall is editing the text</h2>
+      <p class="intro">Online editors happily let you <em>add</em> text on top of the document. But fixing a line that is already written — the very thing you came for — almost always requires a subscription. And your file left for their servers before you even noticed.</p>
+    </div>
+    <div class="face">
+      <div class="eux"><h3>The usual services</h3>
+        <ul><li><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg><span><b>Editing existing text: paid</b></span></li><li><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg><span>Scanned document recognition: paid too</span></li><li><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg><span>Your file leaves for a remote server</span></li><li><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg><span>Size capped, often at 100 MB</span></li><li><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg><span>Account required, or a watermark on the result</span></li></ul></div>
+      <div class="nous"><h3>Here</h3>
+        <ul><li><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg><span><b>Editing existing text: free</b></span></li><li><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg><span>Scan recognition included, no extra charge</span></li><li><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg><span>The file never leaves your browser</span></li><li><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg><span>No size or count limit</span></li><li><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg><span>No account, no watermark; source code public</span></li></ul></div>
+    </div>
+  </div></section>
+
+  <section class="bloc-sec" id="questions"><div class="sec">
+    <div class="entete">
+      <p class="surtitre">Before you start</p>
+      <h2 class="titre">The questions we get</h2>
+    </div>
+    <div class="faq">
+      <details open>
+        <summary>What does it cost?</summary>
+        <p>Nothing, and there is nothing to buy: no paid tier, no limited trial, no watermark. That includes fixing existing text and reading scanned documents, which online services almost all keep for their paid plans. The reason is simple: for them every document burns server time. Here your own computer does the work, so there is nothing to bill.</p>
+      </details>
+      <details>
+        <summary>Is my file really private?</summary>
+        <p>Yes. The PDF is opened and modified by your browser; no data is sent anywhere. The site contains no server code at all: it could not receive your file even if it wanted to. You can check by cutting your connection once the page has loaded — everything keeps working.</p>
+      </details>
+      <details>
+        <summary>Is hidden text really erased?</summary>
+        <p>No, and that matters: replaced text is covered visually but stays inside the file — a copy and paste can bring it back. To truly remove sensitive data, redact the area then reprint the result as a PDF (Print → Save as PDF): the old text is then gone for good.</p>
+      </details>
+      <details>
+        <summary>Is the original font kept?</summary>
+        <p>The text is rewritten in a close standard font — Helvetica, Times or Courier — picked automatically from the document, with bold detected by comparing the measured width against the font metrics. On a common typeface the result is very close; on a distinctive one the difference shows. The right-hand panel lets you correct it by hand.</p>
+      </details>
+      <details>
+        <summary>Is there a size or page limit?</summary>
+        <p>None imposed. The only constraint is your computer memory, and pages are rendered as you scroll so a thick document stays smooth.</p>
+      </details>
+      <details>
+        <summary>Can I use it offline?</summary>
+        <p>Yes. Once the page has loaded you can cut your internet connection. The code can also be downloaded from the public repository for fully local use, including the small development server needed for character recognition.</p>
+      </details>
+    </div>
+  </div></section>
+
+  <section class="final"><div class="sec">
+    <h2 class="titre">Your PDF is waiting</h2>
+    <p class="intro" style="margin:12px auto 0">Drop it, fix what is wrong, take the file back. Nothing else to do.</p>
+    <a class="bouton" href="#outils">See all 24 tools</a>
+    <p class="sous">Free, no account, and your document never leaves your computer.</p>
+  </div></section>
+
+  <footer class="pied">
+    <div class="rappel">
+      <p class="mot">A PDF to fix?<br><span>It will not leave your computer.</span></p>
+      <a class="bouton" href="https://editeur-pdf.netlify.app/">Open the editor</a>
+    </div>
+    <div class="cols">
+      <div>
+        <span class="marque"><span class="glyphe"><svg viewBox="0 0 24 24"><path d="M6 6h12M6 12h8M6 18h5"/></svg></span>Éditeur PDF</span>
+        <p class="pitch">Edit, convert and assemble PDFs without uploading anything. Twenty-four tools, no account, no queue, no file left lying on a server.</p>
+        <div class="sceau">
+          <svg viewBox="0 0 24 24"><path d="M12 3 5 6v6c0 4.2 2.9 7.9 7 9 4.1-1.1 7-4.8 7-9V6z"/><path d="m9 12 2 2 4-4"/></svg>
+          <span><b>Nothing is uploaded</b>All processing happens in your browser, including the recognition of scanned documents.</span>
+        </div>
+        <a class="etoiles" href="https://g.page/r/CfBfIXTvKKmwEAE/review" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg><svg viewBox="0 0 24 24"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg><svg viewBox="0 0 24 24"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg><svg viewBox="0 0 24 24"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg><svg viewBox="0 0 24 24"><path d="m12 2 3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg><em>Leave a review</em></a>
+      </div>
+      <div><h4>Convert a PDF</h4><ul><li><a href="/en/pdf-to-word/">PDF → Word</a></li><li><a href="/en/pdf-to-excel/">PDF → Excel</a></li><li><a href="/en/pdf-to-powerpoint/">PDF → PowerPoint</a></li><li><a href="/en/pdf-to-jpg/">PDF → JPG</a></li><li><a href="/en/pdf-to-png/">PDF → PNG</a></li><li><a href="/en/ocr-pdf/">Scanned PDF to text</a></li></ul></div>
+      <div><h4>Create a PDF</h4><ul><li><a href="/en/word-to-pdf/">Word → PDF</a></li><li><a href="/en/excel-to-pdf/">Excel → PDF</a></li><li><a href="/en/powerpoint-to-pdf/">PowerPoint → PDF</a></li><li><a href="/en/jpg-to-pdf/">JPG → PDF</a></li><li><a href="/en/png-to-pdf/">PNG → PDF</a></li>
+        <li><a href="/en/merge-pdf/">Merge PDFs</a></li></ul></div>
+      <div class="double"><h4>Work on the PDF</h4><ul><li><a href="/en/compress-pdf/">Compress a PDF</a></li><li><a href="/en/split-pdf/">Split a PDF</a></li><li><a href="/en/extract-pdf-pages/">Extract pages</a></li><li><a href="/en/delete-pdf-pages/">Delete pages</a></li><li><a href="/en/organize-pdf/">Organise pages</a></li><li><a href="/en/rotate-pdf/">Rotate a PDF</a></li><li><a href="/en/crop-pdf/">Crop a PDF</a></li><li><a href="/en/add-page-numbers/">Add page numbers</a></li><li><a href="/en/watermark-pdf/">Add a watermark</a></li><li><a href="/en/sign-pdf/">Sign a PDF</a></li><li><a href="/en/unlock-pdf/">Unlock a PDF</a></li><li><a href="/en/remove-pdf-metadata/">Clean the metadata</a></li></ul></div>
+      <div><h4>The project</h4><ul>
+        <li><a href="#fonctions">The editor</a></li>
+        <li><a href="#confiance">Privacy</a></li>
+        <li><a href="#questions">FAQ</a></li>
+        <li><a href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">Source code</a></li>
+      </ul></div>
+    </div>
+    <div class="bas">
+      <span>Built with pdf.js, pdf-lib and fflate — everything is bundled, no network calls.</span>
+      <a href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">Source code</a>
+      <span class="fin">
+        <svg viewBox="0 0 24 24"><path d="M12 3 5 6v6c0 4.2 2.9 7.9 7 9 4.1-1.1 7-4.8 7-9V6z"/></svg>
+        No tracking, no cookies, no account.
+      </span>
+    </div>
+  </footer>
+</div>
+<script>
+  // Le filet sous la barre n'apparaît qu'une fois la page défilée. C'est #home
+  // qui défile, pas la fenêtre : l'écouteur doit donc être posé sur lui.
+  (function(){
+    const z = document.getElementById('home'), n = document.getElementById('hnav');
+    z.addEventListener('scroll', () => n.classList.toggle('colle', z.scrollTop > 8), { passive: true });
+  })();
+</script>
 </body>
 </html>
