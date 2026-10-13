@@ -1,0 +1,263 @@
+<!doctype html>
+<!-- VoilàPDF — https://voilapdf.com — GNU AGPL v3, voir LICENSE -->
+<html lang="fr" data-pair="pdf-trop-lourd">
+<head>
+<meta charset="utf-8">
+<title>PDF trop lourd pour un mail : d'où vient le poids, et quoi faire</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Votre pièce jointe est refusée. Avant de compresser, savoir d'où vient le poids : scan, images placées ou texte. Puis les quatre solutions, par ordre de dégâts.">
+<meta name="google-site-verification" content="vbmtfEKob3NfEM7iX_1giermuIPpd27wY6HxTupUOTY">
+<link rel="canonical" href="https://voilapdf.com/guides/pdf-trop-lourd-pour-un-mail/">
+<link rel="alternate" hreflang="fr" href="https://voilapdf.com/guides/pdf-trop-lourd-pour-un-mail/">
+<link rel="alternate" hreflang="x-default" href="https://voilapdf.com/guides/pdf-trop-lourd-pour-un-mail/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="VoilàPDF">
+<meta property="og:title" content="PDF trop lourd pour un mail : d'où vient le poids, et quoi faire">
+<meta property="og:description" content="Avant de compresser, savoir d'où vient le poids d'un PDF. Puis les quatre solutions pour le faire passer, par ordre de dégâts.">
+<meta property="og:url" content="https://voilapdf.com/guides/pdf-trop-lourd-pour-un-mail/">
+<meta property="og:image" content="https://voilapdf.com/social-preview.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231762e0'/%3E%3Cpath d='M9 10h14M9 16h10M9 22h7' stroke='%23fff' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/style-outil.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[
+{"@type":"Article","@id":"https://voilapdf.com/guides/pdf-trop-lourd-pour-un-mail/#article","headline":"PDF trop lourd pour un mail : d'où vient le poids, et quoi faire","description":"Avant de compresser, savoir d'où vient le poids d'un PDF : scan, images placées ou texte. Puis les quatre solutions, par ordre de dégâts.","inLanguage":"fr","datePublished":"2026-10-13","dateModified":"2026-10-13","author":{"@type":"Organization","name":"VoilàPDF","url":"https://voilapdf.com/"},"publisher":{"@id":"https://voilapdf.com/#editeur"},"mainEntityOfPage":"https://voilapdf.com/guides/pdf-trop-lourd-pour-un-mail/"},
+{"@type":"HowTo","@id":"https://voilapdf.com/guides/pdf-trop-lourd-pour-un-mail/#methode","name":"Faire passer un PDF trop lourd par mail","totalTime":"PT5M","estimatedCost":{"@type":"MonetaryAmount","currency":"EUR","value":"0"},"step":[
+{"@type":"HowToStep","position":1,"name":"Situer le poids","text":"Divisez la taille du fichier par son nombre de pages et essayez de sélectionner du texte à la souris : cela suffit à savoir si le poids vient des images."},
+{"@type":"HowToStep","position":2,"name":"Retirer les pages inutiles","text":"Supprimez les pages blanches et les annexes. Les pages conservées sont recopiées telles quelles, sans réencodage."},
+{"@type":"HowToStep","position":3,"name":"Couper le document","text":"Si tout doit partir, divisez le document en plusieurs envois plutôt que de le dégrader."},
+{"@type":"HowToStep","position":4,"name":"Compresser en dernier","text":"La compression redessine chaque page en image JPEG : le poids tombe, mais le texte cesse d'être sélectionnable."}]},
+{"@type":"FAQPage","@id":"https://voilapdf.com/guides/pdf-trop-lourd-pour-un-mail/#questions","mainEntity":[
+{"@type":"Question","name":"Pourquoi un fichier PDF est-il lourd ?","acceptedAnswer":{"@type":"Answer","text":"Presque toujours à cause des images qu'il contient en pleine définition : pages scannées, photos, visuels placés depuis un logiciel de mise en page. Le texte, lui, ne pèse presque rien."}},
+{"@type":"Question","name":"Comment alléger un PDF trop lourd sans le dégrader ?","acceptedAnswer":{"@type":"Answer","text":"En retirant des pages, ou en coupant le document en plusieurs fichiers. Ces deux opérations recopient les pages conservées telles quelles : rien n'est réencodé, donc rien ne s'abîme."}},
+{"@type":"Question","name":"Comment compresser un fichier PDF en 2 Mo ?","acceptedAnswer":{"@type":"Answer","text":"Aucun outil ne garantit une taille exacte : le résultat dépend du contenu. Lancez un niveau moyen, regardez le poids obtenu, puis descendez d'un cran si besoin. Sur un PDF de texte pur, déjà compact, viser 2 Mo peut être impossible sans couper le document."}},
+{"@type":"Question","name":"Comment couper un PDF trop lourd ?","acceptedAnswer":{"@type":"Answer","text":"L'outil de division produit un fichier par page ou par plage de pages que vous définissez. Les pages sont recopiées sans réencodage, et vous envoyez les morceaux en plusieurs messages."}},
+{"@type":"Question","name":"Comment baisser la qualité d'un PDF, et jusqu'où ?","acceptedAnswer":{"@type":"Answer","text":"Le niveau de compression règle la définition à laquelle chaque page est redessinée. Le repère utile est l'usage : pour une lecture à l'écran on peut descendre bas, pour une pièce destinée à être imprimée ou relue par un service administratif, mieux vaut rester prudent et couper le document."}}]}]}</script>
+</head>
+<body>
+
+<div class="hnav"><div class="in">
+  <a class="brand" href="/"><i><svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h10M5 18h7"/></svg></i>VoilàPDF</a>
+  <nav>
+    <a href="/#outils">Outils</a>
+    <a href="/guides/">Guides</a>
+    <a href="/#questions">Questions</a>
+    <a class="cta-nav" href="/">Modifier un PDF</a>
+  </nav>
+</div></div>
+
+<header class="tete"><div class="sec">
+  <p class="fil"><a href="/">Accueil</a> › <a href="/guides/">Guides</a> › PDF trop lourd pour un mail</p>
+  <h1>Un PDF trop lourd pour l'envoyer par mail</h1>
+  <p class="chapo">Le message est refusé, ou le téléservice affiche « fichier trop
+    volumineux ». Le réflexe est de compresser tout de suite. C'est souvent la
+    bonne réponse, et parfois la plus coûteuse : voici comment savoir, en une
+    minute, laquelle des quatre solutions s'applique à votre fichier.</p>
+  <p class="guide-date"><time datetime="2026-10-13">13 octobre 2026</time> · 6 min de lecture</p>
+</div></header>
+
+<main class="sec corps guide-corps">
+
+<p>La réponse courte, pour qui est pressé : si votre PDF vient d'un scanner ou
+contient des photos, la compression le fera maigrir très fortement, et c'est le
+bon outil. S'il vient d'un traitement de texte et ne contient que du texte, il
+est déjà compact et la compression ne donnera presque rien — dans ce cas, c'est
+le nombre de pages qu'il faut attaquer, pas leur qualité.</p>
+
+<p>Tout le reste de cette page sert à distinguer les deux situations avant
+d'agir, parce que les deux se soignent avec des outils différents et que l'une
+des deux solutions a un coût qu'on ne vous annonce généralement pas.</p>
+
+<h2>Où sont les plafonds, exactement</h2>
+
+<p>Les boîtes mail grand public plafonnent généralement la pièce jointe entre 10
+et 25 Mo, et ce plafond s'applique au message entier, encodage compris : un
+fichier qui frôle la limite passe rarement. Les téléservices administratifs —
+impôts, caisses, assurances, dépôts de dossier — sont souvent beaucoup plus bas,
+parfois à quelques mégaoctets, voire quelques centaines de kilooctets par
+justificatif. C'est pour ça qu'un document qui part sans problème vers un
+collègue se fait refuser par un formulaire administratif.</p>
+
+<p>Deuxième chose à savoir : le plafond du destinataire compte autant que le
+vôtre. Un serveur de messagerie d'entreprise peut accepter 50 Mo en interne et
+refuser au-delà de 10 Mo en entrée. Si vous ne savez pas, visez bas.</p>
+
+<h2>Situer le poids en une minute</h2>
+
+<p>Deux gestes suffisent, et aucun des deux n'a besoin d'un logiciel.</p>
+
+<p><b>Essayez de sélectionner une ligne à la souris</b> dans votre lecteur de
+PDF. Si le texte se surligne, votre document contient une vraie couche de texte :
+le poids vient d'ailleurs. Si rien ne se sélectionne, ou si la sélection attrape
+toute la page d'un bloc, vous avez une photographie de page — un scan — et vous
+venez de trouver le coupable.</p>
+
+<p><b>Divisez la taille par le nombre de pages.</b> C'est un repère grossier,
+pas une mesure, mais il situe bien : une page de texte pèse d'ordinaire quelques
+dizaines de kilooctets, une page scannée en pleine définition peut peser
+plusieurs mégaoctets à elle seule. Un document de 4 pages à 40 Mo n'a pas un
+problème de longueur, il a un problème d'images.</p>
+
+<p>Trois profils reviennent constamment. Le <b>dossier scanné</b> : chaque page
+est une image de plusieurs millions de pixels, le texte n'existe pas en tant que
+texte, et la compression est faite pour ce cas-là. L'<b>export d'un logiciel de
+mise en page ou de dessin</b> — InDesign, Illustrator, AutoCAD, Photoshop : les
+images placées y sont souvent embarquées à leur définition d'origine, bien
+au-delà de ce que l'impression demande. Si vous avez encore le fichier source, le
+vrai correctif est là, dans les réglages d'export, et il vous rendra un PDF léger
+sans rien abîmer. Enfin le <b>PDF de texte pur</b>, né d'un traitement de texte
+ou d'un générateur de factures : s'il est lourd, c'est qu'il est long, ou qu'il
+embarque des polices complètes et des pièces jointes internes.</p>
+
+<h2>Les quatre solutions, par ordre de dégâts</h2>
+
+<p>Elles ne s'excluent pas, mais elles ne se valent pas. Autant commencer par
+celles qui ne coûtent rien à votre document.</p>
+
+<div class="etape-g"><b>1. Retirer ce qui n'a rien à faire là</b>
+Un scan recto-verso produit une page vide à chaque dos non imprimé ;
+<a href="/supprimer-pages-blanches-pdf/">la détection des pages blanches</a> les
+repère et vous rend le document sans elles. Pour les annexes, les doubles scans
+et les pages de garde, <a href="/supprimer-pages-pdf/">la suppression de pages</a>
+se fait en cliquant dans l'aperçu. Dans les deux cas, les pages conservées sont
+recopiées telles quelles, sans réencodage : le document n'est pas dégradé, il est
+simplement plus court. Sur un dossier scanné, retirer les dos vides enlève
+couramment la moitié du poids.</div>
+
+<div class="etape-g"><b>2. N'envoyer que ce qui est demandé</b>
+Un formulaire qui réclame un avis d'imposition n'a pas besoin des vingt pages
+qui l'accompagnent. <a href="/extraire-pages-pdf/">L'extraction de pages</a> vous
+rend un document ne contenant que celles que vous avez cochées, recopiées sans
+perte de qualité. C'est la solution la plus propre quand le destinataire attend
+une pièce précise, et celle qui règle la majorité des refus de téléservices.</div>
+
+<div class="etape-g"><b>3. Couper, plutôt que dégrader</b>
+Si tout doit vraiment partir, <a href="/diviser-pdf/">la division du document</a>
+produit un fichier par page ou par plage de pages, et vous envoyez deux ou trois
+messages au lieu d'un. Les pages ne sont pas réencodées. C'est moins élégant, mais
+le destinataire reçoit vos documents intacts, et c'est préférable à un scan rendu
+illisible par une compression trop forte.</div>
+
+<div class="etape-g"><b>4. Compresser, en connaissant le prix</b>
+C'est l'outil adapté aux scans et aux documents riches en images, et la réduction
+y est souvent très forte. Mais la compression dans un navigateur procède en
+redessinant chaque page en image JPEG à la définition retenue. Ce qu'on y perd est
+énoncé plus bas : ce n'est pas rien, et ça décide parfois de ne pas s'en servir.</div>
+
+<p><a class="vers-outil" href="/compresser-pdf/">Compresser un PDF</a></p>
+
+<h2>Ce que la compression fait réellement</h2>
+
+<p>Il faut le dire clairement, parce que la plupart des services ne le disent
+pas. Réduire le poids d'un PDF en préservant sa couche de texte demande de
+réencoder les images une par une à l'intérieur du fichier — une opération que
+seuls des moteurs installés sur des serveurs savent mener. Dans un navigateur, la
+méthode réaliste consiste à rendre chaque page puis à la réenregistrer en image.
+Le résultat est un PDF nettement plus léger, visuellement fidèle, et qui a perdu
+quatre choses : le texte sélectionnable et la recherche dans le document, les
+liens cliquables et les signets, les champs de formulaire, et une part de
+finesse proportionnelle au niveau choisi.</p>
+
+<p>Les conséquences pratiques sont simples. Un contrat compressé ne se cherche
+plus au mot-clé. Un formulaire compressé n'est plus remplissable — si votre
+problème est justement de figer des réponses déjà saisies, c'est
+<a href="/aplatir-pdf/">l'aplatissement</a> qu'il vous faut, pas la compression.
+Et un document compressé ne se modifie plus : si une correction est à faire,
+faites-la d'abord. Notre guide sur
+<a href="/guides/modifier-le-texte-d-un-pdf/">la modification du texte d'un
+PDF</a> explique comment corriger une ligne en place, scan compris.</p>
+
+<p>Dernier point, utile à connaître : sur un PDF de texte pur, cette méthode
+produirait un fichier <em>plus lourd</em> que l'original, puisqu'elle remplacerait
+du texte très compact par des images. L'outil le détecte et vous rend l'original
+intact plutôt que de l'alourdir. Ce n'est pas une panne — c'est le signe que
+votre problème n'est pas la qualité, mais la longueur, et que les étapes 1 à 3
+sont la seule voie.</p>
+
+<h2>Deux fausses bonnes idées</h2>
+
+<p><b>Mettre le PDF dans un ZIP.</b> Un PDF est déjà un conteneur compressé : le
+ZIP ne gagnera presque rien, et vous ajoutez une manipulation au destinataire.
+Cela n'a d'intérêt que pour regrouper plusieurs fichiers en un seul envoi.</p>
+
+<p><b>« Imprimer en PDF » pour alléger.</b> Le réflexe est répandu et le résultat
+est imprévisible : selon le pilote, le fichier maigrit, ne change pas, ou grossit,
+et vous perdez la couche de texte sans savoir ce que vous avez gagné. Autant
+employer un outil dont le comportement est annoncé.</p>
+
+<p>Un mot sur le téléversement, puisque la question vient toujours : tous les
+outils cités ici travaillent dans votre navigateur et aucun fichier n'est envoyé
+sur un serveur. Les deux seules exceptions du site sont
+<a href="/resumer-pdf/">le résumé</a> et <a href="/traduire-pdf/">la
+traduction</a>, qui téléchargent un modèle de langue sur votre machine avant de
+travailler, toujours sans envoyer votre document.</p>
+
+<h2>Questions fréquentes</h2>
+
+<details open>
+  <summary>Pourquoi un fichier PDF est-il lourd ?</summary>
+  <p>Presque toujours à cause des images qu'il contient en pleine définition :
+    pages scannées, photos, visuels placés depuis un logiciel de mise en page. Le
+    texte, lui, ne pèse presque rien — quelques octets par caractère. Un document
+    de trois pages à 40 Mo contient donc des images, pas du texte.</p>
+</details>
+
+<details>
+  <summary>Comment alléger un PDF trop lourd sans le dégrader ?</summary>
+  <p>En retirant des pages, ou en coupant le document en plusieurs fichiers. Ces
+    deux opérations recopient les pages conservées telles quelles : rien n'est
+    réencodé, donc rien ne s'abîme. Si le fichier vient d'un logiciel de mise en
+    page et que vous avez encore la source, reprendre les réglages d'export est
+    la solution la plus propre de toutes.</p>
+</details>
+
+<details>
+  <summary>Comment compresser un fichier PDF en 2 Mo ?</summary>
+  <p>Aucun outil ne peut garantir une taille exacte : le poids obtenu dépend du
+    contenu des pages. La marche à suivre est empirique — lancez un niveau moyen,
+    regardez le résultat, descendez d'un cran si besoin. Et sur un PDF de texte
+    pur, déjà compact, viser 2 Mo peut être hors de portée sans
+    <a href="/diviser-pdf/">couper le document</a>.</p>
+</details>
+
+<details>
+  <summary>Comment couper un PDF trop lourd ?</summary>
+  <p>L'outil de division produit un fichier par page, ou une par plage de pages
+    que vous définissez vous-même. Les pages sont recopiées sans réencodage, et
+    vous envoyez les morceaux en plusieurs messages en les numérotant dans l'objet
+    — « 1/3 », « 2/3 » — pour que le destinataire sache ce qu'il attend.</p>
+</details>
+
+<details>
+  <summary>Comment baisser la qualité d'un PDF, et jusqu'où ?</summary>
+  <p>Le niveau de compression règle la définition à laquelle chaque page est
+    redessinée. Le bon repère n'est pas un chiffre, c'est l'usage : pour un
+    document qui sera seulement lu à l'écran, on peut descendre assez bas ; pour
+    une pièce destinée à l'impression, ou qu'un service administratif devra relire
+    et peut-être réimprimer, mieux vaut rester prudent et préférer la division.
+    Si ce sont les pages elles-mêmes qui vous intéressent en images, passez plutôt
+    par <a href="/pdf-en-jpg/">la conversion en JPG</a>.</p>
+</details>
+
+</main>
+
+<footer class="pied">
+  <div class="rappel">
+    <p class="mot">Un PDF trop lourd ?<br><span>Il ne quittera pas votre ordinateur.</span></p>
+    <a class="bouton" href="/compresser-pdf/">Compresser un PDF</a>
+  </div>
+  <div class="bas">
+    <span>Construit avec pdf.js, pdf-lib, tesseract.js et fflate — vos fichiers restent dans votre navigateur.</span>
+    <a href="/guides/">Guides</a>
+    <a href="/mentions-legales/">Mentions légales</a>
+    <a href="/confidentialite/">Confidentialité</a>
+    <a href="/contact/">Nous écrire</a>
+  </div>
+</footer>
+
+<a class="badge-fr" href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">
+  <span class="drapeau" aria-hidden="true"><i></i><i></i><i></i></span>
+  <span>Outil open source, fait avec <b>&#9829;</b> en France</span>
+</a>
+
+</body>
+</html>
