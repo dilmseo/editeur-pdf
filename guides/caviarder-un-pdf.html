@@ -1,0 +1,295 @@
+<!doctype html>
+<!-- VoilàPDF — https://voilapdf.com — GNU AGPL v3, voir LICENSE -->
+<html lang="fr" data-pair="caviarder-pdf">
+<head>
+<meta charset="utf-8">
+<title>Caviarder un PDF : ce qui masque vraiment, et ce qui trompe</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Un rectangle noir posé sur un nom ne l'enlève pas du fichier. Comment caviarder un PDF pour de bon, le test qui le prouve en trente secondes, et ce que ça coûte.">
+<meta name="google-site-verification" content="vbmtfEKob3NfEM7iX_1giermuIPpd27wY6HxTupUOTY">
+<link rel="canonical" href="https://voilapdf.com/guides/caviarder-un-pdf/">
+<link rel="alternate" hreflang="fr" href="https://voilapdf.com/guides/caviarder-un-pdf/">
+<link rel="alternate" hreflang="x-default" href="https://voilapdf.com/guides/caviarder-un-pdf/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="VoilàPDF">
+<meta property="og:title" content="Caviarder un PDF : ce qui masque vraiment, et ce qui trompe">
+<meta property="og:description" content="Un rectangle noir posé sur un nom ne l'enlève pas du fichier. La méthode qui tient, le test qui le prouve, et ce que l'opération coûte.">
+<meta property="og:url" content="https://voilapdf.com/guides/caviarder-un-pdf/">
+<meta property="og:image" content="https://voilapdf.com/social-preview.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231762e0'/%3E%3Cpath d='M9 10h14M9 16h10M9 22h7' stroke='%23fff' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/style-outil.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[
+{"@type":"Article","@id":"https://voilapdf.com/guides/caviarder-un-pdf/#article","headline":"Caviarder un PDF : ce qui masque vraiment, et ce qui trompe","description":"Un rectangle noir posé sur un nom ne l'enlève pas du fichier. Comment caviarder un PDF pour de bon, le test qui le prouve, et ce que l'opération coûte.","inLanguage":"fr","datePublished":"2026-10-14","dateModified":"2026-10-14","author":{"@type":"Organization","name":"VoilàPDF","url":"https://voilapdf.com/"},"publisher":{"@id":"https://voilapdf.com/#editeur"},"mainEntityOfPage":"https://voilapdf.com/guides/caviarder-un-pdf/"},
+{"@type":"HowTo","@id":"https://voilapdf.com/guides/caviarder-un-pdf/#methode","name":"Caviarder un PDF","totalTime":"PT5M","estimatedCost":{"@type":"MonetaryAmount","currency":"EUR","value":"0"},"step":[
+{"@type":"HowToStep","position":1,"name":"Couvrir les zones","text":"Avec l'outil Masquer de l'éditeur, glissez sur chaque mention à retirer. Le rectangle cache la zone à l'écran, mais le fichier contient encore le texte."},
+{"@type":"HowToStep","position":2,"name":"Détruire la couche de texte","text":"Convertissez les pages en JPG, puis réassemblez les images en PDF. Les caractères n'existent plus : il ne reste que des pixels."},
+{"@type":"HowToStep","position":3,"name":"Nettoyer ce qui n'est pas dans la page","text":"Supprimez les métadonnées, puis assainissez le fichier pour retirer le JavaScript et les pièces embarquées."},
+{"@type":"HowToStep","position":4,"name":"Vérifier","text":"Extrayez le texte du fichier final et cherchez le nom ou le montant masqué. Un relevé vide est la seule preuve acceptable."}]},
+{"@type":"FAQPage","@id":"https://voilapdf.com/guides/caviarder-un-pdf/#questions","mainEntity":[
+{"@type":"Question","name":"Qu'est-ce que le caviardage d'un document ?","acceptedAnswer":{"@type":"Answer","text":"C'est le retrait des passages qui ne doivent pas être lus, avant de transmettre ou de publier le document. Noircir la zone à l'écran n'est que la partie visible du geste : le caviardage n'est acquis que si l'information a quitté le fichier."}},
+{"@type":"Question","name":"Comment caviarder un texte ?","acceptedAnswer":{"@type":"Answer","text":"En deux temps : couvrir la zone, puis détruire la couche de texte en convertissant les pages en images et en les réassemblant en PDF. Le premier geste seul laisse les caractères dans le fichier, accessibles par un copier-coller."}},
+{"@type":"Question","name":"Comment puis-je caviarder un document ?","acceptedAnswer":{"@type":"Answer","text":"Posez les rectangles dans l'éditeur, passez le résultat par PDF en JPG puis JPG en PDF, nettoyez les métadonnées, et vérifiez en extrayant le texte du fichier final. Tout se fait dans le navigateur, sans téléverser le document."}},
+{"@type":"Question","name":"Pourquoi dit-on caviarder ?","acceptedAnswer":{"@type":"Answer","text":"L'explication retenue par les dictionnaires renvoie à la censure de la presse en Russie impériale : les passages couverts d'encre noire évoquaient des taches de caviar. Le mot est resté pour désigner le passage noirci d'un document."}},
+{"@type":"Question","name":"Comment dire caviarder en anglais ?","acceptedAnswer":{"@type":"Answer","text":"To redact, et le résultat est a redacted document. C'est pour cela que les services en ligne proposent un bouton Redact, que les versions françaises traduisent par biffer, censurer ou noircir — trois mots pour le même geste."}}]}]}</script>
+</head>
+<body>
+
+<div class="hnav"><div class="in">
+  <a class="brand" href="/"><i><svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h10M5 18h7"/></svg></i>VoilàPDF</a>
+  <nav>
+    <a href="/#outils">Outils</a>
+    <a href="/guides/">Guides</a>
+    <a href="/#questions">Questions</a>
+    <a class="cta-nav" href="/">Modifier un PDF</a>
+  </nav>
+</div></div>
+
+<header class="tete"><div class="sec">
+  <p class="fil"><a href="/">Accueil</a> › <a href="/guides/">Guides</a> › Caviarder un PDF</p>
+  <h1>Caviarder un PDF : le rectangle noir ne suffit pas</h1>
+  <p class="chapo">Un RIB, un nom de patient, le montant d'une transaction. On pose
+    un rectangle noir dessus, on enregistre, on envoie — et l'information est
+    toujours dans le fichier, à la disposition de qui sait faire un copier-coller.</p>
+  <p class="guide-date"><time datetime="2026-10-14">14 octobre 2026</time> · 6 min de lecture</p>
+</div></header>
+
+<main class="sec corps guide-corps">
+
+<p>Un PDF se lit comme une page, mais il ne se range pas comme une page. Les
+caractères y sont stockés d'un côté, avec leur position exacte ; les formes et les
+images de l'autre. Dessiner un rectangle au-dessus d'un mot <em>ajoute</em> une
+forme par-dessus. Cela ne retire pas le mot : il reste là, intact, sous une couche
+de peinture.</p>
+
+<p>Caviarder vraiment demande donc deux gestes, pas un. Le premier couvre la zone,
+pour que l'œil ne la voie plus. Le second détruit la couche de texte, pour que
+rien ne subsiste à récupérer — en pratique, en convertissant les pages en images
+puis en les réassemblant en PDF. Sauter le second, c'est produire un document qui
+a l'air caviardé, ce qui est exactement le pire des deux mondes : on le transmet
+en confiance.</p>
+
+<h2>Le test qui tranche, en trente secondes</h2>
+
+<p>Avant toute théorie, voici comment savoir où vous en êtes. Prenez le fichier que
+vous pensez avoir caviardé, ouvrez-le dans n'importe quel lecteur, faites un
+<b>Ctrl+A</b> puis un <b>Ctrl+C</b>, et collez le résultat dans un éditeur de
+texte. Si le nom que vous croyiez retiré apparaît, il n'est pas retiré.</p>
+
+<p>Plus net encore : passez le fichier par
+<a href="/pdf-en-texte/">l'extraction de texte</a> et cherchez la mention dans le
+relevé. L'outil restitue les caractères tels qu'ils sont enregistrés dans le
+document, sans se soucier de ce qui est dessiné par-dessus. Un relevé où la
+mention sensible n'apparaît plus est la seule preuve acceptable. Faites ce test à
+chaque fois : il coûte une minute et il évite la mauvaise surprise qui se découvre
+chez le destinataire.</p>
+
+<h2>Pourquoi un rectangle ne masque rien</h2>
+
+<p>La question revient souvent sous la forme : « mais je ne vois plus rien, alors
+qui le verrait ? » Quatre chemins, tous banals.</p>
+
+<p><b>La sélection.</b> Un lecteur sélectionne le texte sous le rectangle sans
+difficulté, puisqu'il ne regarde que la couche de caractères. La surbrillance
+passe sous la forme opaque, mais le presse-papiers, lui, reçoit tout.</p>
+
+<p><b>La recherche.</b> Tapez le nom dans la fenêtre de recherche du lecteur : il
+le trouve, et il saute à la page. L'indexation d'un moteur, d'une messagerie ou
+d'un gestionnaire documentaire fonctionne de la même façon — un document publié
+en ligne devient cherchable sur son contenu masqué.</p>
+
+<p><b>Les outils en ligne de commande.</b> <code>pdftotext</code> ou n'importe
+quelle bibliothèque de lecture restitue la couche de texte en une ligne de
+commande. Il n'y a
+aucune compétence particulière à avoir : c'est l'usage normal de ces outils.</p>
+
+<p><b>Le déplacement du rectangle.</b> Un éditeur PDF un peu complet permet de
+sélectionner la forme ajoutée et de l'écarter. Le texte réapparaît à l'écran,
+tel quel.</p>
+
+<p>C'est la même limite que celle de la correction de texte : quand on remplace
+une ligne dans un PDF, l'ancienne est recouverte et non retirée. Elle est
+expliquée dans le guide sur
+<a href="/guides/modifier-le-texte-d-un-pdf/">la modification du texte d'un
+PDF</a>, et elle vaut pour tous les éditeurs, le nôtre compris.</p>
+
+<h2>La méthode qui tient, en quatre gestes</h2>
+
+<div class="etape-g"><b>1. Couvrez les zones</b>
+Dans l'éditeur, l'outil <b>Masquer</b> couvre une zone en glissant la souris. La
+couleur est relevée sur le fond de la page, de sorte que le rectangle s'y fonde ;
+si vous préférez la convention du trait noir, parce que le lecteur doit
+<em>voir</em> qu'un passage a été retiré, utilisez l'outil d'ajout de texte pour
+poser une mention du type « [caviardé] » à côté. À ce stade, le document n'est pas
+encore caviardé : il en a seulement l'apparence.</div>
+
+<div class="etape-g"><b>2. Détruisez la couche de texte</b>
+Convertissez le document en images avec <a href="/pdf-en-jpg/">PDF → JPG</a>, puis
+réassemblez les images obtenues avec <a href="/jpg-en-pdf/">JPG → PDF</a>. Le
+résultat est un PDF dont les pages sont des photographies de vos pages : les
+caractères n'existent plus en tant que caractères, et il n'y a donc plus rien à
+récupérer sous les rectangles.</div>
+
+<div class="etape-g"><b>3. Nettoyez ce qui n'est pas dans la page</b>
+Un PDF transporte aussi des champs annexes : auteur, logiciel, titre, dates, et
+parfois des pièces jointes ou du code.
+<a href="/supprimer-metadonnees-pdf/">Le nettoyage des métadonnées</a> vous montre
+d'abord ce que le fichier révèle, puis l'efface ;
+<a href="/assainir-pdf/">l'assainissement</a> retire en plus le JavaScript et les
+fichiers embarqués. Un titre de document qui contient le nom du client annule tout
+le travail précédent.</div>
+
+<div class="etape-g"><b>4. Vérifiez, puis seulement après, envoyez</b>
+Repassez le fichier final par <a href="/pdf-en-texte/">l'extraction de texte</a>.
+Sur un document correctement aplati en images, le relevé est vide : c'est le
+signe que la couche de texte a bien disparu. Gardez l'original de côté, dans un
+dossier que vous ne transmettez pas.</div>
+
+<p><a class="vers-outil" href="/pdf-en-jpg/">Aplatir les pages en images</a></p>
+
+<h2>Ce que l'opération coûte</h2>
+
+<p>Cette méthode fonctionne, et elle a un prix qu'il faut connaître avant de s'y
+engager, pas après.</p>
+
+<p><b>Le texte n'est plus sélectionnable.</b> C'est le but — mais cela s'applique
+à <em>tout</em> le document, pas seulement aux passages retirés. Le destinataire
+ne peut plus copier une référence, et une recherche dans le fichier ne donne plus
+rien. Si le document doit rester exploitable, repassez-le par
+<a href="/ocr-pdf/">la reconnaissance de caractères</a> : elle recrée une couche
+de texte à partir de l'image, en approximant — la qualité dépend de la netteté des
+pages, et elle ne fera évidemment pas réapparaître ce qui est couvert.</p>
+
+<p><b>Le fichier change de poids.</b> Un PDF d'images pèse à peu près la somme des
+images, ce qui peut être beaucoup plus lourd qu'un document texte de même nombre
+de pages — ou plus léger, s'il contenait des polices embarquées volumineuses. Si
+le résultat ne passe pas en pièce jointe, le guide sur
+<a href="/guides/pdf-trop-lourd-pour-un-mail/">un PDF trop lourd pour un mail</a>
+traite la question ; <a href="/compresser-pdf/">la compression</a> est une option,
+en gardant en tête qu'elle rematrice une nouvelle fois les pages.</p>
+
+<p><b>L'accessibilité tombe.</b> Une page devenue image n'est plus lue par un
+lecteur d'écran. Pour un document administratif destiné à être rendu public,
+c'est une contrainte réelle, et la bonne réponse est alors de reprendre le
+document à sa source — un traitement de texte, un export — plutôt que de caviarder
+un PDF déjà produit.</p>
+
+<h2>Le cas du document scanné</h2>
+
+<p>On croit souvent qu'un scan est à l'abri, puisqu'il n'a pas de couche de texte.
+C'est l'inverse : il est plus exposé. La page entière est une image, et poser un
+rectangle par-dessus ne modifie pas cette image — qui reste dans le fichier,
+complète. N'importe quel extracteur d'images rend la page d'origine, rectangle
+compris mais sur un calque séparé, donc avec la zone lisible dessous.</p>
+
+<p>Ajoutez à cela que beaucoup de scans sont passés par une reconnaissance de
+caractères, qui leur a ajouté une couche de texte invisible : vous avez alors les
+deux fuites en même temps. La conclusion ne change pas, elle devient simplement
+obligatoire : l'étape 2 n'est pas optionnelle.</p>
+
+<h2>Quatre faux amis</h2>
+
+<p><b>Le rognage.</b> <a href="/rogner-pdf/">Rogner un PDF</a> réduit la zone
+affichée, pas le contenu : ce qui dépasse du cadre reste dans le fichier et
+réapparaît dès qu'on élargit le cadrage. C'est utile pour une marge de scan, pas
+pour retirer une information.</p>
+
+<p><b>L'aplatissement.</b> <a href="/aplatir-pdf/">Aplatir un PDF</a> fige les
+champs d'un formulaire : les réponses saisies deviennent du contenu de page et ne
+sont plus modifiables. C'est précieux pour renvoyer un formulaire, mais le texte
+de la page n'est pas concerné — l'aplatissement d'un formulaire et le caviardage
+sont deux opérations différentes.</p>
+
+<p><b>Le mot de passe.</b> Protéger un document à l'ouverture ne retire rien de
+son contenu : la personne qui a le mot de passe voit tout, et le mot de passe
+circule souvent dans le même fil de discussion que le fichier. Quant au mot de
+passe de permissions, celui qui interdit l'impression ou la copie, c'est une
+consigne que les lecteurs respectent par convention — c'est d'ailleurs ce que
+<a href="/deverrouiller-pdf/">le déverrouillage</a> lève en une seconde.</p>
+
+<p><b>Le surlignage noir d'un lecteur.</b> Les fonctions d'annotation d'un
+visionneur ajoutent un objet par-dessus la page, exactement comme le rectangle de
+l'étape 1. Certaines annotations se suppriment d'un clic droit dans un autre
+lecteur.</p>
+
+<h2>Un mot sur la confidentialité de ces manipulations</h2>
+
+<p>Les outils cités dans ce guide travaillent dans votre navigateur : le document
+n'est pas téléversé, et rien ne part sur un serveur. C'est particulièrement
+important ici, puisque le fichier que vous manipulez contient par définition
+l'information que vous cherchez à ne pas diffuser — envoyer un document à
+caviarder sur un service distant revient à le communiquer une fois de plus avant
+de le protéger. Deux outils du site font exception et téléchargent un modèle de
+langue dans le navigateur, le résumé et la traduction ; ils ne sont pas dans cette
+chaîne.</p>
+
+<h2>Questions fréquentes</h2>
+
+<details open>
+  <summary>Qu'est-ce que le caviardage d'un document ?</summary>
+  <p>C'est le retrait des passages qui ne doivent pas être lus, avant de
+    transmettre ou de publier le document : noms de tiers, coordonnées bancaires,
+    données de santé, clauses confidentielles. Noircir la zone à l'écran n'est que
+    la partie visible du geste. Le caviardage n'est acquis que si l'information a
+    réellement quitté le fichier.</p>
+</details>
+
+<details>
+  <summary>Comment caviarder un texte ?</summary>
+  <p>En deux temps. On couvre la zone, puis on détruit la couche de texte en
+    convertissant les pages en images et en les réassemblant en PDF. Le premier
+    geste seul laisse les caractères dans le fichier, où un copier-coller les
+    retrouve.</p>
+</details>
+
+<details>
+  <summary>Comment puis-je caviarder un document ?</summary>
+  <p>Posez les rectangles dans l'éditeur, passez le résultat par
+    <a href="/pdf-en-jpg/">PDF → JPG</a> puis <a href="/jpg-en-pdf/">JPG → PDF</a>,
+    nettoyez <a href="/supprimer-metadonnees-pdf/">les métadonnées</a>, et
+    vérifiez en <a href="/pdf-en-texte/">extrayant le texte</a> du fichier final.
+    Aucun compte n'est demandé et le document reste sur votre machine.</p>
+</details>
+
+<details>
+  <summary>Pourquoi dit-on caviarder ?</summary>
+  <p>L'explication retenue par les dictionnaires renvoie à la censure de la presse
+    en Russie impériale : les passages couverts d'encre noire évoquaient des taches
+    de caviar. Le mot est resté pour désigner le passage noirci d'un document, puis
+    l'opération elle-même.</p>
+</details>
+
+<details>
+  <summary>Comment dire caviarder en anglais ?</summary>
+  <p><i>To redact</i>, et le résultat est <i>a redacted document</i>. C'est
+    pourquoi les services en ligne affichent un bouton <i>Redact</i>, que les
+    versions françaises traduisent tantôt par « biffer », tantôt par « censurer »,
+    tantôt par « noircir » : trois mots pour le même geste, et la même limite
+    quand il se réduit à dessiner un rectangle.</p>
+</details>
+
+<p><a class="vers-outil" href="/">Ouvrir l'éditeur</a></p>
+
+</main>
+
+<footer class="pied">
+  <div class="rappel">
+    <p class="mot">Un PDF à caviarder ?<br><span>Il ne quittera pas votre ordinateur.</span></p>
+    <a class="bouton" href="/">Ouvrir l'éditeur</a>
+  </div>
+  <div class="bas">
+    <span>Construit avec pdf.js, pdf-lib, tesseract.js et fflate — vos fichiers restent dans votre navigateur.</span>
+    <a href="/guides/">Guides</a>
+    <a href="/mentions-legales/">Mentions légales</a>
+    <a href="/confidentialite/">Confidentialité</a>
+    <a href="/contact/">Nous écrire</a>
+  </div>
+</footer>
+
+<a class="badge-fr" href="https://github.com/dilmseo/editeur-pdf" target="_blank" rel="noopener">
+  <span class="drapeau" aria-hidden="true"><i></i><i></i><i></i></span>
+  <span>Outil open source, fait avec <b>&#9829;</b> en France</span>
+</a>
+
+</body>
+</html>
